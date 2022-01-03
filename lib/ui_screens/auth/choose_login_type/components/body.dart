@@ -66,7 +66,7 @@ class RoundedBtn extends StatelessWidget {
   }
 }
 
-class DoctorBtn extends StatelessWidget {
+/*class DoctorBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Flexible(
@@ -106,7 +106,7 @@ class AdminBtn extends StatelessWidget {
           )),
     );
   }
-}
+}*/
 
 class UserBtn extends StatelessWidget {
   @override
@@ -124,6 +124,68 @@ class UserBtn extends StatelessWidget {
           ImageText('User'),
           Spacer(flex: 3,),
         ],
+      ),
+    );
+  }
+}
+
+class DoctorBtn extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return RoundedBtn(
+      onTap: () {
+        Provider.of<AuthManage>(context, listen: false)
+            .toggleWidgets(currentPage: 1, type: "doctor");
+      },
+      child: Row(
+        children: [
+          Spacer(),
+          CircleAssetImage('assets/images/surgeon.png'),
+          Spacer(),
+          ImageText('Doctor'),
+          Spacer(flex: 3,),
+        ],
+      ),
+    );
+  }
+}
+class AdminBtn extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.fromSize(
+      size: Size(500, 150),
+      child: RoundedBtn(
+        onTap: () {
+          Provider.of<AuthManage>(context, listen: false)
+              .toggleWidgets(currentPage: 1, type: "admin");
+        },
+        child: Row(
+          children: [
+            Spacer(),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(45),
+              child: Container(
+                height: 90,
+                width: 90,
+                color: xColors.accentColor,
+                child: Image.asset(
+                  'assets/images/administrator.png',
+                  fit: BoxFit.fitHeight,
+                ), // replace
+              ),
+            )
+           ,
+            Spacer(),
+            Text(
+              'Admin',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: xColors.white,
+                  fontSize: 30),
+            ),
+            Spacer(flex: 3,),
+          ],
+        ),
       ),
     );
   }

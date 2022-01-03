@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void delay() {
     Future.delayed(Duration(milliseconds: 2500), () {
-      NavigationService.instance.key.currentState.pushNamed(
+      NavigationService.instance.key.currentState.pushReplacementNamed(
         'Wrapper',
       );
     });
@@ -32,8 +32,8 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Image.asset(
           "assets/images/logo.png",
           fit: BoxFit.cover,
-          height: Responsive.width(50.0, context),
-          width: Responsive.width(50.0, context),
+          height: Responsive.isMobile(context)?Responsive.width(50.0, context):200,
+          width:Responsive.isMobile(context)?Responsive.width(50.0, context):200,
         ),
       ),
     );

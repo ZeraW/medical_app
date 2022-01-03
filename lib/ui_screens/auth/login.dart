@@ -16,6 +16,36 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Responsive.isMobile(context)?Colors.white:xColors.mainColor,
+        body: Responsive(
+          tablet: Container(
+            padding:  EdgeInsets.symmetric(horizontal: Responsive.width(32, context),vertical:Responsive.height(5, context) ),
+            child: Container(color: Colors.white,child: Mobile(type: widget.type,)),
+          ),
+          desktop: Container(
+            padding:  EdgeInsets.symmetric(horizontal: Responsive.width(32, context),vertical:Responsive.height(5, context) ),
+            child: Container(color: Colors.white,child: Mobile(type: widget.type,)),
+          ),
+          mobile: Mobile(type: widget.type,),
+        ),
+      ),
+    );
+  }
+}
+class Mobile extends StatefulWidget {
+  String type;
+
+  Mobile({this.type});
+
+  @override
+  _MobileState createState() => _MobileState();
+}
+
+class _MobileState extends State<Mobile> {
   TextEditingController _phoneController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
 
@@ -24,84 +54,78 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          padding:
-              EdgeInsets.symmetric(horizontal: Responsive.width(6.0, context)),
-          child: ListView(
-            children: [
-              SizedBox(
-                height: Responsive.height(6, context),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: Responsive.width(4.0, context)),
+      child: ListView(
+        children: [
+          SizedBox(
+            height: Responsive.height(6, context),
+          ),
+          Center(
+            child: Image.asset(
+              "assets/images/logo_side.png",
+            ),
+          ),
+          SizedBox(
+            height: Responsive.height(12.0, context),
+          ),
+          TextFormBuilder(
+            controller: _phoneController,
+            hint: "phone number",
+            keyType: TextInputType.visiblePassword,
+            errorText: _phoneError,
+          ),
+          SizedBox(
+            height: Responsive.height(3.0, context),
+          ),
+          TextFormBuilder(
+            controller: _passwordController,
+            hint: "password",
+            keyType: TextInputType.visiblePassword,
+            isPassword: true,
+            errorText: _passwordError,
+          ),
+          SizedBox(
+            height: Responsive.height(4.0, context),
+          ),
+          SizedBox(
+            height: Responsive.height(7.0, context),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: xColors.materialColor(xColors.mainColor)),
+              onPressed: () {
+                 _login(context);
+              },
+              child: Text(
+                "Login",
+                style: TextStyle(
+                    color: xColors.white,
+                    fontSize: Responsive.isMobile(context)?  Responsive.width(4.0, context) : 35,
+                    fontWeight: FontWeight.w600),
               ),
-              Center(
-                child: Image.asset(
-                  "assets/images/logo_side.png",
-                ),
-              ),
-              SizedBox(
-                height: Responsive.height(12.0, context),
-              ),
-              TextFormBuilder(
-                controller: _phoneController,
-                hint: "phone number",
-                keyType: TextInputType.visiblePassword,
-                errorText: _phoneError,
-              ),
-              SizedBox(
-                height: Responsive.height(3.0, context),
-              ),
-              TextFormBuilder(
-                controller: _passwordController,
-                hint: "password",
-                keyType: TextInputType.visiblePassword,
-                isPassword: true,
-                errorText: _passwordError,
-              ),
-              SizedBox(
-                height: Responsive.height(4.0, context),
-              ),
-              SizedBox(
-                height: Responsive.height(7.0, context),
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor:
-                          xColors.materialColor(xColors.mainColor)),
-                  onPressed: () {
-                    /* _login(context);*/
+            ),
+          ), //Spacer(),
+          SizedBox(
+            height: Responsive.height(3.0, context),
+          ),
+          widget.type == 'doctor'
+              ? SizedBox()
+              : GestureDetector(
+                  onTap: () {
+                    Provider.of<AuthManage>(context, listen: false)
+                        .toggleWidgets(currentPage: 2, type: widget.type);
                   },
-                  child: Text(
-                    "Login",
-                    style: TextStyle(
-                        color: xColors.white,
-                        fontSize: Responsive.width(4.0, context),
-                        fontWeight: FontWeight.w600),
+                  child: Center(
+                    child: Text(
+                      "signup new account",
+                      style: TextStyle(
+                          color: xColors.mainColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: Responsive.isMobile(context)? Responsive.width(4.0, context):25),
+                    ),
                   ),
                 ),
-              ), //Spacer(),
-              SizedBox(
-                height: Responsive.height(3.0, context),
-              ),
-              widget.type == 'doctor'
-                  ? SizedBox()
-                  : GestureDetector(
-                      onTap: () {
-                        Provider.of<AuthManage>(context, listen: false)
-                            .toggleWidgets(currentPage: 2, type: widget.type);
-                      },
-                      child: Center(
-                        child: Text(
-                          "signup new account",
-                          style: TextStyle(
-                              color: xColors.mainColor,
-                              fontWeight: FontWeight.w800,
-                              fontSize: Responsive.width(4.0, context)),
-                        ),
-                      ),
-                    ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }
@@ -121,6 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
           context: context,
           email: '${_phoneController.text}.${widget.type}',
           password: _passwordController.text);
+
     } else {
       setState(() {
         if (phone == null || phone.isEmpty) {

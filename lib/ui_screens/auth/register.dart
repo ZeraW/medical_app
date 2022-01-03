@@ -18,22 +18,15 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  TextEditingController _nameController = new TextEditingController();
-  TextEditingController _passwordController = new TextEditingController();
-  TextEditingController _repasswordController = new TextEditingController();
-  TextEditingController _phoneController = new TextEditingController();
-
-  String _nameError = "";
-  String _phoneError = "";
-  String _passError = "";
-  String _rePassError = "";
 
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: new AppBar(
+      backgroundColor: Responsive.isMobile(context)?Colors.white:xColors.mainColor,
+
+      appBar: Responsive.isMobile(context)?new AppBar(
           centerTitle: true,
           elevation: 0.0,
           backgroundColor: xColors.mainColor,
@@ -47,84 +40,126 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           title: Text(
             "Register",
-          )),
-      body: Container(
-        height: Responsive.height(100,context),
-        padding: EdgeInsets.symmetric(
-            vertical: Responsive.height(2,context),
-            horizontal: Responsive.width(4,context)),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Center(
-                child: Image.asset(
-                  "assets/images/logo_side.png",
+          )) : null,
+      body: Responsive(
+        tablet: Container(
+          padding:  EdgeInsets.symmetric(horizontal: Responsive.width(32, context),vertical:Responsive.height(5, context) ),
+          child: Container(color: Colors.white,child: Mobile(type: widget.type,)),
+        ),
+        desktop: Container(
+          padding:  EdgeInsets.symmetric(horizontal: Responsive.width(32, context),vertical:Responsive.height(5, context) ),
+          child: Container(color: Colors.white,child: Mobile(type: widget.type,)),
+        ),
+        mobile: Mobile(type: widget.type,),
+      ),
+    );
+  }
+
+
+}
+
+
+class Mobile extends StatefulWidget {
+  final String type;
+
+  Mobile({this.type});
+
+  @override
+  _MobileState createState() => _MobileState();
+}
+
+class _MobileState extends State<Mobile> {
+
+  TextEditingController _nameController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
+  TextEditingController _repasswordController = new TextEditingController();
+  TextEditingController _phoneController = new TextEditingController();
+
+  String _nameError = "";
+  String _phoneError = "";
+  String _passError = "";
+  String _rePassError = "";
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: Responsive.height(100,context),
+      padding: EdgeInsets.symmetric(
+          vertical: Responsive.height(2,context),
+          horizontal: Responsive.width(4,context)),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Center(
+              child: Image.asset(
+                "assets/images/logo_side.png",
+              ),
+            ),
+            SizedBox(
+              height: Responsive.isMobile(context)?Responsive.height(3.5,context):Responsive.height(7.5,context),
+            ),
+            TextFormBuilder(
+              hint: "user name",
+              controller: _nameController,
+              errorText: _nameError,
+            ),
+            SizedBox(
+              height: Responsive.height(3.0,context),
+            ),
+
+            TextFormBuilder(
+              hint: "phone number",
+              keyType: TextInputType.emailAddress,
+              controller: _phoneController,
+              errorText: _phoneError,
+            ),
+            SizedBox(
+              height: Responsive.height(3.0,context),
+            ),
+
+
+            TextFormBuilder(
+              hint: "password",
+              isPassword: true,
+              controller: _passwordController,
+              errorText: _passError,
+            ),
+            SizedBox(
+              height: Responsive.height(3.0,context),
+            ),
+            TextFormBuilder(
+              hint: "confirm password",
+              isPassword: true,
+              controller: _repasswordController,
+              errorText: _rePassError,
+            ),
+            SizedBox(
+              height: Responsive.height(5.0,context),
+            ),
+            SizedBox(
+              height: Responsive.height(7.0,context),
+              child: RaisedButton(
+                onPressed: () {
+                  _reg(context);
+                },
+                color: xColors.mainColor,
+                child: Text(
+                  "Register a new user",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: Responsive.isMobile(context)?Responsive.width(4.0,context):30,
+                      fontWeight: FontWeight.w600),
                 ),
               ),
-              SizedBox(
-                height: Responsive.height(3.5,context),
-              ),
-              TextFormBuilder(
-                hint: "user name",
-                controller: _nameController,
-                errorText: _nameError,
-              ),
-              SizedBox(
-                height: Responsive.height(3.0,context),
-              ),
-
-              TextFormBuilder(
-                hint: "phone number",
-                keyType: TextInputType.emailAddress,
-                controller: _phoneController,
-                errorText: _phoneError,
-              ),
-              SizedBox(
-                height: Responsive.height(3.0,context),
-              ),
-
-
-              TextFormBuilder(
-                hint: "password",
-                isPassword: true,
-                controller: _passwordController,
-                errorText: _passError,
-              ),
-              SizedBox(
-                height: Responsive.height(3.0,context),
-              ),
-              TextFormBuilder(
-                hint: "confirm password",
-                isPassword: true,
-                controller: _repasswordController,
-                errorText: _rePassError,
-              ),
-              SizedBox(
-                height: Responsive.height(3.0,context),
-              ),
-              SizedBox(
-                height: Responsive.height(7.0,context),
-                child: RaisedButton(
-                  onPressed: () {
-                    /*_reg(context);*/
-                  },
-                  color: xColors.mainColor,
-                  child: Text(
-                    "Register a new user",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: Responsive.width(4.0,context),
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+
 
   _reg(BuildContext context) async {
     String firstName = _nameController.text;
@@ -165,6 +200,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void clear() {
     setState(() {
       _nameError = "";
+      _phoneError = "";
       _passError = "";
       _rePassError = "";
     });

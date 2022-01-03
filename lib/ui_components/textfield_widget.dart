@@ -34,6 +34,7 @@ class TextFormBuilder extends StatelessWidget {
 
             maxLength: maxLength,
             controller: controller,
+            style: TextStyle(fontSize: Responsive.isMobile(context) ?Responsive.width(2,context):17),
             validator: (value) {
               if (value.isEmpty) {
                 return "Please Enter a valid text";
@@ -51,14 +52,14 @@ class TextFormBuilder extends StatelessWidget {
               labelText: '$hint',
               labelStyle: TextStyle(
                   color: activeBorderColor ?? xColors.mainColor,
-                  fontSize: Responsive.width(3.5,context)),
+                  fontSize: Responsive.isMobile(context) ?Responsive.width(3.5,context):17),
               hintText: "$hint",
               hintStyle: TextStyle(
                   color: activeBorderColor ?? xColors.hintColor,
-                  fontSize: Responsive.width(3.5,context)),
+                  fontSize: Responsive.isMobile(context) ?Responsive.width(3.5,context) : 17),
               contentPadding: new EdgeInsets.symmetric(
-                  vertical: Responsive.height(1.0,context),
-                  horizontal: Responsive.width(4.0,context)),
+                  vertical: Responsive.height(2.5,context),
+                  horizontal: Responsive.width(2.0,context)),
               focusedErrorBorder: new OutlineInputBorder(
                 borderSide: BorderSide(width: 1, color: xColors.mainColor),
               ),

@@ -21,17 +21,17 @@ class AuthService {
   Future signInWithEmailAndPassword({BuildContext context, String email, String password}) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+          email: '$email@opts.com', password: password);
       User user = result.user;
       return user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        Toast.show("لم يتم العثور على مستخدم", context,
+        Toast.show("No user found", context,
             backgroundColor: Colors.redAccent,
             duration: Toast.LENGTH_LONG,
             gravity: Toast.BOTTOM);
       } else if (e.code == 'wrong-password') {
-        Toast.show("كلمة مرور خاطئة", context,
+        Toast.show("wrong password", context,
             backgroundColor: Colors.redAccent,
             duration: Toast.LENGTH_LONG,
             gravity: Toast.BOTTOM);
@@ -44,7 +44,7 @@ class AuthService {
     try {
       print('XDA : ' + newUser.type);
       UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: '${newUser.userId}.${newUser.type}@mdical.com', password: newUser.password);
+          email: '${newUser.userId}.${newUser.type}@opts.com', password: newUser.password);
       print('XDA : ' + result.user.uid);
 
       User fbUser = result.user;
@@ -54,12 +54,12 @@ class AuthService {
       return _userFromFirebaseUser(fbUser);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        Toast.show("كلمة المرور المقدمة ضعيفة للغاية.", context,
+        Toast.show("Password is too week", context,
             backgroundColor: Colors.redAccent,
             duration: Toast.LENGTH_LONG,
             gravity: Toast.BOTTOM);
       } else if (e.code == 'email-already-in-use') {
-        Toast.show("الحساب موجود بالفعل", context,
+        Toast.show("Account Already exist", context,
             backgroundColor: Colors.redAccent,
             duration: Toast.LENGTH_LONG,
             gravity: Toast.BOTTOM);
@@ -70,27 +70,28 @@ class AuthService {
   }
 
 
-  Future registerWithoutLogin({BuildContext context, UserModel newUser}) async {
+
+  Future registerDocWithoutLogin({BuildContext context, DoctorModel newDoctor}) async {
     FirebaseApp app = await Firebase.initializeApp(
         name: 'Secondary', options: Firebase.app().options);
     try {
       UserCredential userCredential = await FirebaseAuth.instanceFor(app: app)
           .createUserWithEmailAndPassword(
-          email: '${newUser.userId}.${newUser.type}@tiba.com', password: newUser.password);
+          email: '${newDoctor.phone}.doctor@opts.com', password: '123456');
       User fbUser = userCredential.user;
-      newUser.id = fbUser.uid;
-      await DatabaseService().updateUserData(user: newUser);
+      newDoctor.id = fbUser.uid;
+      await DatabaseService().addDoctor(newDoctor: newDoctor);
       await app.delete();
-      Navigator.pop(context);
+      // Navigator.pop(context);
 
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        Toast.show("كلمة المرور المقدمة ضعيفة للغاية.", context,
+        Toast.show("The password provided is too weak.", context,
             backgroundColor: Colors.redAccent,
             duration: Toast.LENGTH_LONG,
             gravity: Toast.BOTTOM);
       } else if (e.code == 'email-already-in-use') {
-        Toast.show("الحساب موجود بالفعل", context,
+        Toast.show("Account already exists", context,
             backgroundColor: Colors.redAccent,
             duration: Toast.LENGTH_LONG,
             gravity: Toast.BOTTOM);
@@ -99,6 +100,7 @@ class AuthService {
       print(e);
     }
   }
+
 
   void changePassword(String password,Function() fun) async{
     if (password==null) {

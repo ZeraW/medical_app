@@ -24,17 +24,19 @@ class ChooseLoginType extends StatelessWidget {
               EdgeInsets.symmetric(horizontal: Responsive.width(4, context)),
           // change 4 to 80 if something went wrong
           //height
-          child: Column(
-            children: [
-              UserBtn(),
-              Row(
-                children: [ DoctorBtn(),AdminBtn(),],
-              ),
-            ],
+          child: Responsive(
+            mobile: Column(
+              children: [
+                UserBtn(),
+                DoctorBtn(),
+              ],
+            ),
+            desktop: AdminBtn(),
+            tablet: AdminBtn(),
           ),
         ),
         SizedBox(
-          height: Responsive.width(4, context),
+          height: Responsive.height(2, context),
         )
       ],
     ));

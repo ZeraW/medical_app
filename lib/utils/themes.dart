@@ -6,10 +6,10 @@ ThemeData appTheme() {
     primaryColor: xColors.mainColor,
     accentColor: xColors.accentColor,
     hintColor: Colors.white,
-    dividerColor: Colors.black,
+    dividerColor: Colors.grey,
     buttonColor: xColors.btnColor,
     scaffoldBackgroundColor: Colors.white,
-    canvasColor: Colors.black,
+    canvasColor: xColors.mainColor,
     cardColor: Colors.white,
     textTheme: TextTheme(
       headline6: TextStyle(

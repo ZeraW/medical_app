@@ -1,1 +1,1 @@
-enum AdminPages { student, schedule, result }
+enum AdminPages { city, speciality, doctors , locations,reports }

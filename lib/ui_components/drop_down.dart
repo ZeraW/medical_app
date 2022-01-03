@@ -20,7 +20,7 @@ class DropDownStringList extends StatelessWidget {
         Container(
           width: double.maxFinite,
           height: enableBorder ?null:Responsive.height(3.5,context),
-          padding: enableBorder ?EdgeInsets.symmetric(horizontal: Responsive.width(2,context)):null,
+          padding: enableBorder ?EdgeInsets.symmetric(horizontal: Responsive.width(2,context),vertical: 1):null,
           decoration: BoxDecoration(
             border: enableBorder ?Border.all(color: Colors.black54, style: BorderStyle.solid):null,
             borderRadius: enableBorder ?BorderRadius.circular(4):null,
@@ -35,14 +35,12 @@ class DropDownStringList extends StatelessWidget {
               isExpanded: true,
               underline: SizedBox(),
               icon: Icon(Icons.keyboard_arrow_down,color: xColors.mainColor,),
-              hint: Center(
-                child: Text(
-                  selectedItem != null
-                      ? '$hint: $selectedItem'
-                      : 'Choose $hint',
-                  style: TextStyle(
-                      color:  xColors.mainColor,fontSize: Responsive.width(4,context)),
-                ),
+              hint: Text(
+                selectedItem != null
+                    ? '$hint : $selectedItem'
+                    : 'Choose $hint',
+                style: TextStyle(
+                    color:  xColors.mainColor,fontSize: Responsive.isMobile(context)?Responsive.width(4,context):17),
               ),
               onChanged: onChange),
         ),
@@ -53,17 +51,16 @@ class DropDownStringList extends StatelessWidget {
     );
   }
 }
-/*
 
 
-class DropDownCityList extends StatelessWidget {
-  final CityModel selectedItem;
-  final List<CityModel> mList;
+class DropDownDynamicList extends StatelessWidget {
+  final dynamic selectedItem;
+  final List<dynamic> mList;
   final Function onChange;
   final String hint;
   final String errorText;
 
-  DropDownCityList(
+  DropDownDynamicList(
       {this.selectedItem, this.mList,this.hint, this.onChange, this.errorText});
 
   @override
@@ -73,26 +70,28 @@ class DropDownCityList extends StatelessWidget {
       children: [
         Container(
           width: double.maxFinite,
-          padding: EdgeInsets.symmetric(horizontal: Dimensions.getWidth(2)),
+          padding: EdgeInsets.symmetric(horizontal: Responsive.width(2,context),vertical: 1),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.black54, style: BorderStyle.solid),
             borderRadius: BorderRadius.circular(4),
           ),
-          child: new DropdownButton<CityModel>(
-              items: mList.map((CityModel value) {
-                return new DropdownMenuItem<CityModel>(
+          child: new DropdownButton<dynamic>(
+              items: mList.map((dynamic value) {
+                return new DropdownMenuItem<dynamic>(
                   value: value,
                   child: new Text('${value.name}'),
                 );
               }).toList(),
               isExpanded: true,
               underline: SizedBox(),
+              icon: Icon(Icons.keyboard_arrow_down,color: xColors.mainColor,),
+
               hint: Text(
                 selectedItem != null
-                    ? '$hint: ${selectedItem.name}'
+                    ? '$hint : ${selectedItem.name}'
                     : 'Choose $hint',
                 style: TextStyle(
-                    color:  Uti().mainColor,fontSize: Dimensions.getWidth(4)),
+                    color:  xColors.mainColor,fontSize: Responsive.isMobile(context)?Responsive.width(4,context):17),
               ),
               onChanged: onChange),
         ),
@@ -103,6 +102,12 @@ class DropDownCityList extends StatelessWidget {
     );
   }
 }
+
+
+/*
+
+
+
 
 class DropDownClassList extends StatelessWidget {
   final ClassModel selectedItem;

@@ -11,11 +11,20 @@ class DatabaseService {
   // Users collection reference
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('Users');
+  final CollectionReference citiesCollection =
+  FirebaseFirestore.instance.collection('Cities');
 
-/////////////////////////////////// User ///////////////////////////////////
+  final CollectionReference specialityCollection =
+  FirebaseFirestore.instance.collection('Speciality');
+
+  final CollectionReference doctorsCollection =
+  FirebaseFirestore.instance.collection('Doctors');
+
+  final CollectionReference sosCollection =
+  FirebaseFirestore.instance.collection('SOS');
+
+  // --------------------- User --------------------- //
   //get my user
-
-
   Stream<UserModel> get getUserById {
     return userCollection
         .doc(FirebaseAuth.instance.currentUser.uid)
@@ -23,6 +32,12 @@ class DatabaseService {
         .map((event) => UserModel.fromJson(event.data()));
   }
 
+  Stream<UserModel>  getUser(String id) {
+    return userCollection
+        .doc(id)
+        .snapshots()
+        .map((event) => UserModel.fromJson(event.data()));
+  }
   Stream<List<UserModel>> getLiveUsers(int depart, int level) {
     return userCollection
         .where('keyWords.department', isEqualTo: depart)
@@ -82,7 +97,7 @@ task.snapshotEvents.listen((firebase_storage.TaskSnapshot snapshot) {
       //update image
       await task;
       String url = await FirebaseStorage.instance
-          .ref('images/${id}.png')
+          .ref('images/$id.png')
           .getDownloadURL();
 
       return url;
@@ -97,8 +112,112 @@ task.snapshotEvents.listen((firebase_storage.TaskSnapshot snapshot) {
   Future<void> updateUserData({UserModel user}) async {
     return await userCollection.doc(user.id).set(user.toJson());
   }
-  
-/////////////////////////////////// User ///////////////////////////////////
 
+  // --------------------- User --------------------- //
+
+
+  /// --------------------- City --------------------- ///
+  //add new City
+  Future addCity({CityModel newCity}) async {
+    var ref = citiesCollection.doc();
+    newCity.id = ref.id;
+    return await ref.set(newCity.toJson());
+  }
+
+  //update existing City
+  Future updateCity({CityModel updatedCity}) async {
+    return await citiesCollection
+        .doc(updatedCity.id.toString())
+        .update(updatedCity.toJson());
+  }
+
+  //delete existing City
+  Future deleteCity({CityModel deleteCity}) async {
+    return await citiesCollection.doc(deleteCity.id.toString()).delete();
+  }
+
+  // stream for live City
+  Stream<List<CityModel>> get getLiveCities {
+    return citiesCollection.snapshots().map(CityModel().fromQuery);
+  }
+
+  /// --------------------- City --------------------- ///
+
+  // --------------------- Spec --------------------- //
+
+  //add new Spec
+  Future addSpeciality({SpecialityModel newSpeciality}) async {
+    var ref = specialityCollection.doc();
+    newSpeciality.id = ref.id;
+    return await ref.set(newSpeciality.toJson());
+  }
+
+  //update existing Spec
+  Future updateSpeciality({SpecialityModel updatedSpeciality}) async {
+    return await specialityCollection
+        .doc(updatedSpeciality.id.toString())
+        .update(updatedSpeciality.toJson());
+  }
+
+  //delete existing Spec
+  Future deleteSpeciality({SpecialityModel deleteSpeciality}) async {
+    return await specialityCollection.doc(deleteSpeciality.id.toString()).delete();
+  }
+
+  // stream for live Spec
+  Stream<List<SpecialityModel>> get getLiveSpeciality {
+    return specialityCollection.snapshots().map(SpecialityModel().fromQuery);
+  }
+
+  // --------------------- Spec --------------------- //
+
+
+  /// --------------------- Doctor --------------------- ///
+  //add new Doctor
+  Future addDoctor({DoctorModel newDoctor}) async {
+    var ref = doctorsCollection.doc();
+    newDoctor.id = ref.id;
+    return await ref.set(newDoctor.toJson());
+  }
+
+  //update existing Doctor
+  Future updateDoctor({DoctorModel updatedDoctor}) async {
+    return await doctorsCollection
+        .doc(updatedDoctor.id.toString())
+        .update(updatedDoctor.toJson());
+  }
+
+  //delete existing Doctor
+  Future deleteDoctor({DoctorModel deleteDoctor}) async {
+    return await doctorsCollection.doc(deleteDoctor.id.toString()).delete();
+  }
+
+  // stream for live Doctor
+  Stream<List<DoctorModel>> get getLiveDoctor {
+    return doctorsCollection.snapshots().map(DoctorModel().fromQuery);
+  }
+
+  /// --------------------- Doctor --------------------- ///
+
+
+  // --------------------- Help --------------------- //
+  //add new Doctor
+  Future addSOS({HelpModel newSOS}) async {
+    var ref = sosCollection.doc();
+    newSOS.id = ref.id;
+    return await ref.set(newSOS.toJson());
+  }
+
+  //delete existing Doctor
+  Future deleteSOS({HelpModel newSOS}) async {
+    return await sosCollection.doc(newSOS.id.toString()).delete();
+  }
+
+  // stream for live Doctor
+  Stream<List<HelpModel>> getLiveLocations(bool isNew) {
+    return sosCollection.where('isSolved',isEqualTo: isNew).orderBy('time',descending: true).snapshots().map(HelpModel().fromQuery);
+  }
+
+  // --------------------- Help --------------------- //
 
 }
