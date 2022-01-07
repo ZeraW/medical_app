@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         ProxyProvider0(update: (_, __) => DatabaseService().getUserById )
       ],
       child: MaterialApp(
-        title: 'Hakimak',
+        title: 'OPTS',
         builder: BotToastInit(),
         navigatorObservers: [BotToastNavigatorObserver()],
         debugShowCheckedModeBanner: false,

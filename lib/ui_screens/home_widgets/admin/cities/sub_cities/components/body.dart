@@ -2,55 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:medical_app/models/db_model.dart';
 import 'package:medical_app/provider/admin_manage.dart';
 import 'package:medical_app/services/database_api.dart';
-import 'package:medical_app/ui_screens/home_widgets/admin/cities/components/add_edit_cities.dart';
+import 'package:medical_app/ui_components/dialogs.dart';
 import 'package:medical_app/utils/colors.dart';
 import 'package:medical_app/utils/dimensions.dart';
+import 'package:medical_app/utils/font_size.dart';
 import 'package:provider/provider.dart';
 
 class CityCard extends StatelessWidget {
-  CityModel city;
+  SubCityModel city;
   Function edit, delete;
 
   CityCard({this.city, this.edit, this.delete});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 150,
-      height: 80,
+    return IntrinsicWidth(
       child: Card(
         elevation: 2,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Stack(
-            children: [
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child:
-                      SelectableText('${city.name}', style: TextStyle(fontSize: 16))),
-              Align(
-                alignment: Alignment.topRight,
-                child: DropdownButton<String>(
-                  icon: Icon(Icons.more_horiz),
-                  underline: Container(
-                    height: 1,
-                    color: Colors.transparent,
-                  ),
-                  items: <String>['Edit', 'Delete'].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (v) async{
-                    if(v=='Edit'){
-                      context.read<CityManage>().showEditScreen(city);
-                    }else if (v=='Delete'){
-                      await DatabaseService().deleteCity(deleteCity: city);
+          child: Row(
+              children: [
+          Text('${city.name}', style: TextStyle(fontSize: 15)),
+          DropdownButton<String>(
+            icon: Icon(Icons.more_vert,size: 15,),
+            underline: SizedBox(),
+            items: <String>['Edit', 'Delete'].map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (v) async {
+                    if (v == 'Edit') {
+                      context.read<SubCityManage>().hideEditScreen();
+                      Future.delayed(Duration(milliseconds: 25), () {
+                        context.read<SubCityManage>().showEditScreen(city);
+                      });
+                    } else if (v == 'Delete') {
+                      showDeleteDialog(
+                          context: context,
+                          yes: () async {
+                            context.read<SubCityManage>().hideEditScreen();
+                            await DatabaseService()
+                                .deleteSubCity(deleteCity: city)
+                                .then((value) =>
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop('dialog'));
+                          });
                     }
                   },
                 ),
-              ),
             ],
           ),
         ),
@@ -60,9 +62,10 @@ class CityCard extends StatelessWidget {
 }
 
 class Body extends StatelessWidget {
-  final List<CityModel> mList;
+  final List<SubCityModel> mList;
+  String mainCityId;
 
-  Body(this.mList);
+  Body(this.mainCityId, this.mList);
 
   @override
   Widget build(BuildContext context) {
@@ -82,23 +85,11 @@ class Body extends StatelessWidget {
                     Spacer(),
                     ElevatedButton(
                       onPressed: () {
-                        context.read<CityManage>().showAddScreen();
+                        context.read<SubCityManage>().showAddScreen(mainCityId);
                       },
                       child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          children: [
-                            Icon(Icons.add),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text('Add City',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white)),
-                          ],
-                        ),
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(Icons.add),
                       ),
                       style: ButtonStyle(
                           backgroundColor:
@@ -114,8 +105,7 @@ class Body extends StatelessWidget {
                               children: mList
                                   .map((item) => CityCard(
                                         city: item,
-                                        edit: () async {
-                                        },
+                                        edit: () async {},
                                       ))
                                   .toList()
                                   .cast<Widget>(),

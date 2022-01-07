@@ -8,17 +8,16 @@ import 'package:medical_app/utils/dimensions.dart';
 import 'package:medical_app/utils/font_size.dart';
 import 'package:provider/provider.dart';
 
-
-class AddScreen extends StatefulWidget {
-
-
+class AddSubCitiesScreen extends StatefulWidget {
   @override
-  _AddScreenState createState() => _AddScreenState();
+  _AddSubCitiesScreenState createState() => _AddSubCitiesScreenState();
 }
-class _AddScreenState extends State<AddScreen> {
-  TextEditingController _nameController = new TextEditingController();
-  List<SpecialityModel>mList;
-  String _nameError = "";
+
+class _AddSubCitiesScreenState extends State<AddSubCitiesScreen> {
+  TextEditingController _cityNameController = new TextEditingController();
+  List<SubCityModel> mList;
+
+  String _cityNameError = "";
 
   @override
   void initState() {
@@ -27,12 +26,12 @@ class _AddScreenState extends State<AddScreen> {
 
   @override
   Widget build(BuildContext context) {
-    mList = Provider.of<List<SpecialityModel>>(context);
+    mList = Provider.of<List<SubCityModel>>(context);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
         child: Card(
           child: Padding(
             padding: EdgeInsets.all(10.0),
@@ -40,30 +39,27 @@ class _AddScreenState extends State<AddScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: Responsive.height(1,context),
+                  height: Responsive.height(1, context),
                 ),
-
                 SelectableText(
-                  'Add Speciality',
+                  'Add Area',
                   style: TextStyle(
                       color: Colors.black26,
                       fontSize:  Dim.addScreenTitle,
                       fontWeight: FontWeight.w600),
                 ),
-
                 SizedBox(
-                  height: Responsive.height(2,context),
+                  height: Responsive.height(2, context),
                 ),
                 TextFormBuilder(
-                  hint: "Speciality Name",
+                  hint: "Area Name",
                   keyType: TextInputType.text,
-                  controller: _nameController,
-                  errorText: _nameError,
+                  controller: _cityNameController,
+                  errorText: _cityNameError,
                   activeBorderColor: xColors.mainColor,
-
                 ),
                 SizedBox(
-                  height: Responsive.height(3,context),
+                  height: Responsive.height(3, context),
                 ),
                 Align(
                   alignment: Alignment.centerRight,
@@ -74,7 +70,7 @@ class _AddScreenState extends State<AddScreen> {
                     color: xColors.mainColor,
                     padding: EdgeInsets.all(15),
                     child: Text(
-                      'Add Speciality',
+                      'Add Area',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 15,
@@ -91,61 +87,69 @@ class _AddScreenState extends State<AddScreen> {
   }
 
   void _apiRequest() async {
-    String name = _nameController.text;
-    if (name == null || name.isEmpty) {
+    String cityName = _cityNameController.text;
+    if (cityName == null || cityName.isEmpty) {
       clear();
       setState(() {
-        _nameError = "Please enter Speciality Name";
+        _cityNameError = "Please enter Area Name";
       });
-    }else if (!name.contains(new  RegExp('^[a-zA-Z]+\$'))) {
+    } else if (!cityName.contains(new RegExp('^[a-zA-Z]+\$'))) {
       clear();
       setState(() {
-        _nameError = "Use only letters from a-z";
+        _cityNameError = "Use only letters from a-z";
       });
-    }else if ((mList.singleWhere((it) => it.name == name, orElse: () => null)) != null) {
+    } else if ((mList.singleWhere((it) => it.name == cityName,
+            orElse: () => null)) !=
+        null) {
       clear();
       setState(() {
-        _nameError = "Speciality Exist";
+        _cityNameError = "Area Exist";
       });
     } else {
       clear();
       //do request
-      SpecialityModel newModel = SpecialityModel(name: name);
-      await DatabaseService().addSpeciality(newSpeciality: newModel);
 
-      context.read<SpecManage>().hideAddScreen();
+      if(context.read<SubCityManage>().currentCity!=null ){
+        SubCityModel newSubCity = SubCityModel(
+            name: cityName,
+            mainCityId: context.read<SubCityManage>().currentCity);
+        await DatabaseService().addSubCity(newCity: newSubCity);
+
+        context.read<SubCityManage>().hideAddScreen();
+      }
     }
   }
 
   void clear() {
     setState(() {
-      _nameError = "";
+      _cityNameError = "";
     });
   }
 }
 
-
-class EditScreen extends StatefulWidget {
-  EditScreen();
+class EditSubCitiesScreen extends StatefulWidget {
+  EditSubCitiesScreen();
 
   @override
-  _EditScreenState createState() => _EditScreenState();
+  _EditSubCitiesScreenState createState() => _EditSubCitiesScreenState();
 }
-class _EditScreenState extends State<EditScreen> {
-  TextEditingController _nameController = new TextEditingController();
-  String _nameError = "";
-  List<SpecialityModel>mList;
+
+class _EditSubCitiesScreenState extends State<EditSubCitiesScreen> {
+  TextEditingController _cityNameController = new TextEditingController();
+  String _cityNameError = "";
+  List<SubCityModel> mList;
+
   @override
   Widget build(BuildContext context) {
-    if(_nameController.text==null || _nameController.text.isEmpty)
-    _nameController.text = context.watch<SpecManage>().model.name.toString();
+    mList = Provider.of<List<SubCityModel>>(context);
 
-    mList = Provider.of<List<SpecialityModel>>(context);
+    if(_cityNameController.text==null || _cityNameController.text.isEmpty)
+      _cityNameController.text = context.watch<SubCityManage>().city.name.toString();
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
         child: Card(
           child: Padding(
             padding: EdgeInsets.all(10.0),
@@ -153,32 +157,28 @@ class _EditScreenState extends State<EditScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(
-                  height: Responsive.height(1,context),
+                  height: Responsive.height(1, context),
                 ),
-
                 SelectableText(
-                  'Edit Speciality',
+                  'Edit Area',
                   style: TextStyle(
                       color: Colors.black26,
                       fontSize:  Dim.addScreenTitle,
                       fontWeight: FontWeight.w600),
                 ),
-
                 SizedBox(
-                  height: Responsive.height(2,context),
+                  height: Responsive.height(2, context),
                 ),
                 TextFormBuilder(
-                  hint: "City Speciality",
+                  hint: "Area Name",
                   keyType: TextInputType.text,
-                  controller: _nameController,
-                  errorText: _nameError,
+                  controller: _cityNameController,
+                  errorText: _cityNameError,
                   activeBorderColor: xColors.mainColor,
-
                 ),
                 SizedBox(
-                  height: Responsive.height(3,context),
+                  height: Responsive.height(3, context),
                 ),
-
                 Align(
                   alignment: Alignment.centerRight,
                   child: RaisedButton(
@@ -188,7 +188,7 @@ class _EditScreenState extends State<EditScreen> {
                     color: xColors.mainColor,
                     padding: EdgeInsets.all(15),
                     child: Text(
-                      'Edit Speciality',
+                      'Edit Area',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 15,
@@ -205,34 +205,40 @@ class _EditScreenState extends State<EditScreen> {
   }
 
   void _apiRequest() async {
-    String name = _nameController.text;
+    String cityName = _cityNameController.text;
 
-     if (name == null || name.isEmpty) {
+    if (cityName == null || cityName.isEmpty) {
       clear();
       setState(() {
-        _nameError = "Please enter Speciality Name";
+        _cityNameError = "Please enter Area Name";
       });
-    } if ((mList.singleWhere((it) => it.name == name, orElse: () => null)) != null) {
+    } else if (!cityName.contains(new RegExp('^[a-zA-Z]+\$'))) {
       clear();
       setState(() {
-        _nameError = "Speciality Exist";
+        _cityNameError = "Use only letters from a-z";
       });
-    }else {
+    } else if ((mList.singleWhere((it) => it.name == cityName,
+            orElse: () => null)) !=
+        null) {
+      clear();
+      setState(() {
+        _cityNameError = "Area Exist";
+      });
+    } else {
       clear();
       //do request
-      SpecialityModel newModel = SpecialityModel(id:context.read<SpecManage>().model.id,name: name);
-      await DatabaseService().updateSpeciality(updatedSpeciality: newModel);
-      context.read<SpecManage>().hideEditScreen();
-
+      SubCityModel newSubCity = SubCityModel(
+          id: context.read<SubCityManage>().city.id,
+          mainCityId: context.read<SubCityManage>().city.mainCityId,
+          name: cityName);
+      await DatabaseService().updateSubCity(updatedCity: newSubCity);
+      context.read<SubCityManage>().hideEditScreen();
     }
   }
 
   void clear() {
     setState(() {
-      _nameError = "";
+      _cityNameError = "";
     });
   }
 }
-
-
-

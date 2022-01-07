@@ -120,18 +120,16 @@ class _MobileState extends State<Mobile> {
             ),
 
 
-            TextFormBuilder(
+            PasswordFieldWidget(
               hint: "password",
-              isPassword: true,
               controller: _passwordController,
               errorText: _passError,
             ),
             SizedBox(
               height: Responsive.height(3.0,context),
             ),
-            TextFormBuilder(
+            PasswordFieldWidget(
               hint: "confirm password",
-              isPassword: true,
               controller: _repasswordController,
               errorText: _rePassError,
             ),
@@ -149,7 +147,7 @@ class _MobileState extends State<Mobile> {
                   "Register a new user",
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: Responsive.isMobile(context)?Responsive.width(4.0,context):30,
+                      fontSize: Responsive.isMobile(context)?Responsive.width(4.0,context):25,
                       fontWeight: FontWeight.w600),
                 ),
               ),

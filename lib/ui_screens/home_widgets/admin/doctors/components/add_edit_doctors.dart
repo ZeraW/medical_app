@@ -7,6 +7,7 @@ import 'package:medical_app/ui_components/drop_down.dart';
 import 'package:medical_app/ui_components/textfield_widget.dart';
 import 'package:medical_app/utils/colors.dart';
 import 'package:medical_app/utils/dimensions.dart';
+import 'package:medical_app/utils/font_size.dart';
 import 'package:provider/provider.dart';
 
 class AddDScreen extends StatefulWidget {
@@ -17,12 +18,19 @@ class AddDScreen extends StatefulWidget {
 class _AddDScreenState extends State<AddDScreen> {
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _phoneController = new TextEditingController();
+  TextEditingController _addressController = new TextEditingController();
+
   SpecialityModel selectedSpeciality;
+  SubCityModel selectedSubCity;
+
   CityModel selectedCity;
   String gender;
 
   String _nameError = "";
+  String _addressError = "";
   String _phoneError = "";
+
+  String _subCityError = "";
   String _genderError = "";
   String _cityError = "";
   String _specialtyError = "";
@@ -53,11 +61,11 @@ class _AddDScreenState extends State<AddDScreen> {
                   SizedBox(
                     height: Responsive.height(1, context),
                   ),
-                  Text(
+                  SelectableText(
                     'Add Doctor',
                     style: TextStyle(
                         color: Colors.black26,
-                        fontSize: 20,
+                        fontSize:  Dim.addScreenTitle,
                         fontWeight: FontWeight.w600),
                   ),
                   SizedBox(
@@ -78,6 +86,16 @@ class _AddDScreenState extends State<AddDScreen> {
                     keyType: TextInputType.phone,
                     controller: _phoneController,
                     errorText: _phoneError,
+                    activeBorderColor: xColors.mainColor,
+                  ),
+                  SizedBox(
+                    height: Responsive.height(3, context),
+                  ),
+                  TextFormBuilder(
+                    hint: "Address",
+                    keyType: TextInputType.text,
+                    controller: _addressController,
+                    errorText: _addressError,
                     activeBorderColor: xColors.mainColor,
                   ),
                   SizedBox(
@@ -105,13 +123,43 @@ class _AddDScreenState extends State<AddDScreen> {
                           selectedItem: selectedCity,
                           hint: "City",
                           onChange: (dynamic value) {
+                            context
+                                .read<DoctorManage>()
+                                .changeCurrentCity(value.id);
+
                             setState(() {
                               selectedCity = value;
+                              selectedSubCity = null;
                             });
                           })
                       : SizedBox(),
                   SizedBox(
                     height: Responsive.height(3, context),
+                  ),
+                  selectedCity != null
+                      ? StreamBuilder<List<SubCityModel>>(
+                          stream: DatabaseService()
+                              .getLiveSubCities(selectedCity.id),
+                          builder: (context, snapshot) {
+                            List<SubCityModel> mSubCityList = snapshot.data;
+
+                            return mSubCityList != null
+                                ? DropDownDynamicList(
+                                    mList: mSubCityList,
+                                    errorText: _subCityError,
+                                    selectedItem: selectedSubCity,
+                                    hint: "Area",
+                                    onChange: (dynamic value) {
+                                      setState(() {
+                                        selectedSubCity = value;
+                                      });
+                                    })
+                                : SizedBox();
+                          })
+                      : SizedBox(),
+                  SizedBox(
+                    height: Responsive.height(
+                        selectedCity != null ? 3 : 0, context),
                   ),
                   DropDownStringList(
                     hint: 'Gender',
@@ -156,8 +204,11 @@ class _AddDScreenState extends State<AddDScreen> {
   void _apiRequest() async {
     String name = _nameController.text;
     String phone = _phoneController.text;
+    String address = _addressController.text;
+
     String spec = selectedSpeciality.id;
     String city = selectedCity.id;
+    String subCity = selectedSubCity.id;
 
     if (name == null || name.isEmpty) {
       clear();
@@ -169,6 +220,11 @@ class _AddDScreenState extends State<AddDScreen> {
       setState(() {
         _phoneError = "Please enter Phone Number";
       });
+    } else if (address == null || address.isEmpty) {
+      clear();
+      setState(() {
+        _phoneError = "Please enter street address";
+      });
     } else if (spec == null || spec.isEmpty) {
       clear();
       setState(() {
@@ -178,6 +234,11 @@ class _AddDScreenState extends State<AddDScreen> {
       clear();
       setState(() {
         _cityError = "Please Select City";
+      });
+    } else if (subCity == null || subCity.isEmpty) {
+      clear();
+      setState(() {
+        _subCityError = "Please Select Area";
       });
     } else if (gender == null || gender.isEmpty) {
       clear();
@@ -192,9 +253,12 @@ class _AddDScreenState extends State<AddDScreen> {
           specialty: spec,
           phone: phone,
           gender: gender,
+          subCity: subCity,
+          address: address,
           city: city);
 
-      await AuthService().registerDocWithoutLogin(context: context,newDoctor: newModel);
+      await AuthService()
+          .registerDocWithoutLogin(context: context, newDoctor: newModel);
       context.read<DoctorManage>().hideAddScreen();
     }
   }
@@ -206,6 +270,7 @@ class _AddDScreenState extends State<AddDScreen> {
       _genderError = "";
       _cityError = "";
       _specialtyError = "";
+      _addressError = "";
     });
   }
 }
@@ -220,15 +285,21 @@ class EditDScreen extends StatefulWidget {
 class _EditDScreenState extends State<EditDScreen> {
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _phoneController = new TextEditingController();
+  TextEditingController _addressController = new TextEditingController();
+
   SpecialityModel selectedSpeciality;
   CityModel selectedCity;
+  SubCityModel selectedSubCity;
+
   String gender;
   String id;
 
   String _nameError = "";
+  String _addressError = "";
   String _phoneError = "";
   String _genderError = "";
   String _cityError = "";
+  String _subCityError = "";
   String _specialtyError = "";
 
   @override
@@ -236,21 +307,24 @@ class _EditDScreenState extends State<EditDScreen> {
     List<CityModel> mCityList = Provider.of<List<CityModel>>(context);
     List<SpecialityModel> mSpecList =
         Provider.of<List<SpecialityModel>>(context);
-
     if (_nameController.text == null || _nameController.text.isEmpty)
       _nameController.text =
           context.watch<DoctorManage>().model.name.toString();
+    if (_addressController.text == null || _addressController.text.isEmpty)
+      _addressController.text =
+          context.watch<DoctorManage>().model.address.toString();
+
     id = context.watch<DoctorManage>().model.id.toString();
     if (_phoneController.text == null || _phoneController.text.isEmpty)
       _phoneController.text =
           context.watch<DoctorManage>().model.phone.toString();
-    if (selectedSpeciality == null)
+    if (mSpecList != null && selectedSpeciality == null)
       selectedSpeciality = mSpecList.firstWhere((element) =>
-          element.id == context.watch<DoctorManage>().model.specialty);
-    if (selectedCity == null)
+          element.id == context.watch<DoctorManage>().model.specialty,orElse: ()=>SpecialityModel(id: 'null',name: 'Removed'));
+    if (mCityList != null && selectedCity == null)
       selectedCity = mCityList.firstWhere(
-          (element) => element.id == context.watch<DoctorManage>().model.city);
-    if (gender == null || gender.isEmpty)
+          (element) => element.id == context.watch<DoctorManage>().model.city,orElse: ()=>CityModel(id: 'null',name: 'Removed'));
+    if (gender == null)
       gender = context.watch<DoctorManage>().model.gender.toString();
 
     return Scaffold(
@@ -268,11 +342,11 @@ class _EditDScreenState extends State<EditDScreen> {
                   SizedBox(
                     height: Responsive.height(1, context),
                   ),
-                  Text(
+                  SelectableText(
                     'Edit Doctor',
                     style: TextStyle(
                         color: Colors.black26,
-                        fontSize: 20,
+                        fontSize:  Dim.addScreenTitle,
                         fontWeight: FontWeight.w600),
                   ),
                   SizedBox(
@@ -294,6 +368,16 @@ class _EditDScreenState extends State<EditDScreen> {
                     controller: _phoneController,
                     enabled: false,
                     errorText: _phoneError,
+                    activeBorderColor: xColors.mainColor,
+                  ),
+                  SizedBox(
+                    height: Responsive.height(3, context),
+                  ),
+                  TextFormBuilder(
+                    hint: "Address",
+                    keyType: TextInputType.streetAddress,
+                    controller: _addressController,
+                    errorText: _addressError,
                     activeBorderColor: xColors.mainColor,
                   ),
                   SizedBox(
@@ -323,11 +407,51 @@ class _EditDScreenState extends State<EditDScreen> {
                           onChange: (dynamic value) {
                             setState(() {
                               selectedCity = value;
+                              selectedSubCity = null;
+
                             });
                           })
                       : SizedBox(),
                   SizedBox(
                     height: Responsive.height(3, context),
+                  ),
+                  selectedCity != null
+                      ? StreamBuilder<List<SubCityModel>>(
+                          stream: DatabaseService()
+                              .getLiveSubCities(selectedCity.id),
+                          builder: (context, snapshot) {
+                            List<SubCityModel> mSubCityList = snapshot.data;
+
+                            if (mSubCityList != null) {
+                              SubCityModel oldSubCity = mSubCityList.firstWhere(
+                                  (element) =>
+                                      element.id ==
+                                      context
+                                          .read<DoctorManage>()
+                                          .model
+                                          .subCity,orElse: ()=>SubCityModel(id: 'null',name: 'Removed'));
+
+                              if(selectedSubCity ==null && oldSubCity.mainCityId == selectedCity.id){
+                                selectedSubCity = oldSubCity;
+                              }
+                            }
+                            return mSubCityList != null
+                                ? DropDownDynamicList(
+                                    mList: mSubCityList,
+                                    errorText: _subCityError,
+                                    selectedItem: selectedSubCity,
+                                    hint: "Area",
+                                    onChange: (dynamic value) {
+                                      setState(() {
+                                        selectedSubCity = value;
+                                      });
+                                    })
+                                : SizedBox();
+                          })
+                      : SizedBox(),
+                  SizedBox(
+                    height: Responsive.height(
+                        selectedCity != null ? 3 : 0, context),
                   ),
                   DropDownStringList(
                     hint: 'Gender',
@@ -372,8 +496,11 @@ class _EditDScreenState extends State<EditDScreen> {
   void _apiRequest() async {
     String name = _nameController.text;
     String phone = _phoneController.text;
+    String address = _addressController.text;
+
     String spec = selectedSpeciality.id;
     String city = selectedCity.id;
+    String subCity = selectedSubCity.id;
 
     if (name == null || name.isEmpty) {
       clear();
@@ -385,6 +512,11 @@ class _EditDScreenState extends State<EditDScreen> {
       setState(() {
         _phoneError = "Please enter Phone Number";
       });
+    } else if (address == null || address.isEmpty) {
+      clear();
+      setState(() {
+        _phoneError = "Please enter street address";
+      });
     } else if (spec == null || spec.isEmpty) {
       clear();
       setState(() {
@@ -394,6 +526,11 @@ class _EditDScreenState extends State<EditDScreen> {
       clear();
       setState(() {
         _cityError = "Please Select City";
+      });
+    } else if (subCity == null || subCity.isEmpty) {
+      clear();
+      setState(() {
+        _subCityError = "Please Select Area";
       });
     } else if (gender == null || gender.isEmpty) {
       clear();
@@ -409,6 +546,8 @@ class _EditDScreenState extends State<EditDScreen> {
           specialty: spec,
           phone: phone,
           gender: gender,
+          address: address,
+          subCity: subCity,
           city: city);
       await DatabaseService().updateDoctor(updatedDoctor: newModel);
       context.read<DoctorManage>().hideEditScreen();
@@ -422,6 +561,7 @@ class _EditDScreenState extends State<EditDScreen> {
       _genderError = "";
       _cityError = "";
       _specialtyError = "";
+      _addressError = "";
     });
   }
 }

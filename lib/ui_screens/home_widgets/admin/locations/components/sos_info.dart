@@ -32,11 +32,11 @@ class SosInfo extends StatelessWidget {
                       ),
                       Column(
                         children: [
-                          Text(
+                          SelectableText(
                             'User Name',
                             style: TextStyle(fontSize: 27),
                           ),
-                          Text(
+                          SelectableText(
                             'Aage 65 yr',
                             style: TextStyle(fontSize: 17),
                           ),
@@ -100,12 +100,13 @@ class SosInfo extends StatelessWidget {
                               SizedBox(height: 10,),
 
                               ListTile(
+                                onTap: (){},
                                 leading: Icon(
                                   Icons.location_on_sharp,
                                   size: 25,
                                   color: Colors.black,
                                 ),
-                                title: SelectableText(
+                                title: Text(
                                   'Current User Location',
                                   style: TextStyle(color: Colors.blueAccent,decoration: TextDecoration.underline,fontSize: 15),
                                 ),

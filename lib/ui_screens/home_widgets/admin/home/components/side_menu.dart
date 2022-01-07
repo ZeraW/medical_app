@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medical_app/navigation_service.dart';
 import 'package:medical_app/provider/admin_manage.dart';
 import 'package:medical_app/utils/enums.dart';
 import 'package:provider/provider.dart';
@@ -8,44 +9,49 @@ class SideMenu extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
+  
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
         children: [
-          DrawerHeader(
-            child: Image.asset("assets/images/logo.png"),
-          ),
+          SizedBox(height: 15,),
+          Image.asset("assets/images/logo.png",width: 135,height: 135,),
+          SizedBox(height: 25,),
           DrawerListTile(
             title: "Cities",
             press: () {
-              context.read<AdminManage>().toggleWidgets(page: AdminPages.city);
+              NavigationService2.instance.pushReplacement('ManageCitiesScreen');
+              context.read<AdminManage>().changeAppBarTitle(title: 'Manage Cities');
             },
           ),
           DrawerListTile(
             title: "Specialities",
             press: () {
-              context.read<AdminManage>().toggleWidgets(page: AdminPages.speciality);
-            },
+              NavigationService2.instance.pushReplacement('ManageSpecScreen');
+              context.read<AdminManage>().changeAppBarTitle(title: 'Manage Specialities');
+              },
           ),
           DrawerListTile(
             title: "Doctors",
             press: () {
-              context.read<AdminManage>().toggleWidgets(page: AdminPages.doctors);
-            },
+              NavigationService2.instance.pushReplacement('ManageDoctorsScreen');
+              context.read<AdminManage>().changeAppBarTitle(title: 'Manage Doctors');
+              },
           ),
           DrawerListTile(
             title: "User Location",
             press: () {
-              context.read<AdminManage>().toggleWidgets(page: AdminPages.locations);
+              NavigationService2.instance.pushReplacement('ManageLocationsScreen');
+              context.read<AdminManage>().changeAppBarTitle(title: 'Manage Locations');
 
             },
           ),
           DrawerListTile(
             title: "Reports",
             press: () {
-              context.read<AdminManage>().toggleWidgets(page: AdminPages.reports);
-
+              NavigationService2.instance.pushReplacement('ManageReportScreen');
+              context.read<AdminManage>().changeAppBarTitle(title: 'Reports');
             },
           ),
         ],
@@ -70,10 +76,10 @@ class DrawerListTile extends StatelessWidget {
     return ListTile(
       onTap: press,
       horizontalTitleGap: 0.0,
-      leading: Icon(Icons.view_headline_rounded,color: Colors.white,size: 20,),
+      leading: Icon(Icons.view_headline_rounded,color: Colors.white,size: 18,),
       title: Text(
         title,
-        style: TextStyle(color: Colors.white,fontSize: 15),
+        style: TextStyle(color: Colors.white,fontSize: 13),
       ),
     );
   }

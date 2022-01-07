@@ -13,6 +13,8 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('Users');
   final CollectionReference citiesCollection =
   FirebaseFirestore.instance.collection('Cities');
+  final CollectionReference subCitiesCollection =
+  FirebaseFirestore.instance.collection('SubCities');
 
   final CollectionReference specialityCollection =
   FirebaseFirestore.instance.collection('Speciality');
@@ -142,6 +144,34 @@ task.snapshotEvents.listen((firebase_storage.TaskSnapshot snapshot) {
   }
 
   /// --------------------- City --------------------- ///
+
+  /// --------------------- SubCity --------------------- ///
+  //add new SubCity
+  Future addSubCity({SubCityModel newCity}) async {
+    var ref = subCitiesCollection.doc();
+    newCity.id = ref.id;
+    return await ref.set(newCity.toJson());
+  }
+
+  //update existing SubCity
+  Future updateSubCity({SubCityModel updatedCity}) async {
+    return await subCitiesCollection
+        .doc(updatedCity.id.toString())
+        .update(updatedCity.toJson());
+  }
+
+  //delete existing SubCity
+  Future deleteSubCity({SubCityModel deleteCity}) async {
+    return await subCitiesCollection.doc(deleteCity.id.toString()).delete();
+  }
+
+  // stream for live SubCity
+  Stream<List<SubCityModel>> getLiveSubCities(String id) {
+    print('reeee $id');
+    return subCitiesCollection.where('mainCityId' , isEqualTo:id ).snapshots().map(SubCityModel().fromQuery);
+  }
+
+  /// --------------------- SubCity --------------------- ///
 
   // --------------------- Spec --------------------- //
 

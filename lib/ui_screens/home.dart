@@ -82,7 +82,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           create: (context) => DoctorManage()),
                       Provider(create: (context) => widget.user),
                       ChangeNotifierProvider(create: (context) => CityManage()),
-                      ChangeNotifierProvider(
+                ChangeNotifierProvider(create: (context) => SubCityManage()),
+
+                ChangeNotifierProvider(
                           create: (context) => LocationsManage()),
                       ChangeNotifierProvider(create: (context) => SpecManage()),
                     ], child: AdminScreen())

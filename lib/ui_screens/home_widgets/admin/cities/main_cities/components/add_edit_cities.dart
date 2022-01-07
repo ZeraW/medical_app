@@ -5,6 +5,7 @@ import 'package:medical_app/services/database_api.dart';
 import 'package:medical_app/ui_components/textfield_widget.dart';
 import 'package:medical_app/utils/colors.dart';
 import 'package:medical_app/utils/dimensions.dart';
+import 'package:medical_app/utils/font_size.dart';
 import 'package:provider/provider.dart';
 
 
@@ -16,6 +17,7 @@ class AddCitiesScreen extends StatefulWidget {
 }
 class _AddCitiesScreenState extends State<AddCitiesScreen> {
   TextEditingController _cityNameController = new TextEditingController();
+  List<CityModel> mList;
 
   String _cityNameError = "";
 
@@ -26,6 +28,8 @@ class _AddCitiesScreenState extends State<AddCitiesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    mList = Provider.of<List<CityModel>>(context);
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Padding(
@@ -40,11 +44,11 @@ class _AddCitiesScreenState extends State<AddCitiesScreen> {
                   height: Responsive.height(1,context),
                 ),
 
-                Text(
+                SelectableText(
                   'Add City',
                   style: TextStyle(
                       color: Colors.black26,
-                      fontSize: 20,
+                      fontSize: Dim.addScreenTitle,
                       fontWeight: FontWeight.w600),
                 ),
 
@@ -69,7 +73,7 @@ class _AddCitiesScreenState extends State<AddCitiesScreen> {
                       _apiRequest();
                     },
                     color: xColors.mainColor,
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(15),
                     child: Text(
                       'Add City',
                       style: TextStyle(
@@ -79,6 +83,7 @@ class _AddCitiesScreenState extends State<AddCitiesScreen> {
                     ),
                   ),
                 ),
+
               ],
             ),
           ),
@@ -94,7 +99,20 @@ class _AddCitiesScreenState extends State<AddCitiesScreen> {
       setState(() {
         _cityNameError = "Please enter City Name";
       });
-    } else {
+    }
+    else if (!cityName.contains(new  RegExp('^[a-zA-Z]+\$'))) {
+      clear();
+      setState(() {
+        _cityNameError = "Use only letters from a-z";
+      });
+    }
+    else if ((mList.singleWhere((it) => it.name == cityName, orElse: () => null)) != null) {
+      clear();
+      setState(() {
+        _cityNameError = "City Exist";
+      });
+    }
+    else {
       clear();
       //do request
       CityModel newCity = CityModel(name: cityName);
@@ -121,10 +139,14 @@ class EditCitiesScreen extends StatefulWidget {
 class _EditCitiesScreenState extends State<EditCitiesScreen> {
   TextEditingController _cityNameController = new TextEditingController();
   String _cityNameError = "";
-
+  List<CityModel> mList;
   @override
   Widget build(BuildContext context) {
-    _cityNameController.text = context.watch<CityManage>().city.name.toString();
+     mList = Provider.of<List<CityModel>>(context);
+
+    if(_cityNameController.text==null || _cityNameController.text.isEmpty)
+      _cityNameController.text = context.watch<CityManage>().city.name.toString();
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Padding(
@@ -139,11 +161,11 @@ class _EditCitiesScreenState extends State<EditCitiesScreen> {
                   height: Responsive.height(1,context),
                 ),
 
-                Text(
+                SelectableText(
                   'Edit City',
                   style: TextStyle(
                       color: Colors.black26,
-                      fontSize: 20,
+                      fontSize:  Dim.addScreenTitle,
                       fontWeight: FontWeight.w600),
                 ),
 
@@ -161,13 +183,14 @@ class _EditCitiesScreenState extends State<EditCitiesScreen> {
                 SizedBox(
                   height: Responsive.height(3,context),
                 ),
-                SizedBox(
-                  height: Responsive.height(7,context),
+                Align(
+                  alignment: Alignment.centerRight,
                   child: RaisedButton(
                     onPressed: () {
                       _apiRequest();
                     },
                     color: xColors.mainColor,
+                    padding: EdgeInsets.all(15),
                     child: Text(
                       'Edit City',
                       style: TextStyle(
@@ -177,6 +200,7 @@ class _EditCitiesScreenState extends State<EditCitiesScreen> {
                     ),
                   ),
                 ),
+
               ],
             ),
           ),
@@ -193,12 +217,23 @@ class _EditCitiesScreenState extends State<EditCitiesScreen> {
       setState(() {
         _cityNameError = "Please enter City Name";
       });
+    }else if (!cityName.contains(new  RegExp('^[a-zA-Z]+\$'))) {
+       clear();
+       setState(() {
+         _cityNameError = "Use only letters from a-z";
+       });
+     }else if ((mList.singleWhere((it) => it.name == cityName, orElse: () => null)) != null) {
+      clear();
+      setState(() {
+        _cityNameError = "City Exist";
+      });
     } else {
       clear();
       //do request
       CityModel newCity = CityModel(id:context.read<CityManage>().city.id,name: cityName);
       await DatabaseService().updateCity(updatedCity: newCity);
       context.read<CityManage>().hideEditScreen();
+
 
     }
   }

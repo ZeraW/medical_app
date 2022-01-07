@@ -78,11 +78,9 @@ class _MobileState extends State<Mobile> {
           SizedBox(
             height: Responsive.height(3.0, context),
           ),
-          TextFormBuilder(
+          PasswordFieldWidget(
             controller: _passwordController,
             hint: "password",
-            keyType: TextInputType.visiblePassword,
-            isPassword: true,
             errorText: _passwordError,
           ),
           SizedBox(
@@ -100,7 +98,7 @@ class _MobileState extends State<Mobile> {
                 "Login",
                 style: TextStyle(
                     color: xColors.white,
-                    fontSize: Responsive.isMobile(context)?  Responsive.width(4.0, context) : 35,
+                    fontSize: Responsive.isMobile(context)?  Responsive.width(4.0, context) : 25,
                     fontWeight: FontWeight.w600),
               ),
             ),
@@ -121,7 +119,7 @@ class _MobileState extends State<Mobile> {
                       style: TextStyle(
                           color: xColors.mainColor,
                           fontWeight: FontWeight.w600,
-                          fontSize: Responsive.isMobile(context)? Responsive.width(4.0, context):25),
+                          fontSize: Responsive.isMobile(context)? Responsive.width(4.0, context):20),
                     ),
                   ),
                 ),

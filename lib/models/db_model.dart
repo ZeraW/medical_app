@@ -70,6 +70,37 @@ class CityModel {
     return data;
   }
 }
+class SubCityModel {
+  String id,mainCityId;
+  final String name;
+
+  SubCityModel({this.id, this.mainCityId,this.name});
+
+  List<SubCityModel> fromQuery(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return SubCityModel(
+        id: doc.get('id')  ?? '',
+        mainCityId: doc.get('mainCityId')  ?? '',
+
+        name: doc.get('name')?? '',
+      );
+    }).toList();
+  }
+
+  SubCityModel.fromJson(Map<String, dynamic> json)
+      : id = json['id'], mainCityId = json['mainCityId'],
+        name = json['name'];
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['mainCityId'] = this.mainCityId;
+
+    data['name'] = this.name;
+    return data;
+  }
+}
+
 class SpecialityModel {
   String id;
   final String name;
@@ -104,9 +135,12 @@ class DoctorModel {
   String about;
   String gender;
   String city;
+  String subCity;
+
   String specialty;
   String rate;
   String phone;
+  String address;
 
 
   DoctorModel(
@@ -115,9 +149,10 @@ class DoctorModel {
       this.image,
       this.about,
       this.gender,
-      this.city,
+      this.city,this.subCity,
       this.specialty,
       this.rate,
+        this.address,
       this.phone});
 
 
@@ -132,7 +167,11 @@ class DoctorModel {
         city: doc.get('city') ,
         specialty: doc.get('specialty') ,
         rate: doc.get('rate') ,
-        phone: doc.get('phone')
+        phone: doc.get('phone'),
+          address: doc.get('address'),
+          subCity: doc.get('subCity')
+
+
       );
     }).toList();
   }
@@ -148,6 +187,10 @@ class DoctorModel {
       'specialty': this.specialty,
       'rate': this.rate,
       'phone': this.phone,
+      'address': this.address,
+      'subCity': this.subCity,
+
+
     };
   }
 
@@ -162,6 +205,10 @@ class DoctorModel {
       specialty: map['specialty'] as String,
       rate: map['rate'] as String,
       phone: map['phone'] as String,
+      address: map['address'] as String,
+      subCity: map['subCity'] as String,
+
+
     );
   }
 

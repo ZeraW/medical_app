@@ -23,4 +23,60 @@ class NavigationService{
     return key.currentState.pop();
 
   }
+
+
+  void pushReplacement(String newRouteName){
+    bool isNewRouteSameAsCurrent = false;
+
+    key.currentState.popUntil((route) {
+      if (route.settings.name == newRouteName) {
+        isNewRouteSameAsCurrent = true;
+      }
+      return true;
+    });
+    if (!isNewRouteSameAsCurrent) {
+      key.currentState.pushReplacementNamed(newRouteName);
+    }
+  }
+}
+
+
+class NavigationService2{
+  GlobalKey<NavigatorState> key;
+
+  static NavigationService2 instance = NavigationService2();
+
+  NavigationService2(){
+    key = GlobalKey<NavigatorState>();
+  }
+
+  Future<dynamic> navigateToReplacement(String _rn){
+    return key.currentState.pushReplacementNamed(_rn);
+  }
+  Future<dynamic> navigateTo(String _rn){
+    return key.currentState.pushNamed(_rn);
+  }
+  Future<dynamic> navigateToRoute(MaterialPageRoute _rn){
+    return key.currentState.push(_rn);
+  }
+
+  goBack(){
+    return key.currentState.pop();
+
+  }
+
+
+  void pushReplacement(String newRouteName){
+    bool isNewRouteSameAsCurrent = false;
+
+    key.currentState.popUntil((route) {
+      if (route.settings.name == newRouteName) {
+        isNewRouteSameAsCurrent = true;
+      }
+      return true;
+    });
+    if (!isNewRouteSameAsCurrent) {
+      key.currentState.pushReplacementNamed(newRouteName);
+    }
+  }
 }
