@@ -168,7 +168,7 @@ class _EditScreenState extends State<EditScreen> {
                   height: Responsive.height(2,context),
                 ),
                 TextFormBuilder(
-                  hint: "City Speciality",
+                  hint: "Speciality Name",
                   keyType: TextInputType.text,
                   controller: _nameController,
                   errorText: _nameError,

@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:medical_app/models/db_model.dart';
+import 'package:medical_app/navigation_service.dart';
+import 'package:medical_app/provider/admin_manage.dart';
 import 'package:medical_app/services/auth.dart';
 import 'package:medical_app/utils/colors.dart';
 import 'package:provider/provider.dart';
@@ -26,14 +28,18 @@ class AdminLogOut extends StatelessWidget {
       underline: SizedBox(),
       dropdownColor: xColors.white,
 
-      items: <String>['Logout'].map((String value) {
+      items: <String>['Profile','Logout'].map((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
         );
       }).toList(),
       onChanged: (v)async{
-        if(v=='Logout'){
+        if(v=='Profile'){
+          NavigationService2.instance.navigateTo('Profile');
+          context.read<AdminManage>().changeAppBarTitle(title: 'Profile');
+
+        }else if(v=='Logout'){
          await AuthService().signOut();
         }
       },

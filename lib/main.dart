@@ -6,12 +6,15 @@ import 'package:medical_app/routes.dart';
 import 'package:medical_app/services/auth.dart';
 import 'package:medical_app/services/database_api.dart';
 import 'package:provider/provider.dart';
+import 'models/db_model.dart';
 import 'navigation_service.dart';
 import 'utils/themes.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  setPathUrlStrategy();
   await Firebase.initializeApp();
 
   runApp(MyApp());
@@ -27,7 +30,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         StreamProvider<User>.value(value: AuthService().user),
-        ProxyProvider0(update: (_, __) => DatabaseService().getUserById )
+
       ],
       child: MaterialApp(
         title: 'OPTS',

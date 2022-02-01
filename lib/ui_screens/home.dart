@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final List<Map<String, Widget>> _childrenUser = [
       {'Home': Container()},
-      {'Profile': ProfileScreen(widget.user)},
+      {'Profile': ProfileScreen()},
     ];
 
     final List<BottomNavigationBarItem> _bottomNavigation = [

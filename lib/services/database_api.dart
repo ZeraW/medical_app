@@ -40,51 +40,6 @@ class DatabaseService {
         .snapshots()
         .map((event) => UserModel.fromJson(event.data()));
   }
-  Stream<List<UserModel>> getLiveUsers(int depart, int level) {
-    return userCollection
-        .where('keyWords.department', isEqualTo: depart)
-        .where('keyWords.level', isEqualTo: level)
-        .snapshots()
-        .map(UserModel().fromQuery);
-  }
-
-/*  //upload Image method
-  Future uploadImageToStorage({File file, String userId}) async {
-    firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-        .ref('images/users/$userId.png');
-
-    firebase_storage.UploadTask task = ref.putFile(file);
-
-task.snapshotEvents.listen((firebase_storage.TaskSnapshot snapshot) {
-      print('Task state: ${snapshot.state}');
-      print(
-          'Progress: ${(snapshot.bytesTransferred / snapshot.totalBytes) * 100} %');
-    }, onError: (e) {
-      // The final snapshot is also available on the task via `.snapshot`,
-      // this can include 2 additional states, `TaskState.error` & `TaskState.canceled`
-      print(task.snapshot);
-
-      if (e.code == 'permission-denied') {
-        print('User does not have permission to upload to this reference.');
-      }
-    });
-
-
-    // We can still optionally use the Future alongside the stream.
-    try {
-      //update image
-      await task;
-      String url = await FirebaseStorage.instance
-          .ref('images/users/${userId}.png')
-          .getDownloadURL();
-
-      return url;
-    } on firebase_storage.FirebaseException catch (e) {
-      if (e.code == 'permission-denied') {
-        print('User does not have permission to upload to this reference.');
-      }
-    }
-  }*/
 
 
   //upload Image method

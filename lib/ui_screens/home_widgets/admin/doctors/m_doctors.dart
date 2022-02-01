@@ -11,6 +11,7 @@ class ManageDoctorsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<DoctorModel> mList = Provider.of<List<DoctorModel>>(context);
+    List<SpecialityModel> mSpList = Provider.of<List<SpecialityModel>>(context);
 
     return   Scaffold(
       backgroundColor: Colors.transparent,
@@ -19,7 +20,7 @@ class ManageDoctorsScreen extends StatelessWidget {
         children: [
           Expanded(
             flex: 2,
-            child: Body(mList),
+            child: Body(mList,mSpList),
           ),
           Expanded(
             child: context.watch<DoctorManage>().currentWidget(),
