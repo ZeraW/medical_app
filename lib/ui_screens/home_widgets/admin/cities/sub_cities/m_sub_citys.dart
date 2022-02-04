@@ -11,14 +11,14 @@ class ManageSubCitiesScreen extends StatelessWidget {
     final arguments = ModalRoute.of(context).settings.arguments as Map;
     return arguments!=null ?StreamProvider(
         create: (context) => DatabaseService().getLiveSubCities(arguments['id']),
-        child: AreaScreen(arguments['id'])):SizedBox();
+        child: AreaScreen(arguments['id'],arguments['name'],)):SizedBox();
   }
 }
 
 class AreaScreen extends StatelessWidget {
-  String id;
+  String id,name;
 
-  AreaScreen(this.id);
+  AreaScreen(this.id,this.name);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class AreaScreen extends StatelessWidget {
         children: [
           Expanded(
             flex: 2,
-            child: Body(id,mList),
+            child: Body(id,name,mList),
           ),
           Expanded(
             child: context.watch<SubCityManage>().currentWidget(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medical_app/models/db_model.dart';
+import 'package:medical_app/navigation_service.dart';
 import 'package:medical_app/provider/admin_manage.dart';
 import 'package:medical_app/services/database_api.dart';
 import 'package:medical_app/ui_components/dialogs.dart';
@@ -63,9 +64,9 @@ class CityCard extends StatelessWidget {
 
 class Body extends StatelessWidget {
   final List<SubCityModel> mList;
-  String mainCityId;
+  String mainCityId,mainCityName;
 
-  Body(this.mainCityId, this.mList);
+  Body(this.mainCityId,this.mainCityName, this.mList);
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +83,9 @@ class Body extends StatelessWidget {
               children: [
                 Row(
                   children: [
+                    InkWell(onTap: (){
+                      Navigator.of(context).pop();
+                    },splashColor: Colors.transparent,hoverColor: Colors.transparent,child: Text('Cities',style: TextStyle(color: xColors.mainColor),)),Text('  /  ',),Text('$mainCityName'),
                     Spacer(),
                     ElevatedButton(
                       onPressed: () {

@@ -20,7 +20,7 @@ class CityCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         NavigationService2.instance.key.currentState.pushNamed(
-            'ManageSubCitiesScreen', arguments: {'id': city.id});
+            'ManageSubCitiesScreen', arguments: {'id': city.id,'name': city.name,});
         context.read<AdminManage>().changeAppBarTitle(title: '${city.name} Areas');
       },
       child: IntrinsicWidth(
