@@ -255,6 +255,7 @@ class _AddDScreenState extends State<AddDScreen> {
           gender: gender,
           subCity: subCity,
           address: address,
+          password: '123456',
           city: city);
 
       await AuthService()
@@ -547,6 +548,7 @@ class _EditDScreenState extends State<EditDScreen> {
           phone: phone,
           gender: gender,
           address: address,
+          password: context.read<DoctorManage>().model.password,
           subCity: subCity,
           city: city);
       await DatabaseService().updateDoctor(updatedDoctor: newModel);

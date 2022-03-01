@@ -16,7 +16,7 @@ class TextFormBuilder extends StatefulWidget {
   final bool isPassword,enabled;
   final TextEditingController controller;
   String errorText;
-  final int maxLength;
+  final int maxLength,maxLines;
   final Color activeBorderColor;
 
   TextFormBuilder(
@@ -26,6 +26,9 @@ class TextFormBuilder extends StatefulWidget {
       this.controller,
       this.errorText,
         this.maxLength,
+        this.maxLines =1,
+
+
         this.enabled =true,
       this.activeBorderColor});
 
@@ -42,7 +45,7 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
 
             maxLength: widget.maxLength,
             controller: widget.controller,
-            style: TextStyle(fontSize: Responsive.isMobile(context) ?Responsive.width(2,context):17),
+            style: TextStyle(fontSize: Responsive.isMobile(context) ?Responsive.width(3.5,context):17),
             validator: (value) {
               if (value.isEmpty) {
                 return "Please Enter a valid text";
@@ -51,7 +54,7 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
             },
             enabled: widget.enabled,
             //controller: _controller,
-            maxLines: 1,
+            maxLines: widget.maxLines,
             //onChanged: onChange,
             keyboardType: widget.keyType != null ? widget.keyType : TextInputType.text,
             obscureText: widget.isPassword != null ? widget.isPassword : false,
@@ -183,11 +186,13 @@ class PasswordFieldWidget extends StatefulWidget {
   final TextEditingController controller;
   final String hint;
   String errorText;
+  final bool enabled;
 
    PasswordFieldWidget({
     Key key,
      this.controller,
     this.hint,
+     this.enabled=true,
     this.errorText
   }) : super(key: key);
 
@@ -204,6 +209,7 @@ class _PasswordFieldWidgetState extends State<PasswordFieldWidget> {
       TextFormField(
         controller: widget.controller,
         obscureText: isHidden,
+        enabled: widget.enabled,
         decoration: InputDecoration(
           labelText: '${widget.hint}',
           labelStyle: TextStyle(
@@ -247,7 +253,7 @@ class _PasswordFieldWidgetState extends State<PasswordFieldWidget> {
           ),
         ),
         keyboardType: TextInputType.visiblePassword,
-        autofillHints: [AutofillHints.password],
+        autofillHints: widget.enabled ? [AutofillHints.password]:null,
         onChanged: (v){
           setState(() {
             widget.errorText ='';

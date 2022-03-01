@@ -11,6 +11,8 @@ ThemeData appTheme() {
     scaffoldBackgroundColor: Colors.white,
     canvasColor: xColors.mainColor,
     cardColor: Colors.white,
+    elevatedButtonTheme: ElevatedButtonThemeData(style: ButtonStyle(
+        backgroundColor: xColors.materialColor(xColors.mainColor),)),
     textTheme: TextTheme(
       headline6: TextStyle(
         fontWeight: FontWeight.w200,
@@ -66,10 +68,10 @@ AppBarTheme _appBarTheme() {
     elevation: 0.0,
     textTheme: TextTheme(
         headline6: TextStyle(
-      fontSize: 20.0,
-      fontWeight: FontWeight.w600,
-      color: xColors.white,
-    )),
+          fontSize: 20.0,
+          fontWeight: FontWeight.w600,
+          color: xColors.white,
+        )),
     color: xColors.mainColor,
     iconTheme: IconThemeData(
       color: xColors.white,

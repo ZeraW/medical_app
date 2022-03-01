@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:medical_app/models/db_model.dart';
 import 'package:medical_app/provider/admin_manage.dart';
@@ -7,7 +9,7 @@ import 'package:medical_app/utils/dimensions.dart';
 import 'package:provider/provider.dart';
 
 import 'home_widgets/admin/home/admin_screen.dart';
-import 'home_widgets/profile_screen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   UserModel user;
@@ -112,3 +114,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+

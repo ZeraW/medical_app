@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
 
-class NavigationService{
+class NavigationService {
   GlobalKey<NavigatorState> key;
 
   static NavigationService instance = NavigationService();
+  static NavigationService docInstance = NavigationService();
 
-  NavigationService(){
+  NavigationService() {
     key = GlobalKey<NavigatorState>();
   }
 
-  Future<dynamic> navigateToReplacement(String _rn){
+  Future<dynamic> navigateToReplacement(String _rn) {
     return key.currentState.pushReplacementNamed(_rn);
   }
-  Future<dynamic> navigateTo(String _rn){
+
+  Future<dynamic> navigateTo(String _rn) {
     return key.currentState.pushNamed(_rn);
   }
-  Future<dynamic> navigateToRoute(MaterialPageRoute _rn){
+
+  Future<dynamic> navigateToRoute(MaterialPageRoute _rn) {
     return key.currentState.push(_rn);
   }
 
-  goBack(){
-    return key.currentState.pop();
-
+  Future<dynamic> navigateToWidget(Widget _rn) {
+    return key.currentState.push(MaterialPageRoute(builder: (_) => _rn));
   }
 
+  goBack() {
+    return key.currentState.pop();
+  }
 
-  void pushReplacement(String newRouteName){
+  void pushReplacement(String newRouteName) {
     bool isNewRouteSameAsCurrent = false;
 
     key.currentState.popUntil((route) {
@@ -40,33 +45,32 @@ class NavigationService{
   }
 }
 
-
-class NavigationService2{
+class NavigationService2 {
   GlobalKey<NavigatorState> key;
 
   static NavigationService2 instance = NavigationService2();
 
-  NavigationService2(){
+  NavigationService2() {
     key = GlobalKey<NavigatorState>();
   }
 
-  Future<dynamic> navigateToReplacement(String _rn){
+  Future<dynamic> navigateToReplacement(String _rn) {
     return key.currentState.pushReplacementNamed(_rn);
   }
-  Future<dynamic> navigateTo(String _rn){
+
+  Future<dynamic> navigateTo(String _rn) {
     return key.currentState.pushNamed(_rn);
   }
-  Future<dynamic> navigateToRoute(MaterialPageRoute _rn){
+
+  Future<dynamic> navigateToRoute(MaterialPageRoute _rn) {
     return key.currentState.push(_rn);
   }
 
-  goBack(){
+  goBack() {
     return key.currentState.pop();
-
   }
 
-
-  void pushReplacement(String newRouteName){
+  void pushReplacement(String newRouteName) {
     bool isNewRouteSameAsCurrent = false;
 
     key.currentState.popUntil((route) {

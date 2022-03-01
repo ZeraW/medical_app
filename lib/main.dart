@@ -1,15 +1,14 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:medical_app/routes.dart';
 import 'package:medical_app/services/auth.dart';
-import 'package:medical_app/services/database_api.dart';
 import 'package:provider/provider.dart';
-import 'models/db_model.dart';
+import 'package:url_strategy/url_strategy.dart';
+
 import 'navigation_service.dart';
 import 'utils/themes.dart';
-import 'package:url_strategy/url_strategy.dart';
 
 
 void main() async{
@@ -30,7 +29,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         StreamProvider<User>.value(value: AuthService().user),
-
       ],
       child: MaterialApp(
         title: 'OPTS',

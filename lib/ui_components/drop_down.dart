@@ -8,9 +8,10 @@ class DropDownStringList extends StatelessWidget {
   final Function onChange;
   final String errorText,hint,selectedItem;
   final bool enableBorder;
+  final bool enabled;
 
   DropDownStringList(
-      {this.selectedItem, this.mList,this.hint, this.onChange, this.errorText,this.enableBorder=true});
+      {this.selectedItem, this.mList,this.hint, this.onChange,this.enabled = true, this.errorText,this.enableBorder=true});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class DropDownStringList extends StatelessWidget {
               }).toList(),
               isExpanded: true,
               underline: SizedBox(),
-              icon: Icon(Icons.keyboard_arrow_down,color: xColors.mainColor,),
+              icon: enabled ?Icon(Icons.keyboard_arrow_down,color: xColors.mainColor,):SizedBox(),
               hint: Text(
                 selectedItem != null
                     ? '$hint : $selectedItem'
@@ -42,7 +43,7 @@ class DropDownStringList extends StatelessWidget {
                 style: TextStyle(
                     color:  xColors.mainColor,fontSize: Responsive.isMobile(context)?Responsive.width(4,context):17),
               ),
-              onChanged: onChange),
+              onChanged: enabled ? onChange: null),
         ),
         errorText != null
             ? GetErrorWidget(isValid: errorText != "", errorText: errorText)
@@ -59,9 +60,10 @@ class DropDownDynamicList extends StatelessWidget {
   final Function onChange;
   final String hint;
   final String errorText;
+  final bool enabled;
 
   DropDownDynamicList(
-      {this.selectedItem, this.mList,this.hint, this.onChange, this.errorText});
+      {this.selectedItem, this.mList,this.hint, this.onChange,this.enabled = true, this.errorText});
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +78,7 @@ class DropDownDynamicList extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
           ),
           child: new DropdownButton<dynamic>(
+
               items: mList.map((dynamic value) {
                 return new DropdownMenuItem<dynamic>(
                   value: value,
@@ -84,8 +87,7 @@ class DropDownDynamicList extends StatelessWidget {
               }).toList(),
               isExpanded: true,
               underline: SizedBox(),
-              icon: Icon(Icons.keyboard_arrow_down,color: xColors.mainColor,),
-
+              icon: enabled ? Icon(Icons.keyboard_arrow_down,color: xColors.mainColor,) :SizedBox(),
               hint: Text(
                 selectedItem != null
                     ? '$hint : ${selectedItem.name}'
@@ -93,7 +95,7 @@ class DropDownDynamicList extends StatelessWidget {
                 style: TextStyle(
                     color:  xColors.mainColor,fontSize: Responsive.isMobile(context)?Responsive.width(4,context):17),
               ),
-              onChanged: onChange),
+              onChanged: enabled ? onChange : null),
         ),
         errorText != null
             ? GetErrorWidget(isValid: errorText != "", errorText: errorText)

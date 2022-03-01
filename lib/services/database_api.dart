@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../models/db_model.dart';
+import 'auth.dart';
 
 class DatabaseService {
   // Users collection reference
@@ -21,6 +22,8 @@ class DatabaseService {
 
   final CollectionReference doctorsCollection =
   FirebaseFirestore.instance.collection('Doctors');
+  final CollectionReference appointmentCollection =
+  FirebaseFirestore.instance.collection('Appointments');
 
   final CollectionReference sosCollection =
   FirebaseFirestore.instance.collection('SOS');
@@ -126,6 +129,11 @@ class DatabaseService {
     return subCitiesCollection.where('mainCityId' , isEqualTo:id ).snapshots().map(SubCityModel().fromQuery);
   }
 
+  // stream for live City
+  Stream<List<SubCityModel>> get getLiveSubCity {
+    return subCitiesCollection.snapshots().map(SubCityModel().fromQuery);
+  }
+
   /// --------------------- SubCity --------------------- ///
 
   // --------------------- Spec --------------------- //
@@ -160,16 +168,31 @@ class DatabaseService {
   /// --------------------- Doctor --------------------- ///
   //add new Doctor
   Future addDoctor({DoctorModel newDoctor}) async {
-    var ref = doctorsCollection.doc();
-    newDoctor.id = ref.id;
+    var ref = doctorsCollection.doc(newDoctor.id);
     return await ref.set(newDoctor.toJson());
   }
 
   //update existing Doctor
-  Future updateDoctor({DoctorModel updatedDoctor}) async {
-    return await doctorsCollection
-        .doc(updatedDoctor.id.toString())
-        .update(updatedDoctor.toJson());
+  Future updateDoctor({DoctorModel updatedDoctor,File image,bool passChanged}) async {
+
+    if(image!=null){
+      updatedDoctor.image = await (DatabaseService().uploadImageToStorage(id: 'doctor/${updatedDoctor.id}', file: image));
+    }
+
+    if(passChanged){
+      AuthService().changePassword(
+          updatedDoctor.password, () async {
+        await doctorsCollection
+            .doc(updatedDoctor.id.toString())
+            .update(updatedDoctor.toJson());
+      });
+    }else {
+
+      await doctorsCollection
+          .doc(updatedDoctor.id.toString())
+          .update(updatedDoctor.toJson());
+    }
+
   }
 
   //delete existing Doctor
@@ -181,6 +204,14 @@ class DatabaseService {
   Stream<List<DoctorModel>> get getLiveDoctor {
     return doctorsCollection.snapshots().map(DoctorModel().fromQuery);
   }
+
+  Stream<DoctorModel>  getDoc(String id) {
+    return doctorsCollection
+        .doc(id)
+        .snapshots()
+        .map((event) => DoctorModel.fromJson(event.data()));
+  }
+
 
   /// --------------------- Doctor --------------------- ///
 
@@ -204,5 +235,6 @@ class DatabaseService {
   }
 
   // --------------------- Help --------------------- //
+
 
 }
