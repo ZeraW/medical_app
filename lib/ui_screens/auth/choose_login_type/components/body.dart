@@ -66,47 +66,7 @@ class RoundedBtn extends StatelessWidget {
   }
 }
 
-/*class DoctorBtn extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Flexible(
-      fit: FlexFit.tight,
-      child: RoundedBtn(
-          onTap: () {
-            Provider.of<AuthManage>(context, listen: false)
-                .toggleWidgets(currentPage: 1, type: "doctor");
-          },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CircleAssetImage('assets/images/surgeon.png'),
-              ImageText('Doctor'),
-            ],
-          )),
-    );
-  }
-}
 
-class AdminBtn extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Flexible(
-      fit: FlexFit.tight,
-      child: RoundedBtn(
-          onTap: () {
-            Provider.of<AuthManage>(context, listen: false)
-                .toggleWidgets(currentPage: 1, type: "admin");
-          },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CircleAssetImage('assets/images/administrator.png'),
-              ImageText('Admin'),
-            ],
-          )),
-    );
-  }
-}*/
 
 class UserBtn extends StatelessWidget {
   @override
@@ -114,14 +74,14 @@ class UserBtn extends StatelessWidget {
     return RoundedBtn(
       onTap: () {
         Provider.of<AuthManage>(context, listen: false)
-            .toggleWidgets(currentPage: 1, type: "user");
+            .toggleWidgets(currentPage: 1, type: "patient");
       },
       child: Row(
         children: [
           Spacer(),
           CircleAssetImage('assets/images/man.png'),
           Spacer(),
-          ImageText('User'),
+          ImageText('Patient'),
           Spacer(flex: 3,),
         ],
       ),

@@ -3,6 +3,8 @@ import 'package:medical_app/ui_screens/auth/choose_login_type/choose_login_type.
 import 'package:medical_app/ui_screens/auth/login.dart';
 import 'package:medical_app/ui_screens/auth/register.dart';
 
+import '../ui_screens/auth/patient_register.dart';
+
 class AuthManage extends ChangeNotifier {
   int pageState = 0;
   String type = '';
@@ -30,7 +32,12 @@ class AuthManage extends ChangeNotifier {
     if (pageState == 1) {
       return LoginScreen(type: type);
     } else if (pageState == 2) {
-      return RegisterScreen(type: type);
+      if(type == 'admin'){
+        return RegisterScreen(type: type);
+      }else{
+        return PatientRegisterScreen(type: type);
+
+      }
     } else {
       return ChooseLoginType();
     }

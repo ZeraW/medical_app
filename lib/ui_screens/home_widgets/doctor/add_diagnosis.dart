@@ -1,61 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:medical_app/models/db_model.dart';
-import 'package:medical_app/provider/admin_manage.dart';
-import 'package:medical_app/services/auth.dart';
+import 'package:medical_app/navigation_service.dart';
 import 'package:medical_app/services/database_api.dart';
-import 'package:medical_app/ui_components/drop_down.dart';
 import 'package:medical_app/ui_components/textfield_widget.dart';
+import 'package:medical_app/ui_screens/home_widgets/patient/medical_history.dart';
 import 'package:medical_app/utils/colors.dart';
 import 'package:medical_app/utils/dimensions.dart';
-import 'package:medical_app/utils/font_size.dart';
 import 'package:provider/provider.dart';
 
+import 'finish_examination.dart';
+
 class AddDiagnosisScreen extends StatefulWidget {
+  PatientModel patientModel;
+  AppointmentModel appointmentModel;
+  AddDiagnosisScreen(this.patientModel,this.appointmentModel);
+
   @override
   _AddDiagnosisScreenState createState() => _AddDiagnosisScreenState();
 }
 
 class _AddDiagnosisScreenState extends State<AddDiagnosisScreen> {
- /* TextEditingController _patientNameController = new TextEditingController();
-  TextEditingController _doctorNameController = new TextEditingController();
-  TextEditingController _specController = new TextEditingController();
-  TextEditingController _dateController = new TextEditingController();*/
   TextEditingController _complainController = new TextEditingController();
   TextEditingController _diagnosisController = new TextEditingController();
   TextEditingController _treatmentController = new TextEditingController();
 
-/*  String selectedSpeciality;
-
-  String _patientNameError = "";
-  String _doctorNameError = "";
-  String _specError = "";
-  String _dateError = "";*/
   String _complainError = "";
   String _diagnosisError = "";
   String _treatmentError = "";
 
-/*
-  @override
-  void initState() {
-    super.initState();
-    DoctorModel doc = context.read<DoctorModel>();
-
-    List<SpecialityModel> mSpecList = context.read<List<SpecialityModel>>();
-    print('doc ${doc.specialty}');
-    print('mSpecList ${mSpecList.firstWhere((element) => element.id == doc.specialty, orElse: () => SpecialityModel(id: 'null', name: 'removed')).name}');
-    selectedSpeciality = doc.specialty;
-    _doctorNameController.text = doc.name;
-     _specController.text =mSpecList.firstWhere((element) => element.id == doc.specialty, orElse: () => SpecialityModel(id: 'null', name: 'removed')).name;
-     _dateController.text = '${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}';
-
-  }
-*/
-
   @override
   Widget build(BuildContext context) {
-    List<SpecialityModel> mSpecList =
-        Provider.of<List<SpecialityModel>>(context);
-
+    DoctorModel doctorModel = context.watch<DoctorModel>();
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
@@ -77,50 +52,6 @@ class _AddDiagnosisScreenState extends State<AddDiagnosisScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /*TextFormBuilder(
-                  hint: "Patient Name",
-                  keyType: TextInputType.text,
-                  controller: _patientNameController,
-                  errorText: _patientNameError,
-                  enabled: false,
-                  activeBorderColor: xColors.mainColor,
-                ),
-                SizedBox(
-                  height: Responsive.height(3, context),
-                ),
-                TextFormBuilder(
-                  hint: "Doctor Name",
-                  keyType: TextInputType.text,
-                  controller: _doctorNameController,
-                  errorText: _doctorNameError,
-                  enabled: false,
-                  activeBorderColor: xColors.mainColor,
-                ),
-                SizedBox(
-                  height: Responsive.height(3, context),
-                ),
-                TextFormBuilder(
-                  hint: "Doctor Specialty",
-                  keyType: TextInputType.text,
-                  controller: _specController,
-                  errorText: _specError,
-                  enabled: false,
-                  activeBorderColor: xColors.mainColor,
-                ),
-                SizedBox(
-                  height: Responsive.height(3, context),
-                ),
-                TextFormBuilder(
-                  hint: "Date",
-                  keyType: TextInputType.text,
-                  controller: _dateController,
-                  errorText: _dateError,
-                  enabled: false,
-                  activeBorderColor: xColors.mainColor,
-                ),
-                SizedBox(
-                  height: Responsive.height(3, context),
-                ),*/
                 TextFormBuilder(
                   hint: "Patient Symptoms",
                   keyType: TextInputType.text,
@@ -158,12 +89,46 @@ class _AddDiagnosisScreenState extends State<AddDiagnosisScreen> {
                   alignment: Alignment.centerRight,
                   child: RaisedButton(
                     onPressed: () {
-                      _apiRequest();
+                      if (doctorModel != null) {
+                        _apiRequest(doctorModel);
+                      }
                     },
                     color: xColors.mainColor,
                     padding: EdgeInsets.all(15),
                     child: Text(
-                      'Submit',
+                      'Submit and Finish',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10,),
+
+                Row(children: [
+                  Expanded(child: Container(color: Colors.black12,height: 3,)),
+                  SizedBox(width: 10,),
+                  Text('OR'),
+                  SizedBox(width: 10,),
+                  Expanded(child: Container(color: Colors.black12,height: 3,)),
+
+
+                ],),
+                SizedBox(height: 20,),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: RaisedButton(
+                    onPressed: () {
+                     if( widget.appointmentModel.patientId!=null){
+                       NavigationService.docInstance.navigateToWidget(AddFile(widget.appointmentModel.patientId));
+                     }
+                    },
+                    color: xColors.mainColor,
+                    padding: EdgeInsets.all(15),
+                    child: Text(
+                      'Add File',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 15,
@@ -179,36 +144,12 @@ class _AddDiagnosisScreenState extends State<AddDiagnosisScreen> {
     );
   }
 
-  void _apiRequest() async {
-/*    String _patientName = _patientNameController.text;
-    String _doctorName = _doctorNameController.text;
-    String _spec = _specController.text;
-    String _date = _dateController.text;*/
+  void _apiRequest(DoctorModel doctorModel) async {
     String _complain = _complainController.text;
     String _diagnosis = _diagnosisController.text;
     String _treatment = _treatmentController.text;
 
-    /*if (_patientName == null || _patientName.isEmpty) {
-      clear();
-      setState(() {
-        _patientNameError = "Please enter Patient Name";
-      });
-    } else if (_doctorName == null || _doctorName.isEmpty) {
-      clear();
-      setState(() {
-        _doctorNameError = "Please enter Doctor Name";
-      });
-    } else if (_date == null || _date.isEmpty) {
-      clear();
-      setState(() {
-        _dateError = "Please enter Pick a Date";
-      });
-    } else if (_spec == null || _spec.isEmpty) {
-      clear();
-      setState(() {
-        _specError = "Please Select Specialty";
-      });
-    } else*/ if (_complain == null || _complain.isEmpty) {
+    if (_complain == null || _complain.isEmpty) {
       clear();
       setState(() {
         _complain = "Please enter Patient Symptoms";
@@ -226,28 +167,31 @@ class _AddDiagnosisScreenState extends State<AddDiagnosisScreen> {
     } else {
       clear();
       //do request
-      DiagnosisModel(
-          patientName: '_patientName',
+      DiagnosisModel model = DiagnosisModel(
+          timestamp: DateTime.now(),
+          patientName: widget.patientModel.name,
           complain: _complain,
-          date: '_date',
           diagnosis: _diagnosis,
-          doctorName: '_doctorName',
-          spec: '_spec',
+          doctorName: doctorModel.name,
+          spec: doctorModel.specialty,
           treatment: _treatment);
+      await DatabaseService()
+          .addDiagnosis(id: widget.patientModel.id, add: model);
+
+      AppointmentModel newAppointmentModel =  widget.appointmentModel;
+      newAppointmentModel.status =1;
+      newAppointmentModel.keyWords['status'] = 1;
+      await DatabaseService()
+          .updateAppointment(update: newAppointmentModel);
+      NavigationService.docInstance.navigateToWidgetReplacement(FinishExamination(widget.appointmentModel));
     }
   }
 
   void clear() {
     setState(() {
-      /*_patientNameError = "";
-      _doctorNameError = "";
-      _specError = "";
-      _dateError = "";*/
       _complainError = "";
       _diagnosisError = "";
       _treatmentError = "";
     });
   }
 }
-
-

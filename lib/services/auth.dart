@@ -69,6 +69,35 @@ class AuthService {
     }
   }
 
+  // register with email and password
+  Future registerPWithEmailAndPassword({BuildContext context,PatientModel newUser,File userImage}) async {
+    try {
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: '${newUser.phone}.patient@opts.com', password: newUser.password);
+      print('XDA : ' + result.user.uid);
+
+      User fbUser = result.user;
+      newUser.id = fbUser.uid;
+      await DatabaseService().updatePatientData(user: newUser);
+
+      return _userFromFirebaseUser(fbUser);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        Toast.show("Password is too week", context,
+            backgroundColor: Colors.redAccent,
+            duration: Toast.LENGTH_LONG,
+            gravity: Toast.BOTTOM);
+      } else if (e.code == 'email-already-in-use') {
+        Toast.show("Account Already exist", context,
+            backgroundColor: Colors.redAccent,
+            duration: Toast.LENGTH_LONG,
+            gravity: Toast.BOTTOM);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
 
 
   Future registerDocWithoutLogin({BuildContext context, DoctorModel newDoctor}) async {

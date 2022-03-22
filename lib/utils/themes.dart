@@ -14,8 +14,8 @@ ThemeData appTheme() {
     elevatedButtonTheme: ElevatedButtonThemeData(style: ButtonStyle(
         backgroundColor: xColors.materialColor(xColors.mainColor),)),
     textTheme: TextTheme(
-      headline6: TextStyle(
-        fontWeight: FontWeight.w200,
+      headline6: TextStyle( //search delegate font
+        fontWeight: FontWeight.w400,
         color: xColors.mainColor,
       ),
       headline1: TextStyle(
@@ -66,12 +66,11 @@ ThemeData appTheme() {
 AppBarTheme _appBarTheme() {
   return AppBarTheme(
     elevation: 0.0,
-    textTheme: TextTheme(
-        headline6: TextStyle(
-          fontSize: 20.0,
-          fontWeight: FontWeight.w600,
-          color: xColors.white,
-        )),
+    titleTextStyle: TextStyle(
+      fontSize: 20.0,
+      fontWeight: FontWeight.w600,
+      color: xColors.white,),
+
     color: xColors.mainColor,
     iconTheme: IconThemeData(
       color: xColors.white,

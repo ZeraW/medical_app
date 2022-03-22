@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class xColors {
-  static const Color mainColor = Color(0xff00BCAE);
+  static const Color mainColor = Colors.indigo; //3F51B5
   static const Color pinkColor = Color(0xffF4DEFD);
   static const Color accentColor = Color(0xffD2FCFF);
   static const Color greenColor = Color(0xff84ae1a);

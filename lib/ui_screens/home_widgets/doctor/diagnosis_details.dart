@@ -10,12 +10,14 @@ import 'package:medical_app/utils/dimensions.dart';
 import 'package:medical_app/utils/font_size.dart';
 import 'package:provider/provider.dart';
 
-
-
 class DiagnosisDetailsScreen extends StatelessWidget {
+  DiagnosisModel model;
+
+  DiagnosisDetailsScreen(this.model);
 
   @override
   Widget build(BuildContext context) {
+    List<SpecialityModel> mSpec = context.watch<List<SpecialityModel>>();
 
     return Scaffold(
       appBar: AppBar(
@@ -24,50 +26,46 @@ class DiagnosisDetailsScreen extends StatelessWidget {
           backgroundColor: xColors.mainColor,
           title: Text(
             'Diagnosis & Treatment',
-            style: TextStyle(
-                color: xColors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: Responsive.width(5, context)),
           )),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ListTile(title: Text('Patient Name'),
-            subtitle: Text('name'),
+            ListTile(
+              title: Text('Patient Name'),
+              subtitle: Text('${model.patientName}'),
             ),
-
-            ListTile(title: Text('Doctor Name'),
-              subtitle: Text('name'),
+            ListTile(
+              title: Text('Doctor Name'),
+              subtitle: Text('${model.doctorName}'),
             ),
-
-            ListTile(title: Text('Doctor Specialty'),
-              subtitle: Text('Specialty'),
+            mSpec != null
+                ? ListTile(
+                    title: Text('Doctor Specialty'),
+                    subtitle: Text(
+                        '${mSpec.firstWhere((element) => element.id == model.spec, orElse: () => SpecialityModel(id: 'null', name: 'Removed')).name}'),
+                  )
+                : SizedBox(),
+            ListTile(
+              title: Text('Date'),
+              subtitle: Text(
+                  '${model.timestamp.day}-${model.timestamp.month}-${model.timestamp.year}'),
             ),
-
-            ListTile(title: Text('Date'),
-              subtitle: Text('22-2-2022'),
+            ListTile(
+              title: Text('Patient Symptoms'),
+              subtitle: Text('${model.complain}'),
             ),
-
-            ListTile(title: Text('Patient Symptoms'),
-              subtitle: Text('Symptoms'),
+            ListTile(
+              title: Text('Doctor Diagnosis'),
+              subtitle: Text('${model.diagnosis}'),
             ),
-
-            ListTile(title: Text('Doctor Diagnosis'),
-              subtitle: Text('Diagnosis'),
+            ListTile(
+              title: Text('Treatments'),
+              subtitle: Text('${model.treatment}'),
             ),
-
-            ListTile(title: Text('Treatments'),
-              subtitle: Text('treatments'),
-            ),
-
           ],
         ),
       ),
     );
   }
-
-
 }
-
-

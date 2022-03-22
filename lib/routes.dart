@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:medical_app/services/database_api.dart';
 import 'package:medical_app/ui_screens/home_widgets/doctor/doctor_home.dart';
+import 'package:medical_app/ui_screens/home_widgets/patient/patient_appointment.dart';
+import 'package:medical_app/ui_screens/home_widgets/patient/patient_home.dart';
 import 'package:medical_app/ui_screens/splash.dart';
 import 'package:medical_app/wrapper.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +19,8 @@ import 'ui_screens/home_widgets/admin/reports/m_reports.dart';
 import 'ui_screens/home_widgets/admin/specialities/m_spec.dart';
 import 'ui_screens/home_widgets/doctor/doctor_appointment.dart';
 import 'ui_screens/home_widgets/doctor/m_appointments.dart';
-import 'ui_screens/profile_screen.dart';
+import 'ui_screens/home_widgets/admin/profile_screen.dart';
+import 'ui_screens/home_widgets/patient/book_appointment_query.dart';
 
 final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
   "/": (BuildContext context) => SplashScreen(),
@@ -38,6 +41,9 @@ final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
   "ManageAppointments": (BuildContext context) => ManageAppointments(),
   "doctorHome": (BuildContext context) => DoctorHome(),
   "DoctorAppointmentScreen": (BuildContext context) => DoctorAppointmentScreen(),
+  "patientHome": (BuildContext context) => PatientHome(),
+  "QueryDoctor": (BuildContext context) => QueryDoctor(),
+  "PatientAppointmentScreen": (BuildContext context) => PatientAppointmentScreen(),
 
 
 

@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:medical_app/navigation_service.dart';
 import 'package:medical_app/routes.dart';
 import 'package:medical_app/ui_screens/auth/root.dart';
-import 'package:medical_app/ui_screens/home_widgets/doctor/doctor_home.dart';
 import 'package:medical_app/utils/themes.dart';
+import 'package:provider/provider.dart';
+
+import 'models/db_model.dart';
 import 'provider/auth_manage.dart';
 import 'services/database_api.dart';
-import 'package:provider/provider.dart';
-import 'ui_screens/home.dart';
-import 'models/db_model.dart';
+import 'ui_screens/home_widgets/admin/home/home.dart';
+import 'ui_screens/home_widgets/patient/sos_sender.dart';
 
 class Wrapper extends StatefulWidget {
 
@@ -51,6 +52,8 @@ class _WrapperState extends State<Wrapper> {
               value: DatabaseService().getLiveSpeciality),
           StreamProvider<DoctorModel>.value(
               value: DatabaseService().getDoc(user.uid)),
+          StreamProvider<List<PatientModel>>.value(
+              value: DatabaseService().getLivePatients),
         ], child: MaterialApp(
             title: 'doctor',
             debugShowCheckedModeBanner: false,
@@ -61,7 +64,34 @@ class _WrapperState extends State<Wrapper> {
           ),
         );
       }else {
-        return Container(child: Text('User'),);
+        print(user.uid);
+        return  MultiProvider(providers: [
+          StreamProvider<List<CityModel>>.value(
+              value: DatabaseService().getLiveCities),
+          StreamProvider<List<SubCityModel>>.value(
+              value: DatabaseService().getLiveSubCity),
+          StreamProvider<List<SpecialityModel>>.value(
+              value: DatabaseService().getLiveSpeciality),
+          StreamProvider<PatientModel>.value(
+              value: DatabaseService().getPatient(user.uid)),
+          StreamProvider<List<DiagnosisModel>>.value(
+              value: DatabaseService().getLiveDiagnosis(user.uid)),
+          StreamProvider<List<HistoryFilesModel>>.value(
+              value: DatabaseService().getLiveHistoryFiles(user.uid)),
+        ], child: Stack(
+          children: [
+            MaterialApp(
+              title: 'patient',
+              debugShowCheckedModeBanner: false,
+              navigatorKey: NavigationService.patientInstance.key,
+              initialRoute: 'patientHome',
+              theme: appTheme(),
+              routes: routes,
+            ),
+            SosSender()
+          ],
+        ),
+        );
       }
 
     }

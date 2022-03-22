@@ -22,6 +22,7 @@ class _AddDScreenState extends State<AddDScreen> {
 
   SpecialityModel selectedSpeciality;
   SubCityModel selectedSubCity;
+  Map<String,String> keyWords={};
 
   CityModel selectedCity;
   String gender;
@@ -65,7 +66,7 @@ class _AddDScreenState extends State<AddDScreen> {
                     'Add Doctor',
                     style: TextStyle(
                         color: Colors.black26,
-                        fontSize:  Dim.addScreenTitle,
+                        fontSize: Dim.addScreenTitle,
                         fontWeight: FontWeight.w600),
                   ),
                   SizedBox(
@@ -248,6 +249,7 @@ class _AddDScreenState extends State<AddDScreen> {
     } else {
       clear();
       //do request
+      createSearchKeywordsList();
       DoctorModel newModel = DoctorModel(
           name: name,
           specialty: spec,
@@ -256,12 +258,21 @@ class _AddDScreenState extends State<AddDScreen> {
           subCity: subCity,
           address: address,
           password: '123456',
+          keyWords: keyWords,
           city: city);
 
       await AuthService()
           .registerDocWithoutLogin(context: context, newDoctor: newModel);
       context.read<DoctorManage>().hideAddScreen();
     }
+  }
+
+  void createSearchKeywordsList(){
+    keyWords['name']=_nameController.text.toLowerCase().toString();
+    keyWords['spec']=selectedSpeciality.id.toString();
+    keyWords['city']=selectedCity.id.toString();
+    keyWords['subCity']=selectedSubCity.id.toString();
+    keyWords['gender']=gender.toString();
   }
 
   void clear() {
@@ -287,6 +298,7 @@ class _EditDScreenState extends State<EditDScreen> {
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _phoneController = new TextEditingController();
   TextEditingController _addressController = new TextEditingController();
+  Map<String,String> keyWords={};
 
   SpecialityModel selectedSpeciality;
   CityModel selectedCity;
@@ -320,13 +332,18 @@ class _EditDScreenState extends State<EditDScreen> {
       _phoneController.text =
           context.watch<DoctorManage>().model.phone.toString();
     if (mSpecList != null && selectedSpeciality == null)
-      selectedSpeciality = mSpecList.firstWhere((element) =>
-          element.id == context.watch<DoctorManage>().model.specialty,orElse: ()=>SpecialityModel(id: 'null',name: 'Removed'));
+      selectedSpeciality = mSpecList.firstWhere(
+          (element) =>
+              element.id == context.watch<DoctorManage>().model.specialty,
+          orElse: () => SpecialityModel(id: 'null', name: 'Removed'));
     if (mCityList != null && selectedCity == null)
       selectedCity = mCityList.firstWhere(
-          (element) => element.id == context.watch<DoctorManage>().model.city,orElse: ()=>CityModel(id: 'null',name: 'Removed'));
+          (element) => element.id == context.watch<DoctorManage>().model.city,
+          orElse: () => CityModel(id: 'null', name: 'Removed'));
     if (gender == null)
       gender = context.watch<DoctorManage>().model.gender.toString();
+    if (keyWords == null)
+      keyWords = context.watch<DoctorManage>().model.keyWords;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -347,7 +364,7 @@ class _EditDScreenState extends State<EditDScreen> {
                     'Edit Doctor',
                     style: TextStyle(
                         color: Colors.black26,
-                        fontSize:  Dim.addScreenTitle,
+                        fontSize: Dim.addScreenTitle,
                         fontWeight: FontWeight.w600),
                   ),
                   SizedBox(
@@ -409,7 +426,6 @@ class _EditDScreenState extends State<EditDScreen> {
                             setState(() {
                               selectedCity = value;
                               selectedSubCity = null;
-
                             });
                           })
                       : SizedBox(),
@@ -430,9 +446,12 @@ class _EditDScreenState extends State<EditDScreen> {
                                       context
                                           .read<DoctorManage>()
                                           .model
-                                          .subCity,orElse: ()=>SubCityModel(id: 'null',name: 'Removed'));
+                                          .subCity,
+                                  orElse: () => SubCityModel(
+                                      id: 'null', name: 'Removed'));
 
-                              if(selectedSubCity ==null && oldSubCity.mainCityId == selectedCity.id){
+                              if (selectedSubCity == null &&
+                                  oldSubCity.mainCityId == selectedCity.id) {
                                 selectedSubCity = oldSubCity;
                               }
                             }
@@ -541,6 +560,7 @@ class _EditDScreenState extends State<EditDScreen> {
     } else {
       clear();
       //do request
+      createSearchKeywordsList();
       DoctorModel newModel = DoctorModel(
           id: id,
           name: name,
@@ -548,12 +568,23 @@ class _EditDScreenState extends State<EditDScreen> {
           phone: phone,
           gender: gender,
           address: address,
+          keyWords: keyWords,
           password: context.read<DoctorManage>().model.password,
           subCity: subCity,
           city: city);
-      await DatabaseService().updateDoctor(updatedDoctor: newModel);
+
+      print('resdsd');
+      await DatabaseService().updateDoctor(updatedDoctor: newModel,passChanged: false);
       context.read<DoctorManage>().hideEditScreen();
     }
+  }
+
+  void createSearchKeywordsList(){
+    keyWords['name']=_nameController.text.toLowerCase().toString();
+    keyWords['spec']=selectedSpeciality.id.toString();
+    keyWords['city']=selectedCity.id.toString();
+    keyWords['subCity']=selectedSubCity.id.toString();
+    keyWords['gender']=gender.toString();
   }
 
   void clear() {

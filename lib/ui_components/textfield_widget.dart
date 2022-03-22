@@ -45,7 +45,7 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
 
             maxLength: widget.maxLength,
             controller: widget.controller,
-            style: TextStyle(fontSize: Responsive.isMobile(context) ?Responsive.width(3.5,context):17),
+            style: TextStyle(fontSize: Responsive.isMobile(context) ?Responsive.width(4,context):17),
             validator: (value) {
               if (value.isEmpty) {
                 return "Please Enter a valid text";
@@ -67,11 +67,11 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
               labelText: '${widget.hint}',
               labelStyle: TextStyle(
                   color: widget.activeBorderColor ?? xColors.mainColor,
-                  fontSize: Responsive.isMobile(context) ?Responsive.width(3.5,context):17),
+                  fontSize: Responsive.isMobile(context) ?Responsive.width(4,context):17),
               hintText: "${widget.hint}",
               hintStyle: TextStyle(
                   color: widget.activeBorderColor ?? xColors.hintColor,
-                  fontSize: Responsive.isMobile(context) ?Responsive.width(3.5,context) : 17),
+                  fontSize: Responsive.isMobile(context) ?Responsive.width(4,context) : 17),
               contentPadding: new EdgeInsets.symmetric(
                   vertical: Responsive.height(2.5,context),
                   horizontal: Responsive.width(2.0,context)),
@@ -148,7 +148,7 @@ class CleanTextField extends StatelessWidget {
               counterText: "",
               hintStyle: TextStyle(
                   color:  xColors.hintColor,
-                  fontSize: Responsive.width(3.5,context)),
+                  fontSize: Responsive.width(4,context)),
               contentPadding: new EdgeInsets.symmetric(
                   vertical: Responsive.height(1.0,context),
                   horizontal: Responsive.width(4.0,context)),
@@ -214,11 +214,11 @@ class _PasswordFieldWidgetState extends State<PasswordFieldWidget> {
           labelText: '${widget.hint}',
           labelStyle: TextStyle(
               color:  xColors.mainColor,
-              fontSize: Responsive.isMobile(context) ?Responsive.width(3.5,context):17),
+              fontSize: Responsive.isMobile(context) ?Responsive.width(4,context):17),
           hintText: "${widget.hint}",
           hintStyle: TextStyle(
               color:xColors.hintColor,
-              fontSize: Responsive.isMobile(context) ?Responsive.width(3.5,context) : 17),
+              fontSize: Responsive.isMobile(context) ?Responsive.width(4,context) : 17),
           contentPadding: new EdgeInsets.symmetric(
               vertical: Responsive.height(2.5,context),
               horizontal: Responsive.width(2.0,context)),
@@ -326,17 +326,6 @@ class _EmailFieldWidgetState extends State<EmailFieldWidget> {
         : null,*/
   );
 }
-
-
-
-
-
-
-
-
-
-
-
 
 class LimitRangeTextInputFormatter extends TextInputFormatter {
   LimitRangeTextInputFormatter(this.min, this.max) : assert(min < max);

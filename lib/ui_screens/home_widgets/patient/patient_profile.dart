@@ -13,20 +13,21 @@ import 'package:provider/provider.dart';
 
 import '../../../services/auth.dart';
 
-class DoctorProfile extends StatefulWidget {
+class PatientProfile extends StatefulWidget {
   @override
-  _DoctorProfileState createState() => _DoctorProfileState();
+  _PatientProfileState createState() => _PatientProfileState();
 }
 
-class _DoctorProfileState extends State<DoctorProfile> {
+class _PatientProfileState extends State<PatientProfile> {
   @override
   Widget build(BuildContext context) {
-    DoctorModel user = Provider.of<DoctorModel>(context);
+    PatientModel user = Provider.of<PatientModel>(context);
     List<SpecialityModel> specialityModel =
         Provider.of<List<SpecialityModel>>(context);
     List<CityModel> cityModel = Provider.of<List<CityModel>>(context);
     List<SubCityModel> subCityModel = Provider.of<List<SubCityModel>>(context);
 
+    print(user);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: user != null &&
@@ -40,7 +41,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
 }
 
 class Body extends StatefulWidget {
-  DoctorModel user;
+  PatientModel user;
   List<SpecialityModel> specialityModel;
 
   List<CityModel> cityModel;
@@ -59,51 +60,27 @@ class _BodyState extends State<Body> {
 
   String imageUrl;
   String gender;
-
-  SpecialityModel selectedSpeciality;
-  CityModel selectedCity;
-  SubCityModel selectedSubCity;
-  Map<String, String> keyWords;
-
   TextEditingController _nameController = new TextEditingController();
-  TextEditingController _aboutController = new TextEditingController();
-  TextEditingController _addressController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
   TextEditingController _phoneController = new TextEditingController();
-  TextEditingController _consultationFeesController =
-      new TextEditingController();
+  TextEditingController _ageController = new TextEditingController();
+
 
   String _nameError = "";
-  String _aboutError = "";
-  String _addressError = "";
+  String _ageError = "";
+
   String _phoneError = "";
   String _passError = "";
-  String _subCityError = "";
   String _genderError = "";
-  String _cityError = "";
-  String _specialtyError = "";
-  String _consultationFeesError = "";
 
   @override
   void initState() {
     super.initState();
     _nameController.text = widget.user.name;
-    _aboutController.text = widget.user.about;
     _passwordController.text = widget.user.password;
-    _phoneController.text = widget.user.phone;
-    _addressController.text = widget.user.address;
-    _consultationFeesController.text = widget.user.fees;
-    keyWords = widget.user.keyWords;
+    _ageController.text = widget.user.age;
 
-    selectedSpeciality = widget.specialityModel.firstWhere(
-        (element) => element.id == widget.user.specialty,
-        orElse: () => SpecialityModel(id: 'null', name: 'Removed'));
-    selectedCity = widget.cityModel.firstWhere(
-        (element) => element.id == widget.user.city,
-        orElse: () => CityModel(id: 'null', name: 'Removed'));
-    selectedSubCity = widget.subCityModel.firstWhere(
-        (element) => element.id == widget.user.subCity,
-        orElse: () => SubCityModel(id: 'null', name: 'Removed'));
+    _phoneController.text = widget.user.phone;
     imageUrl = widget.user.image;
     gender = widget.user.gender.toString();
   }
@@ -262,10 +239,10 @@ class _BodyState extends State<Body> {
                       height: Responsive.height(3, context),
                     ),
                     TextFormBuilder(
-                      hint: "Address",
-                      keyType: TextInputType.streetAddress,
-                      controller: _addressController,
-                      errorText: _addressError,
+                      hint: "age",
+                      keyType: TextInputType.number,
+                      controller: _ageController,
+                      errorText: _ageError,
                       enabled: isEnabled,
                       activeBorderColor: xColors.mainColor,
                     ),
@@ -280,84 +257,6 @@ class _BodyState extends State<Body> {
                     ),
                     SizedBox(
                       height: Responsive.height(3, context),
-                    ),
-                    TextFormBuilder(
-                      hint: "Consultation Fees",
-                      keyType: TextInputType.number,
-                      controller: _consultationFeesController,
-                      enabled: isEnabled,
-                      errorText: _consultationFeesError,
-                      activeBorderColor: xColors.mainColor,
-                    ),
-                    SizedBox(
-                      height: Responsive.height(3, context),
-                    ),
-                    DropDownDynamicList(
-                        mList: widget.specialityModel,
-                        errorText: _specialtyError,
-                        selectedItem: selectedSpeciality,
-                        enabled: false,
-                        hint: "Specialty",
-                        onChange: (dynamic value) {
-                          setState(() {
-                            selectedSpeciality = value;
-                          });
-                        }),
-                    SizedBox(
-                      height: Responsive.height(3, context),
-                    ),
-                    DropDownDynamicList(
-                        mList: widget.cityModel,
-                        errorText: _cityError,
-                        selectedItem: selectedCity,
-                        enabled: isEnabled,
-                        hint: "City",
-                        onChange: (dynamic value) {
-                          setState(() {
-                            selectedCity = value;
-                            selectedSubCity = null;
-                          });
-                        }),
-                    SizedBox(
-                      height: Responsive.height(3, context),
-                    ),
-                    selectedCity != null
-                        ? StreamBuilder<List<SubCityModel>>(
-                            stream: DatabaseService()
-                                .getLiveSubCities(selectedCity.id),
-                            builder: (context, snapshot) {
-                              List<SubCityModel> mSubCityList = snapshot.data;
-
-                              if (mSubCityList != null) {
-                                SubCityModel oldSubCity =
-                                    mSubCityList.firstWhere(
-                                        (element) =>
-                                            element.id == widget.user.subCity,
-                                        orElse: () => SubCityModel(
-                                            id: 'null', name: 'Removed'));
-                                if (selectedSubCity == null &&
-                                    oldSubCity.mainCityId == selectedCity.id) {
-                                  selectedSubCity = oldSubCity;
-                                }
-                              }
-                              return mSubCityList != null
-                                  ? DropDownDynamicList(
-                                      mList: mSubCityList,
-                                      errorText: _subCityError,
-                                      selectedItem: selectedSubCity,
-                                      enabled: isEnabled,
-                                      hint: "Area",
-                                      onChange: (dynamic value) {
-                                        setState(() {
-                                          selectedSubCity = value;
-                                        });
-                                      })
-                                  : SizedBox();
-                            })
-                        : SizedBox(),
-                    SizedBox(
-                      height: Responsive.height(
-                          selectedCity != null ? 3 : 0, context),
                     ),
                     DropDownStringList(
                       hint: 'Gender',
@@ -374,18 +273,7 @@ class _BodyState extends State<Body> {
                     SizedBox(
                       height: Responsive.height(3, context),
                     ),
-                    TextFormBuilder(
-                      hint: "About Doctor",
-                      keyType: TextInputType.text,
-                      controller: _aboutController,
-                      enabled: isEnabled,
-                      errorText: _aboutError,
-                      activeBorderColor: xColors.mainColor,
-                      maxLines: 3,
-                    ),
-                    SizedBox(
-                      height: Responsive.height(2, context),
-                    ),
+
 
                     ElevatedButton(
                         onPressed: () async{
@@ -405,26 +293,13 @@ class _BodyState extends State<Body> {
           ],
         ));
   }
-  void createSearchKeywordsList(){
-    keyWords['name']=_nameController.text.toLowerCase().toString();
-    keyWords['spec']=selectedSpeciality.id.toString();
-    keyWords['city']=selectedCity.id.toString();
-    keyWords['subCity']=selectedSubCity.id.toString();
-    keyWords['gender']=gender.toString();
-    keyWords['fees']=_consultationFeesController.text.toString();
 
-  }
   void _apiRequest() async {
     String name = _nameController.text;
     String phone = _phoneController.text;
-    String address = _addressController.text;
-    String about = _aboutController.text;
     String password = _passwordController.text;
-    String fees = _consultationFeesController.text;
+    String age = _ageController.text;
 
-    String spec = selectedSpeciality.id;
-    String city = selectedCity.id;
-    String subCity = selectedSubCity.id;
 
     if (name == null || name.isEmpty) {
       clear();
@@ -436,35 +311,15 @@ class _BodyState extends State<Body> {
       setState(() {
         _phoneError = "Please enter Phone Number";
       });
-    } else if (address == null || address.isEmpty) {
+    } else if (age == null || age.isEmpty) {
       clear();
       setState(() {
-        _phoneError = "Please enter street address";
+        _phoneError = "Please enter age";
       });
     } else if (password == null || password.isEmpty || password.length < 5) {
       clear();
       setState(() {
         _passError = "Please enter Password 6 letters or more";
-      });
-    }else if (fees == null || fees.isEmpty) {
-      clear();
-      setState(() {
-        _consultationFeesError = "Please enter Consultation Fees";
-      });
-    } else if (spec == null || spec.isEmpty) {
-      clear();
-      setState(() {
-        _specialtyError = "Please Select Specialty";
-      });
-    } else if (city == null || city.isEmpty) {
-      clear();
-      setState(() {
-        _cityError = "Please Select City";
-      });
-    } else if (subCity == null || subCity.isEmpty) {
-      clear();
-      setState(() {
-        _subCityError = "Please Select Area";
       });
     } else if (gender == null || gender.isEmpty) {
       clear();
@@ -474,24 +329,16 @@ class _BodyState extends State<Body> {
     } else {
       clear();
       //do request
-      createSearchKeywordsList();
-      DoctorModel newModel = DoctorModel(
+      PatientModel newModel = PatientModel(
           id: widget.user.id,
           name: name,
-          specialty: spec,
           image: pickedImage == null ? widget.user.image : null,
           phone: phone,
+          age: age,
           gender: gender,
-          about: about,
-          appointments: widget.user.appointments,
-          keyWords: keyWords,
-          rate: widget.user.rate,
-          address: address,fees: fees,
-          password: password,
-          subCity: subCity,
-          city: city);
-      await DatabaseService().updateDoctor(
-          updatedDoctor: newModel,
+          password: password,);
+      await DatabaseService().updatePatient(
+          updated: newModel,
           image: pickedImage,
           passChanged: widget.user.password != password);
     }
@@ -501,13 +348,10 @@ class _BodyState extends State<Body> {
     setState(() {
       _nameError = "";
       _passError = '';
-      _aboutError = '';
       _phoneError = "";
       _genderError = "";
-      _cityError = "";
-      _specialtyError = "";
-      _addressError = "";
-      _consultationFeesError = "";
+      _ageError ="";
+
     });
   }
 }

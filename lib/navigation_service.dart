@@ -5,6 +5,8 @@ class NavigationService {
 
   static NavigationService instance = NavigationService();
   static NavigationService docInstance = NavigationService();
+  static NavigationService patientInstance = NavigationService();
+
 
   NavigationService() {
     key = GlobalKey<NavigatorState>();
@@ -24,6 +26,9 @@ class NavigationService {
 
   Future<dynamic> navigateToWidget(Widget _rn) {
     return key.currentState.push(MaterialPageRoute(builder: (_) => _rn));
+  }
+  Future<dynamic> navigateToWidgetReplacement(Widget _rn) {
+    return key.currentState.pushReplacement(MaterialPageRoute(builder: (_) => _rn));
   }
 
   goBack() {

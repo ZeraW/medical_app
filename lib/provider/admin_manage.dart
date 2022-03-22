@@ -274,6 +274,7 @@ class LocationsManage extends ChangeNotifier {
 
   void isNewChanger(bool isNew) {
     this.isNew = isNew;
+    this.infoScreen = 0;
     notifyListeners();
   }
 

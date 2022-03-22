@@ -8,8 +8,8 @@ import 'package:medical_app/utils/colors.dart';
 import 'package:medical_app/utils/dimensions.dart';
 import 'package:provider/provider.dart';
 
-import 'home_widgets/admin/home/admin_screen.dart';
-import 'profile_screen.dart';
+import 'admin_screen.dart';
+import '../profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   UserModel user;
