@@ -8,6 +8,7 @@ import 'package:medical_app/models/db_model.dart';
 import 'package:medical_app/navigation_service.dart';
 import 'package:medical_app/services/database_api.dart';
 import 'package:medical_app/ui_components/date_picker.dart';
+import 'package:medical_app/ui_components/dialogs.dart';
 import 'package:medical_app/ui_components/error_widget.dart';
 import 'package:medical_app/ui_components/textfield_widget.dart';
 import 'package:medical_app/ui_screens/home_widgets/doctor/diagnosis_details.dart';
@@ -111,9 +112,18 @@ class _FileTabState extends State<FileTab> {
                         TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                 trailing: IconButton(
                     onPressed: () async {
-                      await DatabaseService().deleteFile(
-                          model: item,
-                          id: FirebaseAuth.instance.currentUser.uid);
+
+                      showDialogWithFun(
+                          context: context,
+                          title: 'Delete File',
+                          msg:
+                          'Are your sure that you want to delete this File?',
+                          yes: () async {
+                            await DatabaseService().deleteFile(
+                                model: item,
+                                id: FirebaseAuth.instance.currentUser.uid);
+                          });
+
                     },
                     icon: Icon(
                       Icons.delete_outline,

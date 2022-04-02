@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medical_app/models/db_model.dart';
 import 'package:medical_app/navigation_service.dart';
+import 'package:medical_app/ui_components/dialogs.dart';
 import 'package:medical_app/ui_screens/home_widgets/doctor/patient_info.dart';
 import 'package:medical_app/utils/colors.dart';
 import 'package:medical_app/utils/dimensions.dart';
@@ -159,11 +160,21 @@ class AppointmentCard extends StatelessWidget {
                       : RaisedButton(
                     color: Colors.redAccent,
                     onPressed: () async{
-                      AppointmentModel newAppointmentModel =  appointmentModel;
-                      newAppointmentModel.status =2;
-                      newAppointmentModel.keyWords['status'] = 2;
-                      await DatabaseService()
-                          .updateAppointment(update: newAppointmentModel);
+
+
+                      showDialogWithFun(
+                          context: context,
+                          title: 'Cancel Appointment',
+                          msg:
+                          'Are your sure that you want to cancel this Appointment?',
+                          yes: () async {
+                            AppointmentModel newAppointmentModel =  appointmentModel;
+                            newAppointmentModel.status =2;
+                            newAppointmentModel.keyWords['status'] = 2;
+                            await DatabaseService()
+                                .updateAppointment(update: newAppointmentModel);
+
+                          });
                     },
                     child: Text(
                       "Cancel",
