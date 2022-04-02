@@ -77,6 +77,7 @@ class _MobileState extends State<Mobile> {
   TextEditingController _repasswordController = new TextEditingController();
   TextEditingController _phoneController = new TextEditingController();
   TextEditingController _ageController = new TextEditingController();
+  TextEditingController _emailController = new TextEditingController();
 
   String gender;
 
@@ -84,6 +85,8 @@ class _MobileState extends State<Mobile> {
   String _phoneError = "";
   String _passError = "";
   String _rePassError = "";
+  String _emailError = "";
+
   String _ageError = "";
 
   String _genderError = "";
@@ -114,7 +117,15 @@ class _MobileState extends State<Mobile> {
             SizedBox(
               height: Responsive.height(3.0,context),
             ),
-
+            TextFormBuilder(
+              hint: "Email",
+              keyType: TextInputType.emailAddress,
+              controller: _emailController,
+              errorText: _emailError,
+            ),
+            SizedBox(
+              height: Responsive.height(3.0,context),
+            ),
             TextFormBuilder(
               hint: "phone number",
               keyType: TextInputType.phone,
@@ -193,6 +204,7 @@ class _MobileState extends State<Mobile> {
     String password = _passwordController.text;
     String passwordConfirm = _repasswordController.text;
     String age = _ageController.text;
+    String email = _emailController.text;
 
 
     if (firstName == null || firstName.isEmpty) {
@@ -200,9 +212,12 @@ class _MobileState extends State<Mobile> {
       setState(() {
 
       });
-    } else if (phone == null || phone.isEmpty) {
+    } else if (phone == null || phone.isEmpty|| phone.length!=11 ) {
       clear();
-      _phoneError = "Enter a phone number";
+      _phoneError = "Enter a valid phone number";
+    }else if (email == null || email.isEmpty || !isEmail(email)) {
+      clear();
+      _emailError = "Enter a valid Email";
     } else if (password == null || password.isEmpty) {
       clear();
       _passError = "Enter the password";
@@ -218,7 +233,7 @@ class _MobileState extends State<Mobile> {
       PatientModel newUser = PatientModel(
           name: firstName,
           password: password,
-          phone: phone,
+          phone: phone,email: email,
           age: age,
           gender: gender,
           );
@@ -226,12 +241,21 @@ class _MobileState extends State<Mobile> {
           context: context, newUser: newUser);
     }
   }
+  bool isEmail(String em) {
+    String p =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
+    RegExp regExp = RegExp(p);
+
+    return regExp.hasMatch(em);
+  }
   void clear() {
     setState(() {
       _nameError = "";
       _phoneError = "";
       _passError = "";
+      _emailError = "";
+
       _rePassError = "";
       _ageError = "";
       _genderError = "";

@@ -23,7 +23,6 @@ class DoctorScreen extends StatefulWidget {
   @override
   _DoctorScreenState createState() => _DoctorScreenState();
 }
-
 class _DoctorScreenState extends State<DoctorScreen> {
   Map<String, dynamic> keyWords = {};
 
@@ -128,6 +127,17 @@ class _DoctorScreenState extends State<DoctorScreen> {
                     SizedBox(
                       height: Responsive.height(2.0, context),
                     ),
+                    BottomBuilder(
+                      title: "Book an appointment",
+                      heightT: Responsive.height(7.0, context),
+                      onTapFunction: () {
+                        bookAppointment(model);
+                      },
+                      widthT: double.infinity,
+                    ),
+                    SizedBox(
+                      height: Responsive.height(2.0, context),
+                    ),
                     Text(
                       "${widget.doctor.name}",
                       style: TextStyle(
@@ -161,7 +171,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                         // borderColor: Colors.red,
                         spacing: 1.0),
                     SizedBox(
-                      height: Responsive.height(4, context),
+                      height: Responsive.height(2, context),
                     ),
                     Text(
                       "About",
@@ -181,7 +191,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                           fontSize: Responsive.width(3.3, context)),
                     ),
                     SizedBox(
-                      height: Responsive.height(2.5, context),
+                      height: Responsive.height(1.5, context),
                     ),
                     Text(
                       "Address",
@@ -201,7 +211,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                           fontSize: Responsive.width(3.3, context)),
                     ),
                     SizedBox(
-                      height: Responsive.height(2.5, context),
+                      height: Responsive.height(2, context),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -220,17 +230,6 @@ class _DoctorScreenState extends State<DoctorScreen> {
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: Responsive.height(4.0, context),
-                    ),
-                    BottomBuilder(
-                      title: "Book an appointment",
-                      heightT: Responsive.height(8.0, context),
-                      onTapFunction: () {
-                        bookAppointment(model);
-                      },
-                      widthT: double.infinity,
                     ),
                     SizedBox(
                       height: Responsive.height(2.0, context),
@@ -260,7 +259,6 @@ class _DoctorScreenState extends State<DoctorScreen> {
     }
   }
 
-
   void bookAppointment(PatientModel patientModel) async{
     AppointmentModel model = AppointmentModel(
         doctorId: widget.doctor.id,
@@ -284,7 +282,6 @@ class _DoctorScreenState extends State<DoctorScreen> {
 
   }
 }
-
 class FlatButtonBuilder extends StatelessWidget {
   final Color color;
   final String labelText;
@@ -316,7 +313,6 @@ class FlatButtonBuilder extends StatelessWidget {
         ));
   }
 }
-
 class AboutDoctorSections extends StatelessWidget {
   final String title;
   final String value;
@@ -346,7 +342,6 @@ class AboutDoctorSections extends StatelessWidget {
     );
   }
 }
-
 class BottomBuilder extends StatelessWidget {
   final String title;
   final Function onTapFunction;

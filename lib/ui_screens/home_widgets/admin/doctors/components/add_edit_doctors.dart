@@ -19,6 +19,7 @@ class _AddDScreenState extends State<AddDScreen> {
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _phoneController = new TextEditingController();
   TextEditingController _addressController = new TextEditingController();
+  TextEditingController _emailController = new TextEditingController();
 
   SpecialityModel selectedSpeciality;
   SubCityModel selectedSubCity;
@@ -30,6 +31,7 @@ class _AddDScreenState extends State<AddDScreen> {
   String _nameError = "";
   String _addressError = "";
   String _phoneError = "";
+  String _emailError = "";
 
   String _subCityError = "";
   String _genderError = "";
@@ -78,6 +80,15 @@ class _AddDScreenState extends State<AddDScreen> {
                     controller: _nameController,
                     errorText: _nameError,
                     activeBorderColor: xColors.mainColor,
+                  ),
+                  SizedBox(
+                    height: Responsive.height(3, context),
+                  ),
+                  TextFormBuilder(
+                    hint: "Email",
+                    keyType: TextInputType.emailAddress,
+                    controller: _emailController,
+                    errorText: _emailError,
                   ),
                   SizedBox(
                     height: Responsive.height(3, context),
@@ -206,6 +217,7 @@ class _AddDScreenState extends State<AddDScreen> {
     String name = _nameController.text;
     String phone = _phoneController.text;
     String address = _addressController.text;
+    String email = _emailController.text;
 
     String spec = selectedSpeciality.id;
     String city = selectedCity.id;
@@ -216,10 +228,13 @@ class _AddDScreenState extends State<AddDScreen> {
       setState(() {
         _nameError = "Please enter Doctor Name";
       });
-    } else if (phone == null || phone.isEmpty) {
+    }  else if (email == null || email.isEmpty || !isEmail(email)) {
+      clear();
+      _emailError = "Enter a valid Email";
+    }else if (phone == null || phone.isEmpty|| phone.length<11) {
       clear();
       setState(() {
-        _phoneError = "Please enter Phone Number";
+        _phoneError = "Please enter valid Phone Number";
       });
     } else if (address == null || address.isEmpty) {
       clear();
@@ -254,7 +269,7 @@ class _AddDScreenState extends State<AddDScreen> {
           name: name,
           specialty: spec,
           phone: phone,
-          gender: gender,
+          gender: gender,email: email,
           subCity: subCity,
           address: address,
           password: '123456',
@@ -266,7 +281,14 @@ class _AddDScreenState extends State<AddDScreen> {
       context.read<DoctorManage>().hideAddScreen();
     }
   }
+  bool isEmail(String em) {
+    String p =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
+    RegExp regExp = RegExp(p);
+
+    return regExp.hasMatch(em);
+  }
   void createSearchKeywordsList(){
     keyWords['name']=_nameController.text.toLowerCase().toString();
     keyWords['spec']=selectedSpeciality.id.toString();
@@ -280,6 +302,8 @@ class _AddDScreenState extends State<AddDScreen> {
       _nameError = "";
       _phoneError = "";
       _genderError = "";
+      _emailError = "";
+
       _cityError = "";
       _specialtyError = "";
       _addressError = "";

@@ -74,9 +74,12 @@ class _MobileState extends State<Mobile> {
   TextEditingController _passwordController = new TextEditingController();
   TextEditingController _repasswordController = new TextEditingController();
   TextEditingController _phoneController = new TextEditingController();
+  TextEditingController _emailController = new TextEditingController();
 
   String _nameError = "";
   String _phoneError = "";
+  String _emailError = "";
+
   String _passError = "";
   String _rePassError = "";
 
@@ -109,17 +112,26 @@ class _MobileState extends State<Mobile> {
               height: Responsive.height(3.0,context),
             ),
 
+
+
+            TextFormBuilder(
+              hint: "Email",
+              keyType: TextInputType.emailAddress,
+              controller: _emailController,
+              errorText: _emailError,
+            ),
+            SizedBox(
+              height: Responsive.height(3.0,context),
+            ),
             TextFormBuilder(
               hint: "phone number",
-              keyType: TextInputType.emailAddress,
+              keyType: TextInputType.phone,
               controller: _phoneController,
               errorText: _phoneError,
             ),
             SizedBox(
               height: Responsive.height(3.0,context),
             ),
-
-
             PasswordFieldWidget(
               hint: "password",
               controller: _passwordController,
@@ -161,19 +173,24 @@ class _MobileState extends State<Mobile> {
 
   _reg(BuildContext context) async {
     String firstName = _nameController.text;
-    String userId = _phoneController.text.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
+    String phone = _phoneController.text.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
     String password = _passwordController.text;
     String passwordConfirm = _repasswordController.text;
+    String email = _emailController.text;
+
 
     if (firstName == null || firstName.isEmpty) {
       _nameError = "Enter the username";
       setState(() {
 
       });
-    } else if (userId == null || userId.isEmpty) {
+    } else if (email == null || email.isEmpty || !isEmail(email)) {
       clear();
-      _phoneError = "Enter a phone number";
-    } else if (password == null || password.isEmpty) {
+      _emailError = "Enter a valid Email";
+    }else if (phone == null || phone.isEmpty|| phone.length!=11 ) {
+      clear();
+      _phoneError = "Enter a valid phone number";
+    } else if (password == null || password.isEmpty ) {
       clear();
       _passError = "Enter the password";
     } else if (passwordConfirm == null || passwordConfirm.isEmpty) {
@@ -188,18 +205,28 @@ class _MobileState extends State<Mobile> {
       UserModel newUser = UserModel(
           name: firstName,
           password: password,
-          userId: userId,
+          phone: phone,email: email,
           type: widget.type);
       await AuthService().registerWithEmailAndPassword(
           context: context, newUser: newUser);
     }
   }
 
+  bool isEmail(String em) {
+    String p =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+    RegExp regExp = RegExp(p);
+
+    return regExp.hasMatch(em);
+  }
   void clear() {
     setState(() {
       _nameError = "";
       _phoneError = "";
       _passError = "";
+      _emailError = "";
+
       _rePassError = "";
     });
   }

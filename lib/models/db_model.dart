@@ -1,22 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
-  String id, password, name, userId, type;
+  String id, password, name, email, phone, type;
 
-  UserModel({this.id, this.password, this.name, this.userId, this.type});
+  UserModel(
+      {this.id, this.password, this.email, this.name, this.phone, this.type});
 
   UserModel.fromSnapShot(DocumentSnapshot doc)
       : id = doc.get('id'),
         password = doc.get('password'),
         name = doc.get('name'),
-        userId = doc.get('userId'),
+        email = doc.get('email'),
+        phone = doc.get('phone'),
         type = doc.get('type');
 
   UserModel.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         password = json['password'],
         name = json['name'],
-        userId = json['userId'],
+        email = json['email'],
+        phone = json['phone'],
         type = json['type'];
 
   List<UserModel> fromQuery(QuerySnapshot snapshot) {
@@ -25,7 +28,8 @@ class UserModel {
           id: doc.get('id'),
           password: doc.get('password'),
           name: doc.get('name'),
-          userId: doc.get('userId'),
+          email: doc.get('email'),
+          phone: doc.get('phone'),
           type: doc.get('type'));
     }).toList();
   }
@@ -35,19 +39,21 @@ class UserModel {
       'id': id,
       'password': password,
       'name': name,
-      'userId': userId,
+      'email': email,
+      'phone': phone,
       'type': type,
     };
   }
 }
 
 class PatientModel {
-  String id, password, name, phone, gender, image, age;
+  String id, password, name, phone, email, gender, image, age;
 
   PatientModel(
       {this.id,
       this.password,
       this.name,
+      this.email,
       this.phone,
       this.gender,
       this.age,
@@ -57,6 +63,7 @@ class PatientModel {
       : id = doc.get('id'),
         password = doc.get('password'),
         name = doc.get('name'),
+        email = doc.get('email'),
         gender = doc.get('gender'),
         age = doc.get('age'),
         image = doc.get('image'),
@@ -66,6 +73,7 @@ class PatientModel {
       : id = json['id'],
         password = json['password'],
         name = json['name'],
+        email = json['email'],
         gender = json['gender'],
         image = json['image'],
         age = json['age'],
@@ -77,6 +85,7 @@ class PatientModel {
           id: doc.get('id'),
           password: doc.get('password'),
           name: doc.get('name'),
+          email: doc.get('email'),
           gender: doc.get('gender'),
           image: doc.get('image'),
           age: doc.get('age'),
@@ -90,6 +99,7 @@ class PatientModel {
       'password': password,
       'name': name,
       'gender': gender,
+      'email': email,
       'image': image,
       'age': age,
       'phone': phone,
@@ -183,20 +193,19 @@ class SpecialityModel {
 }
 
 class DoctorModel {
-  String id;
-  String name;
-  String image;
-  String about;
-  String gender;
-  String city;
-  String subCity;
-  String password;
-  String specialty;
-  String fees;
-
-  String rate;
-  String phone;
-  String address;
+  String id,
+      name,
+      image,
+      about,email,
+      gender,
+      city,
+      subCity,
+      password,
+      specialty,
+      fees,
+      rate,
+      phone,
+      address;
   Map<String, String> keyWords;
 
   Map<String, DateTime> appointments;
@@ -205,7 +214,7 @@ class DoctorModel {
       {this.id,
       this.name,
       this.image,
-      this.about,
+      this.about,this.email,
       this.gender,
       this.city,
       this.subCity,
@@ -223,6 +232,8 @@ class DoctorModel {
       return DoctorModel(
           id: doc.get('id'),
           name: doc.get('name'),
+          email: doc.get('email'),
+
           image: doc.get('image'),
           about: doc.get('about'),
           gender: doc.get('gender'),
@@ -251,6 +262,8 @@ class DoctorModel {
       'id': this.id,
       'name': this.name,
       'image': this.image,
+      'email': this.email,
+
       'about': this.about,
       'gender': this.gender,
       'password': this.password,
@@ -270,6 +283,8 @@ class DoctorModel {
     return DoctorModel(
       id: map['id'] as String,
       name: map['name'] as String,
+      email: map['email'] as String,
+
       image: map['image'] as String,
       about: map['about'] as String,
       gender: map['gender'] as String,
@@ -348,7 +363,6 @@ class AppointmentModel {
   DateTime time;
   int status;
   Map<String, dynamic> keyWords;
-
 
   AppointmentModel(
       {this.id,

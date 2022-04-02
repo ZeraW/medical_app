@@ -68,7 +68,10 @@ class _BodyState extends State<Body> {
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _aboutController = new TextEditingController();
   TextEditingController _addressController = new TextEditingController();
+  TextEditingController _emailController = new TextEditingController();
+
   TextEditingController _passwordController = new TextEditingController();
+
   TextEditingController _phoneController = new TextEditingController();
   TextEditingController _consultationFeesController =
       new TextEditingController();
@@ -88,6 +91,8 @@ class _BodyState extends State<Body> {
   void initState() {
     super.initState();
     _nameController.text = widget.user.name;
+    _emailController.text = widget.user.email;
+
     _aboutController.text = widget.user.about;
     _passwordController.text = widget.user.password;
     _phoneController.text = widget.user.phone;
@@ -239,6 +244,7 @@ class _BodyState extends State<Body> {
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: ListView(
                   children: [
+                    SizedBox(height: 10,),
                     TextFormBuilder(
                       hint: "Doctor Name",
                       keyType: TextInputType.text,
@@ -251,10 +257,21 @@ class _BodyState extends State<Body> {
                       height: Responsive.height(3, context),
                     ),
                     TextFormBuilder(
+                      hint: "Email",
+                      keyType: TextInputType.emailAddress,
+                      controller: _emailController,
+                      enabled: false,
+                      errorText: '',
+                      activeBorderColor: xColors.mainColor,
+                    ),
+                    SizedBox(
+                      height: Responsive.height(3, context),
+                    ),
+                    TextFormBuilder(
                       hint: "Phone Number",
                       keyType: TextInputType.phone,
                       controller: _phoneController,
-                      enabled: false,
+                      enabled: isEnabled,
                       errorText: _phoneError,
                       activeBorderColor: xColors.mainColor,
                     ),
@@ -266,7 +283,7 @@ class _BodyState extends State<Body> {
                       keyType: TextInputType.streetAddress,
                       controller: _addressController,
                       errorText: _addressError,
-                      enabled: isEnabled,
+                      enabled: false,
                       activeBorderColor: xColors.mainColor,
                     ),
                     SizedBox(
@@ -310,7 +327,7 @@ class _BodyState extends State<Body> {
                         mList: widget.cityModel,
                         errorText: _cityError,
                         selectedItem: selectedCity,
-                        enabled: isEnabled,
+                        enabled: false,
                         hint: "City",
                         onChange: (dynamic value) {
                           setState(() {
@@ -345,7 +362,7 @@ class _BodyState extends State<Body> {
                                       mList: mSubCityList,
                                       errorText: _subCityError,
                                       selectedItem: selectedSubCity,
-                                      enabled: isEnabled,
+                                      enabled: false,
                                       hint: "Area",
                                       onChange: (dynamic value) {
                                         setState(() {
@@ -364,7 +381,7 @@ class _BodyState extends State<Body> {
                       mList: ['Male', 'Female'],
                       selectedItem: gender,
                       errorText: _genderError,
-                      enabled: isEnabled,
+                      enabled: false,
                       onChange: (value) {
                         setState(() {
                           gender = value;
@@ -431,10 +448,10 @@ class _BodyState extends State<Body> {
       setState(() {
         _nameError = "Please enter Doctor Name";
       });
-    } else if (phone == null || phone.isEmpty) {
+    } else if (phone == null || phone.isEmpty ||phone.length!=11 ) {
       clear();
       setState(() {
-        _phoneError = "Please enter Phone Number";
+        _phoneError = "Please enter valid Phone Number";
       });
     } else if (address == null || address.isEmpty) {
       clear();
@@ -483,6 +500,7 @@ class _BodyState extends State<Body> {
           phone: phone,
           gender: gender,
           about: about,
+          email: widget.user.email,
           appointments: widget.user.appointments,
           keyWords: keyWords,
           rate: widget.user.rate,

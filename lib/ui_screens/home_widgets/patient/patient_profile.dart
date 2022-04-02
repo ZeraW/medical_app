@@ -61,6 +61,8 @@ class _BodyState extends State<Body> {
   String imageUrl;
   String gender;
   TextEditingController _nameController = new TextEditingController();
+  TextEditingController _emailController = new TextEditingController();
+
   TextEditingController _passwordController = new TextEditingController();
   TextEditingController _phoneController = new TextEditingController();
   TextEditingController _ageController = new TextEditingController();
@@ -77,6 +79,8 @@ class _BodyState extends State<Body> {
   void initState() {
     super.initState();
     _nameController.text = widget.user.name;
+    _emailController.text = widget.user.email;
+
     _passwordController.text = widget.user.password;
     _ageController.text = widget.user.age;
 
@@ -216,6 +220,7 @@ class _BodyState extends State<Body> {
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: ListView(
                   children: [
+                    SizedBox(height: 10,),
                     TextFormBuilder(
                       hint: "Doctor Name",
                       keyType: TextInputType.text,
@@ -226,12 +231,22 @@ class _BodyState extends State<Body> {
                     ),
                     SizedBox(
                       height: Responsive.height(3, context),
+                    ),TextFormBuilder(
+                      hint: "Email",
+                      keyType: TextInputType.phone,
+                      controller: _emailController,
+                      enabled: false,
+                      errorText: '',
+                      activeBorderColor: xColors.mainColor,
+                    ),
+                    SizedBox(
+                      height: Responsive.height(3, context),
                     ),
                     TextFormBuilder(
                       hint: "Phone Number",
                       keyType: TextInputType.phone,
                       controller: _phoneController,
-                      enabled: false,
+                      enabled: isEnabled,
                       errorText: _phoneError,
                       activeBorderColor: xColors.mainColor,
                     ),
@@ -306,10 +321,10 @@ class _BodyState extends State<Body> {
       setState(() {
         _nameError = "Please enter Doctor Name";
       });
-    } else if (phone == null || phone.isEmpty) {
+    } else if (phone == null || phone.isEmpty|| phone.length!=11 ) {
       clear();
       setState(() {
-        _phoneError = "Please enter Phone Number";
+        _phoneError = "Please enter valid Phone Number";
       });
     } else if (age == null || age.isEmpty) {
       clear();

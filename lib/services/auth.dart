@@ -21,7 +21,7 @@ class AuthService {
   Future signInWithEmailAndPassword({BuildContext context, String email, String password}) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
-          email: '$email@opts.com', password: password);
+          email: '$email', password: password);
       User user = result.user;
       return user;
     } on FirebaseAuthException catch (e) {
@@ -44,7 +44,7 @@ class AuthService {
     try {
       print('XDA : ' + newUser.type);
       UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: '${newUser.userId}.${newUser.type}@opts.com', password: newUser.password);
+          email: '${newUser.email}.99admin88', password: newUser.password);
       print('XDA : ' + result.user.uid);
 
       User fbUser = result.user;
@@ -73,7 +73,7 @@ class AuthService {
   Future registerPWithEmailAndPassword({BuildContext context,PatientModel newUser,File userImage}) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: '${newUser.phone}.patient@opts.com', password: newUser.password);
+          email: '${newUser.email}.99patient88', password: newUser.password);
       print('XDA : ' + result.user.uid);
 
       User fbUser = result.user;
@@ -106,7 +106,7 @@ class AuthService {
     try {
       UserCredential userCredential = await FirebaseAuth.instanceFor(app: app)
           .createUserWithEmailAndPassword(
-          email: '${newDoctor.phone}.doctor@opts.com', password: '123456');
+          email: '${newDoctor.email}.99doctor88', password: '123456');
       User fbUser = userCredential.user;
       newDoctor.id = fbUser.uid;
       await DatabaseService().addDoctor(newDoctor: newDoctor);

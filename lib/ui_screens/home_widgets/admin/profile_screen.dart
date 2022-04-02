@@ -48,7 +48,7 @@ class _BodyState extends State<Body> {
     super.initState();
     _nameController.text = widget.user.name;
     _passwordController.text = widget.user.password;
-    _phoneController.text = widget.user.userId;
+    _phoneController.text = widget.user.phone;
   }
 
   @override
@@ -163,7 +163,7 @@ class _BodyState extends State<Body> {
       UserModel newUser = UserModel(
           name: firstName,
           password: password,
-          userId: widget.user.userId,
+          phone: widget.user.phone,
           id: widget.user.id,
           type: widget.user.type);
 

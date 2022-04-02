@@ -10,16 +10,17 @@ import 'add_diagnosis.dart';
 import 'diagnosis_details.dart';
 
 class PatientInfo extends StatefulWidget {
-final  AppointmentModel appointmentModel;
-final  PatientModel patientModel;
-  const PatientInfo(this.appointmentModel,this.patientModel,{Key key}) : super(key: key);
+  final AppointmentModel appointmentModel;
+  final PatientModel patientModel;
+
+  const PatientInfo(this.appointmentModel, this.patientModel, {Key key})
+      : super(key: key);
 
   @override
   State<PatientInfo> createState() => _PatientInfoState();
 }
 
 class _PatientInfoState extends State<PatientInfo> {
-
   bool isDiagnosis = true;
 
   @override
@@ -45,7 +46,16 @@ class _PatientInfoState extends State<PatientInfo> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(45),
-                  child: Image.network('${widget.patientModel.image}',fit: BoxFit.cover,height: 90,width: 90,),
+                  child: widget.patientModel.image != null
+                      ? Image.network(
+                          '${widget.patientModel.image}',
+                          fit: BoxFit.cover,
+                          height: 90,
+                          width: 90,
+                        )
+                      : CircleAvatar(
+                          radius: 45,child: Icon(Icons.person,size: 50,color: Colors.white,),backgroundColor: Colors.black26,
+                        ),
                 ),
                 SizedBox(
                   width: 10,
@@ -86,86 +96,110 @@ class _PatientInfoState extends State<PatientInfo> {
             SizedBox(
               height: 10,
             ),
-            Row(mainAxisAlignment: MainAxisAlignment.center,children: [
-              GestureDetector(onTap: (){
-                isDiagnosis = true;
-                setState(() {
-
-                });
-              },child: Text('Diagnosis',style: TextStyle(color: isDiagnosis ? xColors.mainColor : null ,fontSize: isDiagnosis?18:17),)),
-              SizedBox(width: 20,),
-              GestureDetector(onTap: (){
-                isDiagnosis = false;
-                setState(() {
-
-                });
-              },child: Text('Files',style: TextStyle(color: !isDiagnosis ? xColors.mainColor : null ,fontSize: !isDiagnosis?18:17),)),
-            ],),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                    onTap: () {
+                      isDiagnosis = true;
+                      setState(() {});
+                    },
+                    child: Text(
+                      'Diagnosis',
+                      style: TextStyle(
+                          color: isDiagnosis ? xColors.mainColor : null,
+                          fontSize: isDiagnosis ? 18 : 17),
+                    )),
+                SizedBox(
+                  width: 20,
+                ),
+                GestureDetector(
+                    onTap: () {
+                      isDiagnosis = false;
+                      setState(() {});
+                    },
+                    child: Text(
+                      'Files',
+                      style: TextStyle(
+                          color: !isDiagnosis ? xColors.mainColor : null,
+                          fontSize: !isDiagnosis ? 18 : 17),
+                    )),
+              ],
+            ),
             SizedBox(
               height: 10,
             ),
-            isDiagnosis?  StreamBuilder<List<DiagnosisModel>>(
-                stream: DatabaseService().getLiveDiagnosis(widget.patientModel.id),
-                builder: (context, snapshot) {
-                  List<DiagnosisModel> mList = snapshot.data;
+            isDiagnosis
+                ? StreamBuilder<List<DiagnosisModel>>(
+                    stream: DatabaseService()
+                        .getLiveDiagnosis(widget.patientModel.id),
+                    builder: (context, snapshot) {
+                      List<DiagnosisModel> mList = snapshot.data;
 
-                  return Expanded(
-                    child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 10),
-                  padding: EdgeInsets.all(5),
-                  color: xColors.offWhite,
-                  child: mList!=null ? ListView.builder(
-                    itemCount: mList.length,
-                    itemBuilder: (context, index) {
-                      return diaCard(mList[index]);
-                    },
-                  ):SizedBox(),
-                ));
-              }
-            ):
-            StreamBuilder<List<HistoryFilesModel>>(
-                stream: DatabaseService().getLiveHistoryFiles(widget.patientModel.id),
-                builder: (context, snapshot) {
-                  List<HistoryFilesModel> mList = snapshot.data;
-
-                  return Expanded(
-                      child: Container(
+                      return Expanded(
+                          child: Container(
                         margin: EdgeInsets.symmetric(vertical: 10),
                         padding: EdgeInsets.all(5),
                         color: xColors.offWhite,
-                        child: mList!=null ? ListView.builder(
-                          itemCount: mList.length,
-                          itemBuilder: (context, index) {
-                            HistoryFilesModel item = mList[index];
-                            return ListTile(
-                              onTap: () {
-                                NavigationService.docInstance
-                                    .navigateToWidget(ViewFile(item));
-                              },
-                              leading: Icon(
-                                Icons.file_open,
-                              ),
-                              title: Text(
-                                '${item.title}',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                              ),
-                              subtitle: Text(
-                                  '${item.date.day}-${item.date.month}-${item.date.year}',
-                                  style:
-                                  TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                            );
-                          },
-                        ):SizedBox(),
+                        child: mList != null
+                            ? ListView.builder(
+                                itemCount: mList.length,
+                                itemBuilder: (context, index) {
+                                  return diaCard(mList[index]);
+                                },
+                              )
+                            : SizedBox(),
                       ));
-                }
-            ),
+                    })
+                : StreamBuilder<List<HistoryFilesModel>>(
+                    stream: DatabaseService()
+                        .getLiveHistoryFiles(widget.patientModel.id),
+                    builder: (context, snapshot) {
+                      List<HistoryFilesModel> mList = snapshot.data;
+
+                      return Expanded(
+                          child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        padding: EdgeInsets.all(5),
+                        color: xColors.offWhite,
+                        child: mList != null
+                            ? ListView.builder(
+                                itemCount: mList.length,
+                                itemBuilder: (context, index) {
+                                  HistoryFilesModel item = mList[index];
+                                  return ListTile(
+                                    onTap: () {
+                                      NavigationService.docInstance
+                                          .navigateToWidget(ViewFile(item));
+                                    },
+                                    leading: Icon(
+                                      Icons.file_open,
+                                    ),
+                                    title: Text(
+                                      '${item.title}',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    subtitle: Text(
+                                        '${item.date.day}-${item.date.month}-${item.date.year}',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600)),
+                                  );
+                                },
+                              )
+                            : SizedBox(),
+                      ));
+                    }),
             Center(
               child: SizedBox(
                 height: Responsive.height(7, context),
                 child: ElevatedButton(
                     onPressed: () {
-                      NavigationService.docInstance
-                          .navigateToWidget(AddDiagnosisScreen(widget.patientModel,widget.appointmentModel));
+                      NavigationService.docInstance.navigateToWidget(
+                          AddDiagnosisScreen(
+                              widget.patientModel, widget.appointmentModel));
                     },
                     child: Text('Add diagnosis & treatment',
                         style: TextStyle(
@@ -179,7 +213,7 @@ class _PatientInfoState extends State<PatientInfo> {
     );
   }
 
-  Widget diaCard(DiagnosisModel model){
+  Widget diaCard(DiagnosisModel model) {
     return InkWell(
         onTap: () {
           NavigationService.docInstance
@@ -187,12 +221,13 @@ class _PatientInfoState extends State<PatientInfo> {
         },
         child: Card(
             child: ListTile(
-              title: Text(
-                '${model.diagnosis}',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text('date: ${model.timestamp.day}-${model.timestamp.month}-${model.timestamp.year}'),
-              trailing: Icon(Icons.keyboard_arrow_right),
-            )));
+          title: Text(
+            '${model.diagnosis}',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          subtitle: Text(
+              'date: ${model.timestamp.day}-${model.timestamp.month}-${model.timestamp.year}'),
+          trailing: Icon(Icons.keyboard_arrow_right),
+        )));
   }
 }

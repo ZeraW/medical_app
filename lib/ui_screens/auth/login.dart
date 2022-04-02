@@ -46,10 +46,10 @@ class Mobile extends StatefulWidget {
 }
 
 class _MobileState extends State<Mobile> {
-  TextEditingController _phoneController = new TextEditingController();
+  TextEditingController _emailController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
 
-  String _phoneError = "";
+  String _emailError = "";
   String _passwordError = "";
 
   @override
@@ -70,10 +70,10 @@ class _MobileState extends State<Mobile> {
             height: Responsive.height(12.0, context),
           ),
           TextFormBuilder(
-            controller: _phoneController,
-            hint: "phone number",
+            controller: _emailController,
+            hint: "email",
             keyType: TextInputType.visiblePassword,
-            errorText: _phoneError,
+            errorText: _emailError,
           ),
           SizedBox(
             height: Responsive.height(3.0, context),
@@ -129,29 +129,29 @@ class _MobileState extends State<Mobile> {
   }
 
   _login(BuildContext context) async {
-    String phone = _phoneController.text;
+    String email = _emailController.text;
     String password = _passwordController.text;
-    if (phone != null &&
-        phone.isNotEmpty &&
+    if (email != null &&
+        email.isNotEmpty &&
         password != null &&
         password.isNotEmpty) {
       setState(() {
         _passwordError = '';
-        _phoneError = '';
+        _emailError = '';
       });
       await AuthService().signInWithEmailAndPassword(
           context: context,
-          email: '${_phoneController.text}.${widget.type}',
+          email: '${_emailController.text}.99${widget.type}88',
           password: _passwordController.text);
 
     } else {
       setState(() {
-        if (phone == null || phone.isEmpty) {
-          _phoneError = "enter a valid phone number";
+        if (email == null || email.isEmpty) {
+          _emailError = "enter a valid email";
           _passwordError = '';
         } else {
           _passwordError = "enter a valid password";
-          _phoneError = '';
+          _emailError = '';
         }
       });
     }

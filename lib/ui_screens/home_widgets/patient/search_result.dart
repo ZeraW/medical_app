@@ -68,7 +68,7 @@ class DoctorCard extends StatelessWidget {
               blurRadius: 6.0,
             )
           ]),
-      height: Responsive.height(40, context),
+      height: 330,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10.0),
         child: Column(

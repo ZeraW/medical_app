@@ -99,6 +99,8 @@ class _AppointmentTabsState extends State<AppointmentTabs> {
                   return AppointmentCard(
                     type: widget.type,
                     date:'${item.time.day}-${item.time.month}-${item.time.year}',
+                    status: item.status,
+                    appointmentModel: item,
                     doctorName: docList
                         .firstWhere((element) =>
                     element.id == item.doctorId,
@@ -117,8 +119,10 @@ class AppointmentCard extends StatelessWidget {
   final AppointmentType type;
   final String doctorName;
   final String date;
+  final int status;
+  final AppointmentModel appointmentModel;
 
-  const AppointmentCard({this.type, this.doctorName,this.date, Key key})
+  const AppointmentCard({this.type, this.doctorName,this.appointmentModel,this.date,this.status, Key key})
       : super(key: key);
 
   @override
@@ -139,6 +143,10 @@ class AppointmentCard extends StatelessWidget {
                   title: "Date",
                   value: "$date",
                 ),
+                status >0 ? RowCardBuilder(
+                  title: "Status",
+                  value: "${status ==1 ? 'Finished' : 'Canceled'}",
+                ):SizedBox()
               ],
             ),
             Row(
@@ -150,8 +158,12 @@ class AppointmentCard extends StatelessWidget {
                       ? SizedBox()
                       : RaisedButton(
                     color: Colors.redAccent,
-                    onPressed: () {
-                      //   cancelAppointment();
+                    onPressed: () async{
+                      AppointmentModel newAppointmentModel =  appointmentModel;
+                      newAppointmentModel.status =2;
+                      newAppointmentModel.keyWords['status'] = 2;
+                      await DatabaseService()
+                          .updateAppointment(update: newAppointmentModel);
                     },
                     child: Text(
                       "Cancel",

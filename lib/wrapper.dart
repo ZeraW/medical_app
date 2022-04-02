@@ -29,9 +29,12 @@ class _WrapperState extends State<Wrapper> {
       return ChangeNotifierProvider(
           create: (context) => AuthManage(), child: RootScreen());
     } else {
-      var start = user.email.indexOf(".") + 1;
-      var end = user.email.indexOf("@");
+      var start = user.email.indexOf(".99") + 3;
+      var end = user.email.indexOf("88");
       String type = user.email.substring(start,end);
+      print('email ${user.email}');
+
+      print('type $type');
 
       if(type == 'admin'){
         return StreamBuilder<UserModel>(
@@ -93,6 +96,8 @@ class _WrapperState extends State<Wrapper> {
         ),
         );
       }
+
+
 
     }
   }

@@ -80,7 +80,7 @@ class _SortablePageState extends State<SortablePage> {
   );
 
   Widget buildDataTable() {
-    final columns = ['Name', 'Phone', 'Specialty','Gender','Edit'];
+    final columns = ['Name', 'Email','Phone', 'Specialty','Gender','Edit'];
 
     return DataTable(
       sortAscending: isAscending,
@@ -100,7 +100,7 @@ class _SortablePageState extends State<SortablePage> {
       .toList();
 
   List<DataRow> getRows(List<DoctorModel> users) => users.map((DoctorModel user) {
-    final cells = [user.name, user.phone, sp(user.specialty),user.gender,user];
+    final cells = [user.name,user.email, user.phone, sp(user.specialty),user.gender,user];
 
     return DataRow(cells: getCells(cells));
   }).toList();

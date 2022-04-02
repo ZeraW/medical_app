@@ -63,6 +63,7 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
                 widget.errorText ='';
               });
             },
+            textInputAction: TextInputAction.none,
             decoration: InputDecoration(
               labelText: '${widget.hint}',
               labelStyle: TextStyle(
