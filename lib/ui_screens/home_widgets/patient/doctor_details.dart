@@ -9,6 +9,7 @@ import 'package:medical_app/utils/dimensions.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:intl/intl.dart';
+import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../navigation_service.dart';
@@ -77,7 +78,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     image: DecorationImage(
-                      image: NetworkImage(widget.doctor.image),
+                      image: widget.doctor.image!=null ?NetworkImage(widget.doctor.image):AssetImage('assets/images/surgeon.png'),
                       fit: BoxFit.fitHeight,
                     ),
                   ),
@@ -131,7 +132,16 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       title: "Book an appointment",
                       heightT: Responsive.height(7.0, context),
                       onTapFunction: () {
-                        bookAppointment(model);
+                        if(widget.doctor.fees!=null){
+                          bookAppointment(model);
+                        }else{
+
+                          Toast.show(
+                              "Help is on the way", context,
+                              backgroundColor: Colors.black54,
+                              duration: Toast.LENGTH_LONG + 2,
+                              gravity: Toast.CENTER);
+                        }
                       },
                       widthT: double.infinity,
                     ),
@@ -184,7 +194,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       height: Responsive.height(1.0, context),
                     ),
                     Text(
-                      widget.doctor.about,
+                      '${widget.doctor.about}',
                       style: TextStyle(
                           color: Colors.black,
                           height: 1.5,

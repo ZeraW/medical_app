@@ -65,28 +65,29 @@ class _SosInfoState extends State<SosInfo> {
                         ],
                       ),
                       Spacer(),
-                      !provider.model.isSolved ?
                       SizedBox(
                           height: 50,
                           width: 150,
                           child: RaisedButton(
                             onPressed: () async {
-                              HelpModel update = provider.model;
-                              update.isSolved = true;
-                              await DatabaseService().updateSOS(sos: update);
-                              provider.hideInfoScreen();
+                              if(!provider.model.isSolved ){
+                                HelpModel update = provider.model;
+                                update.isSolved = true;
+                                await DatabaseService().updateSOS(sos: update);
+                                provider.hideInfoScreen();
+                              }
                             },
-                            color: xColors.mainColor,
+                            color: !provider.model.isSolved ? xColors.mainColor:Colors.green,
                             child: Center(
                               child: Text(
-                                "Solved ?",
+                                !provider.model.isSolved ?"Solved ?": "Solved",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white,
                                     fontSize: 18),
                               ),
                             ),
-                          )):SizedBox()
+                          ))
                     ],
                   ),
                   SizedBox(

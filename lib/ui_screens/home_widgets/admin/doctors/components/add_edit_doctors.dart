@@ -231,7 +231,7 @@ class _AddDScreenState extends State<AddDScreen> {
     }  else if (email == null || email.isEmpty || !isEmail(email)) {
       clear();
       _emailError = "Enter a valid Email";
-    }else if (phone == null || phone.isEmpty|| phone.length<11) {
+    }else if (phone == null || phone.isEmpty|| phone.length!=11 || phone.length>11) {
       clear();
       setState(() {
         _phoneError = "Please enter valid Phone Number";
@@ -322,7 +322,9 @@ class _EditDScreenState extends State<EditDScreen> {
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _phoneController = new TextEditingController();
   TextEditingController _addressController = new TextEditingController();
-  Map<String,String> keyWords={};
+  TextEditingController _emailController = new TextEditingController();
+
+  Map<String,String> keyWords;
 
   SpecialityModel selectedSpeciality;
   CityModel selectedCity;
@@ -350,6 +352,9 @@ class _EditDScreenState extends State<EditDScreen> {
     if (_addressController.text == null || _addressController.text.isEmpty)
       _addressController.text =
           context.watch<DoctorManage>().model.address.toString();
+    if (_emailController.text == null || _emailController.text.isEmpty)
+      _emailController.text =
+          context.watch<DoctorManage>().model.email.toString();
 
     id = context.watch<DoctorManage>().model.id.toString();
     if (_phoneController.text == null || _phoneController.text.isEmpty)
@@ -405,10 +410,20 @@ class _EditDScreenState extends State<EditDScreen> {
                     height: Responsive.height(3, context),
                   ),
                   TextFormBuilder(
+                    hint: "Email",
+                    keyType: TextInputType.emailAddress,
+                    enabled: false,
+                    controller: _emailController,
+                    errorText: '',
+                    activeBorderColor: xColors.mainColor,
+                  ),
+                  SizedBox(
+                    height: Responsive.height(3, context),
+                  ),
+                  TextFormBuilder(
                     hint: "Phone Number",
                     keyType: TextInputType.phone,
                     controller: _phoneController,
-                    enabled: false,
                     errorText: _phoneError,
                     activeBorderColor: xColors.mainColor,
                   ),
@@ -551,10 +566,10 @@ class _EditDScreenState extends State<EditDScreen> {
       setState(() {
         _nameError = "Please enter Doctor Name";
       });
-    } else if (phone == null || phone.isEmpty) {
+    } else if (phone == null || phone.isEmpty||phone.length!=11 || phone.length>11) {
       clear();
       setState(() {
-        _phoneError = "Please enter Phone Number";
+        _phoneError = "Please enter valid Phone Number";
       });
     } else if (address == null || address.isEmpty) {
       clear();
@@ -585,13 +600,21 @@ class _EditDScreenState extends State<EditDScreen> {
       clear();
       //do request
       createSearchKeywordsList();
+
       DoctorModel newModel = DoctorModel(
           id: id,
           name: name,
           specialty: spec,
           phone: phone,
+          email: _emailController.text,
           gender: gender,
           address: address,
+          fees: context.read<DoctorManage>().model.fees,
+          image: context.read<DoctorManage>().model.image,
+          rate: context.read<DoctorManage>().model.rate,
+          appointments: context.read<DoctorManage>().model.appointments,
+          about: context.read<DoctorManage>().model.about,
+
           keyWords: keyWords,
           password: context.read<DoctorManage>().model.password,
           subCity: subCity,
