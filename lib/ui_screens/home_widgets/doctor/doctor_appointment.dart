@@ -102,7 +102,7 @@ class _AppointmentTabsState extends State<AppointmentTabs> {
                     PatientModel patient = patientList.firstWhere(
                         (element) => element.id == item.patientId,
                         orElse: () =>
-                            PatientModel(id: "null", name: "Doctor Removed"));
+                            PatientModel(id: "null", name: "Removed"));
                     return AppointmentCard(
                       appointmentModel: item,
                       onTap: () {

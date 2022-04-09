@@ -72,7 +72,7 @@ class _MobileState extends State<Mobile> {
           TextFormBuilder(
             controller: _emailController,
             hint: "email",
-            keyType: TextInputType.visiblePassword,
+            keyType: TextInputType.emailAddress,
             errorText: _emailError,
           ),
           SizedBox(

@@ -222,7 +222,7 @@ class _BodyState extends State<Body> {
                   children: [
                     SizedBox(height: 10,),
                     TextFormBuilder(
-                      hint: "Doctor Name",
+                      hint: "Patient Name",
                       keyType: TextInputType.text,
                       controller: _nameController,
                       errorText: _nameError,
@@ -319,7 +319,7 @@ class _BodyState extends State<Body> {
     if (name == null || name.isEmpty) {
       clear();
       setState(() {
-        _nameError = "Please enter Doctor Name";
+        _nameError = "Please enter Patient Name";
       });
     } else if (phone == null || phone.isEmpty|| phone.length!=11 ) {
       clear();

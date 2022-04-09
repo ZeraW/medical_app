@@ -251,7 +251,7 @@ class _BodyState extends State<Body> {
                       controller: _nameController,
                       errorText: _nameError,
                       activeBorderColor: xColors.mainColor,
-                      enabled: isEnabled,
+                      enabled: false,
                     ),
                     SizedBox(
                       height: Responsive.height(3, context),

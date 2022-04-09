@@ -85,8 +85,8 @@ class _AddDiagnosisScreenState extends State<AddDiagnosisScreen> {
                 SizedBox(
                   height: Responsive.height(3, context),
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
+                SizedBox(
+                  width: double.infinity,
                   child: RaisedButton(
                     onPressed: () {
                       if (doctorModel != null) {

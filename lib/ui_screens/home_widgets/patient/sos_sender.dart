@@ -17,16 +17,15 @@ class SosSender extends StatelessWidget {
         child: Align(
             alignment: Alignment.centerLeft,
             child: Material(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(30),
+                color: Colors.transparent,
                 child: IconButton(
                   icon: Icon(
-                    Icons.help,
+                    Icons.local_hospital_outlined,
                     size: 45,
-                    color: Colors.white,
+                    color: Colors.black54,
                   ),
                   padding: EdgeInsets.zero,
-                  splashColor: xColors.mainColor,
+                  splashColor: Colors.black12,
                   splashRadius: 24,
                   onPressed: () {
                     showDialog(

@@ -45,7 +45,7 @@ class NavigationService {
       return true;
     });
     if (!isNewRouteSameAsCurrent) {
-      key.currentState.pushReplacementNamed(newRouteName);
+      key.currentState.pushNamedAndRemoveUntil(newRouteName, (Route<dynamic> route) => false);
     }
   }
 }
