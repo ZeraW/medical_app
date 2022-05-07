@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 
 class AdminManage extends ChangeNotifier {
   AdminPages page;
-  String title = 'Manage Cities';
+  String title = 'Reports';
 
   void changeAppBarTitle({String title}) {
     this.title = title;

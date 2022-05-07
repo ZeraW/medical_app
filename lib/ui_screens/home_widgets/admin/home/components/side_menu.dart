@@ -18,6 +18,13 @@ class SideMenu extends StatelessWidget {
           SizedBox(height: 15,),
           Image.asset("assets/images/logo.png",width: 135,height: 135,),
           SizedBox(height: 25,),
+        DrawerListTile(
+        title: "Reports",
+        press: () {
+      NavigationService2.instance.pushReplacement('ManageReportScreen');
+      context.read<AdminManage>().changeAppBarTitle(title: 'Reports');
+    },
+    ),
           DrawerListTile(
             title: "Cities",
             press: () {
@@ -46,14 +53,7 @@ class SideMenu extends StatelessWidget {
               context.read<AdminManage>().changeAppBarTitle(title: 'Manage Locations');
 
             },
-          ),
-          DrawerListTile(
-            title: "Reports",
-            press: () {
-              NavigationService2.instance.pushReplacement('ManageReportScreen');
-              context.read<AdminManage>().changeAppBarTitle(title: 'Reports');
-            },
-          ),
+          )
         ],
       ),
     );

@@ -80,6 +80,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           value: DatabaseService().getLiveDoctor),
                       ChangeNotifierProvider(
                           create: (context) => AdminManage()),
+                StreamProvider<List<PatientModel>>.value(
+                    value: DatabaseService().getLivePatients),
+                StreamProvider<ReportModel>.value(
+                    value: DatabaseService().getLiveReport('2022')),
                       ChangeNotifierProvider(
                           create: (context) => DoctorManage()),
                       Provider(create: (context) => widget.user),

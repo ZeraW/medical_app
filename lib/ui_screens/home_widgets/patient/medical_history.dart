@@ -18,62 +18,86 @@ import 'package:provider/provider.dart';
 import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MedicalHistory extends StatelessWidget {
+class MedicalHistory extends StatefulWidget {
   MedicalHistory({Key key}) : super(key: key);
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
+  State<MedicalHistory> createState() => _MedicalHistoryState();
+}
+
+class _MedicalHistoryState extends State<MedicalHistory>  with SingleTickerProviderStateMixin {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Function onTap;
+
+  TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = new TabController(vsync: this, length: 3);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          elevation: 0.0,
-          key: _scaffoldKey,
-          actions: [
-            IconButton(
-                onPressed: () {
+    print(_tabController.index);
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        elevation: 0.0,
+        key: _scaffoldKey,
+        actions: [
+          IconButton(
+              onPressed: () {
+                if(_tabController.index==1){
                   NavigationService.patientInstance.navigateToWidget(AddFile(FirebaseAuth.instance.currentUser.uid));
-                },
-                icon: Icon(Icons.add))
-          ],
-          title: Text(
-            'Medical History',
-          ),
-          bottom: TabBar(
-            indicatorColor: Colors.grey,
-            indicatorWeight: 3.0,
-            unselectedLabelColor: Colors.grey,
-            labelColor: Colors.white,
-            labelStyle: TextStyle(fontWeight: FontWeight.w600),
-            tabs: <Widget>[
-              Tab(
-                icon: Text(
-                  "Diagnosis",
-                ),
-              ),
-              Tab(
-                icon: Text(
-                  "Files",
-                ),
-              ),
-            ],
-          ),
+                }
+              },
+              icon: Icon(Icons.add))
+        ],
+        title: Text(
+          'Medical History',
         ),
-        body: TabBarView(
-          children: <Widget>[
-            DiagnosisTab(
-                type: HistoryType.DIAGNOSIS, scaffoldKey: _scaffoldKey),
-            FileTab(type: HistoryType.FILES, scaffoldKey: _scaffoldKey)
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorColor: Colors.grey,
+          indicatorWeight: 3.0,
+          unselectedLabelColor: Colors.grey,
+          labelColor: Colors.white,
+          labelStyle: TextStyle(fontWeight: FontWeight.w600),
+          tabs: <Widget>[
+            Tab(
+              text: "Diagnosis",
+            ),
+            Tab(
+              text:"Files",
+
+            ),
+            Tab(
+              text: "Tests",
+            ),
           ],
         ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: <Widget>[
+          DiagnosisTab(type: HistoryType.DIAGNOSIS, scaffoldKey: _scaffoldKey),
+          FileTab(type: HistoryType.FILES, scaffoldKey: _scaffoldKey),
+          TestTab(type: HistoryType.TESTS, scaffoldKey: _scaffoldKey),
+
+        ],
       ),
     );
   }
 }
 
-enum HistoryType { DIAGNOSIS, FILES }
+enum HistoryType { DIAGNOSIS, FILES , TESTS}
 
 class FileTab extends StatefulWidget {
   final HistoryType type;
@@ -427,5 +451,64 @@ class _ViewFileState extends State<ViewFile> {
         ),
       ),
     );
+  }
+}
+
+
+class TestTab extends StatefulWidget {
+  final HistoryType type;
+  final scaffoldKey;
+
+  TestTab({@required this.type, @required this.scaffoldKey});
+
+  @override
+  _TestTabState createState() => _TestTabState();
+}
+
+class _TestTabState extends State<TestTab> {
+  @override
+  Widget build(BuildContext context) {
+    List<HistoryFilesModel> mList = context.watch<List<HistoryFilesModel>>();
+
+    return mList != null
+        ? ListView.builder(
+        itemBuilder: (context, index) {
+          HistoryFilesModel item = mList[index];
+          return ListTile(
+            onTap: () {
+           /*   NavigationService.patientInstance
+                  .navigateToWidget(ViewFile(item));*/
+            },
+            title: Text(
+              '${item.title}',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+            subtitle: Text(
+                '${item.date.day}-${item.date.month}-${item.date.year}',
+                style:
+                TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+            trailing: IconButton(
+                onPressed: () async {
+
+                  showDialogWithFun(
+                      context: context,
+                      title: 'Delete Test',
+                      msg:
+                      'Are your sure that you want to delete this Test?',
+                      yes: () async {
+                        await DatabaseService().deleteFile(
+                            model: item,
+                            id: FirebaseAuth.instance.currentUser.uid);
+                      });
+
+                },
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: Colors.redAccent,
+                )),
+          );
+        },
+        itemCount: mList.length)
+        : SizedBox();
   }
 }

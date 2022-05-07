@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:medical_app/models/db_model.dart';
-import 'package:medical_app/provider/admin_manage.dart';
 import 'package:provider/provider.dart';
 
-class AllDoctorsReport extends StatelessWidget {
+class ProfitReport extends StatelessWidget {
+
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +12,23 @@ class AllDoctorsReport extends StatelessWidget {
     ReportModel report = context.watch<ReportModel>();
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       body: mList != null && mSp != null && report!=null
-          ? SortablePage(mList, mSp,report)
+          ? Column(
+        children: [
+          SizedBox(height: 15,),
+
+          Row(children: [
+            SizedBox(width: 15,),
+
+            Text('Total Profit : ${report.report['priceTotal']}   ,   '),
+            Text('Total Visitation Count : ${report.report['countTotal']}'),
+
+          ],),
+          SizedBox(height: 15,),
+          Expanded(child: SortablePage(mList, mSp,report)),
+        ],
+      )
           : SizedBox(),
     );
   }
@@ -42,10 +56,10 @@ class _SortablePageState extends State<SortablePage> {
 
   Widget buildDataTable() {
 
-   print( widget.report.doctorVisitation);
+    print( widget.report.doctorVisitation);
 
 
-    final columns = ['Name', 'Email','Phone', 'Specialty','Gender','Patients\nCount','Visitation\nCount'];
+    final columns = ['Name','Specialty','Visitation\nCount','Total\nProfit (L.E)'];
 
     return DataTable(
       sortAscending: isAscending,
@@ -65,7 +79,7 @@ class _SortablePageState extends State<SortablePage> {
       .toList();
 
   List<DataRow> getRows(List<DoctorModel> users) => users.map((DoctorModel user) {
-    final cells = [user.name,user.email, user.phone, sp(user.specialty),user.gender,'${user.patients.length}',bookingCount(user.id)];
+    final cells = [user.name, sp(user.specialty),bookingCount(user.id),profit(user.id)];
 
     return DataRow(cells: getCells(cells));
   }).toList();
@@ -78,25 +92,23 @@ class _SortablePageState extends State<SortablePage> {
     return widget.report.doctorVisitation!=null && widget.report.doctorVisitation.containsKey(id)? widget.report.doctorVisitation[id]:0;
   }
 
+  int profit(String id){
+    return widget.report.doctorProfit!=null && widget.report.doctorProfit.containsKey(id)? widget.report.doctorProfit[id]:0;
+  }
+
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
       widget.users.sort((user1, user2) =>
           compareString(ascending, user1.name, user2.name));
-    } else if (columnIndex == 3) {
-      widget.users.sort((user1, user2) =>
-          compareString(ascending, user1.gender, user2.gender));
-    } else if (columnIndex == 2) {
+    }else if (columnIndex == 1) {
       widget.users.sort((user1, user2) =>
           compareString(ascending, '${user1.specialty}', '${user2.specialty}'));
-    }else if (columnIndex == 6) {
+    }else if (columnIndex == 2) {
       widget.users.sort((user1, user2) =>
           compareString(ascending, bookingCount(user1.id).toString(), bookingCount(user2.id).toString()));
-    }else if (columnIndex == 5) {
+    }else if (columnIndex == 3) {
       widget.users.sort((user1, user2) =>
-          compareString(ascending, '${user1.patients.length}', '${user2.patients.length}'));
-    }else if (columnIndex == 4) {
-      widget.users.sort((user1, user2) =>
-          compareString(ascending, '${user1.gender}', '${user2.gender}'));
+          compareString(ascending, profit(user1.id).toString(), profit(user2.id).toString()));
     }
 
     setState(() {

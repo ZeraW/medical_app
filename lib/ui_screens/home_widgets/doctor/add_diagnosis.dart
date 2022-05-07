@@ -7,6 +7,7 @@ import 'package:medical_app/ui_screens/home_widgets/patient/medical_history.dart
 import 'package:medical_app/utils/colors.dart';
 import 'package:medical_app/utils/dimensions.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 import 'finish_examination.dart';
 
@@ -145,6 +146,7 @@ class _AddDiagnosisScreenState extends State<AddDiagnosisScreen> {
   }
 
   void _apiRequest(DoctorModel doctorModel) async {
+    FocusScope.of(context).unfocus();
     String _complain = _complainController.text;
     String _diagnosis = _diagnosisController.text;
     String _treatment = _treatmentController.text;
@@ -164,6 +166,9 @@ class _AddDiagnosisScreenState extends State<AddDiagnosisScreen> {
       setState(() {
         _treatmentError = "Please enter doctor treatment";
       });
+    }else if(doctorModel.fees==null || doctorModel.fees.isEmpty ){
+      clear();
+      Toast.show('Add Your Consultation Fee In Profile Screen', context,duration: 4);
     } else {
       clear();
       //do request
@@ -181,8 +186,12 @@ class _AddDiagnosisScreenState extends State<AddDiagnosisScreen> {
       AppointmentModel newAppointmentModel =  widget.appointmentModel;
       newAppointmentModel.status =1;
       newAppointmentModel.keyWords['status'] = 1;
-      await DatabaseService()
-          .updateAppointment(update: newAppointmentModel);
+      await DatabaseService().updateAppointment(update: newAppointmentModel);
+      await DatabaseService().addPatient2DoctorList(docId: newAppointmentModel.doctorId,newPatient: widget.patientModel);
+      await DatabaseService().updateReport(docId: doctorModel.id,price: int.parse(doctorModel.fees));
+
+
+
       NavigationService.docInstance.navigateToWidgetReplacement(FinishExamination(widget.appointmentModel));
     }
   }

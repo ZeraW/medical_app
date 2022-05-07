@@ -14,7 +14,8 @@ import 'ui_screens/home_widgets/admin/doctors/m_doctors.dart';
 import 'ui_screens/home_widgets/admin/locations/m_locations.dart';
 import 'ui_screens/home_widgets/admin/reports/all_doctor_report.dart';
 import 'ui_screens/home_widgets/admin/reports/all_patient_report.dart';
-import 'ui_screens/home_widgets/admin/reports/doctor_supervised_report.dart';
+import 'ui_screens/home_widgets/admin/reports/appointments_report.dart';
+import 'ui_screens/home_widgets/admin/reports/profit_report.dart';
 import 'ui_screens/home_widgets/admin/reports/m_reports.dart';
 import 'ui_screens/home_widgets/admin/specialities/m_spec.dart';
 import 'ui_screens/home_widgets/doctor/doctor_appointment.dart';
@@ -32,9 +33,11 @@ final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
   "ManageReportScreen": (BuildContext context) => ManageReportScreen(),
   "ManageSubCitiesScreen": (BuildContext context) => ManageSubCitiesScreen(),
 
-  "Doctor_SuperVised_Report": (BuildContext context) => DoctorSuperVisedReport(),
+  "finance_profit_Report": (BuildContext context) => ProfitReport(),
   "All_Doctors_Report": (BuildContext context) => AllDoctorsReport(),
   "All_Patients_Report": (BuildContext context) => AllPatientsReport(),
+  "Appointments_Report": (BuildContext context) => AppointmentsReport(),
+
   "Profile": (BuildContext context) => StreamProvider<UserModel>.value(
       value: DatabaseService().getUserById,
       child:  ProfileScreen()),

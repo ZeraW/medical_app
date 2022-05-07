@@ -504,6 +504,7 @@ class _BodyState extends State<Body> {
           appointments: widget.user.appointments,
           keyWords: keyWords,
           rate: widget.user.rate,
+          patients: widget.user.patients,
           address: address,fees: fees,
           password: password,
           subCity: subCity,

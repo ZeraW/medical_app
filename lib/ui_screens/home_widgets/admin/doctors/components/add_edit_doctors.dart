@@ -272,6 +272,7 @@ class _AddDScreenState extends State<AddDScreen> {
           gender: gender,email: email,
           subCity: subCity,
           address: address,
+          patients: {},
           password: '123456',
           keyWords: keyWords,
           city: city);
@@ -614,6 +615,7 @@ class _EditDScreenState extends State<EditDScreen> {
           rate: context.read<DoctorManage>().model.rate,
           appointments: context.read<DoctorManage>().model.appointments,
           about: context.read<DoctorManage>().model.about,
+          patients: context.read<DoctorManage>().model.patients,
 
           keyWords: keyWords,
           password: context.read<DoctorManage>().model.password,

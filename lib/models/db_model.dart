@@ -47,7 +47,7 @@ class UserModel {
 }
 
 class PatientModel {
-  String id, password, name, phone, email, gender, image, age;
+  String id, password, name, phone, email,city, gender, image, age;
 
   PatientModel(
       {this.id,
@@ -56,14 +56,16 @@ class PatientModel {
       this.email,
       this.phone,
       this.gender,
-      this.age,
+      this.age,this.city,
       this.image});
 
   PatientModel.fromSnapShot(DocumentSnapshot doc)
       : id = doc.get('id'),
         password = doc.get('password'),
         name = doc.get('name'),
-        email = doc.get('email'),
+        city = doc.get('city'),
+
+      email = doc.get('email'),
         gender = doc.get('gender'),
         age = doc.get('age'),
         image = doc.get('image'),
@@ -73,7 +75,9 @@ class PatientModel {
       : id = json['id'],
         password = json['password'],
         name = json['name'],
-        email = json['email'],
+        city = json['city'],
+
+      email = json['email'],
         gender = json['gender'],
         image = json['image'],
         age = json['age'],
@@ -85,6 +89,8 @@ class PatientModel {
           id: doc.get('id'),
           password: doc.get('password'),
           name: doc.get('name'),
+          city: doc.get('city'),
+
           email: doc.get('email'),
           gender: doc.get('gender'),
           image: doc.get('image'),
@@ -98,6 +104,8 @@ class PatientModel {
       'id': id,
       'password': password,
       'name': name,
+      'city': city,
+
       'gender': gender,
       'email': email,
       'image': image,
@@ -207,6 +215,7 @@ class DoctorModel {
       phone,
       address;
   Map<String, String> keyWords;
+  Map<String, String> patients;
 
   Map<String, DateTime> appointments;
 
@@ -221,7 +230,7 @@ class DoctorModel {
       this.specialty,
       this.password,
       this.fees,
-      this.rate,
+      this.rate,this.patients,
       this.keyWords,
       this.appointments,
       this.address,
@@ -245,6 +254,9 @@ class DoctorModel {
           keyWords: doc.get('keyWords') != null
               ? Map<String, String>.from(doc.get('keyWords'))
               : {},
+          patients: doc.get('patients') != null
+              ? Map<String, String>.from(doc.get('patients'))
+              : {},
           appointments: doc.get('appointments') != null
               ? Map<String, Timestamp>.from(doc.get('appointments'))
                   .map<String, DateTime>((key, value) {
@@ -263,6 +275,7 @@ class DoctorModel {
       'name': this.name,
       'image': this.image,
       'email': this.email,
+      'patients': this.patients,
 
       'about': this.about,
       'gender': this.gender,
@@ -284,7 +297,9 @@ class DoctorModel {
       id: map['id'] as String,
       name: map['name'] as String,
       email: map['email'] as String,
-
+      patients: map['patients'] != null
+          ? Map<String, String>.from(map['patients'])
+          : {},
       image: map['image'] as String,
       about: map['about'] as String,
       gender: map['gender'] as String,
@@ -490,6 +505,93 @@ class HistoryFilesModel {
       'title': this.title,
       'details': this.details,
       'fileUrl': this.fileUrl,
+      'date': this.date,
+    };
+  }
+}
+
+class ReportModel {
+  final String id;
+  Map<String, int> report;
+  Map<String, int> doctorProfit;
+  Map<String, int> doctorVisitation;
+
+  ReportModel({this.id, this.report,this.doctorProfit,this.doctorVisitation});
+
+  List<ReportModel> fromQuery(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return ReportModel(
+        id: doc.get('id') ?? '',
+        report: doc.get('report') != null
+            ? Map<String, int>.from(doc.get('report'))
+            : {},
+
+        doctorProfit: doc.get('doctorProfit') != null
+            ? Map<String, int>.from(doc.get('doctorProfit'))
+            : {},
+
+        doctorVisitation: doc.get('doctorVisitation') != null
+            ? Map<String, int>.from(doc.get('doctorVisitation'))
+            : {},
+      );
+    }).toList();
+  }
+
+
+
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': this.id,
+      'report': this.report,
+      'doctorProfit': this.doctorProfit,
+      'doctorVisitation': this.doctorVisitation,
+    };
+  }
+
+  factory ReportModel.fromMap(Map<String, dynamic> map) {
+    return ReportModel(
+      id: map['id'] as String,
+      report: map['report'] != null
+          ? Map<String, int>.from(map['report'])
+          : {},
+      doctorProfit: map['doctorProfit'] != null
+          ? Map<String, int>.from(map['doctorProfit'])
+          : {},
+      doctorVisitation: map['doctorVisitation'] != null
+          ? Map<String, int>.from(map['doctorVisitation'])
+          : {},
+    );
+  }
+}
+
+
+class PatientTestModel {
+  String id, type;
+  int first,second;
+  DateTime date;
+
+  PatientTestModel(
+      {this.date, this.id, this.first, this.type, this.second});
+
+  List<PatientTestModel> fromQuery(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return PatientTestModel(
+        id: doc.get('id'),
+        type: doc.get('type'),
+        first: doc.get('first'),
+        second: doc.get('second'),
+        date: doc.get('date').toDate(),
+      );
+    }).toList();
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': this.id,
+      'type': this.type,
+      'first': this.first,
+      'second': this.second,
       'date': this.date,
     };
   }

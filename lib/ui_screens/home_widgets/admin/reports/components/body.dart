@@ -25,8 +25,11 @@ class Body extends StatelessWidget {
                   ReportCard(title: 'All Doctors',description: 'A report showing all the doctors registered in the system.',onTap: (){
                     NavigationService2.instance.navigateTo('All_Doctors_Report');
                   },),
-                  ReportCard(title: 'Doctor Supervised patients',description: 'A report showing all the doctors Supervised patients.',onTap: (){
-                    NavigationService2.instance.navigateTo('Doctor_SuperVised_Report');
+                  ReportCard(title: 'Finance & Profits',description: 'A report showing all the doctors profits',onTap: (){
+                    NavigationService2.instance.navigateTo('finance_profit_Report');
+                  },),
+                  ReportCard(title: 'Appointments',description: 'A report showing all the doctors Appointments',onTap: (){
+                    NavigationService2.instance.navigateTo('Appointments_Report');
                   },),
                 ],
               ),

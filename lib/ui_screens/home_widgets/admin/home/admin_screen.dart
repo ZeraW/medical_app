@@ -63,7 +63,7 @@ class _AdminScreenState extends State<AdminScreen> {
                       title: 'admin',
                       debugShowCheckedModeBanner: false,
                       navigatorKey: NavigationService2.instance.key,
-                      initialRoute: 'ManageCitiesScreen',
+                      initialRoute: 'ManageReportScreen',
                       theme: appTheme(),
                       routes: routes,
                     ),
