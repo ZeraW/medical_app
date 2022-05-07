@@ -275,7 +275,6 @@ class DatabaseService {
     if (isNew) {
       return appointmentCollection
           .where('keyWords.status', isEqualTo: 0)
-          .orderBy('keyWords.time')
           .snapshots()
           .map(AppointmentModel().fromQuery);
     } else {
