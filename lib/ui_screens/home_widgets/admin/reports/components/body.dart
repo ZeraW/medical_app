@@ -9,9 +9,14 @@ import 'package:provider/provider.dart';
 class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    List<DoctorModel> docList = Provider.of<List<DoctorModel>>(context);
+    ReportModel report = context.watch<ReportModel>();
+    List<PatientModel> patList = Provider.of<List<PatientModel>>(context);
+
+
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Padding(
+      body: patList!=null && report!=null && docList!=null?Padding(
         padding: EdgeInsets.all(5.0),
         child: SizedBox(
           width: double.infinity,
@@ -22,7 +27,7 @@ class Body extends StatelessWidget {
               child: Wrap(
                 children: [
                   ReportCard(
-                    title: 'All Patients',
+                    title: 'All Patients (${patList.length})',
                     description:
                         'A report showing all the patients registered in the system.',
                     onTap: () {
@@ -33,7 +38,7 @@ class Body extends StatelessWidget {
                     },
                   ),
                   ReportCard(
-                    title: 'All Doctors',
+                    title: 'All Doctors (${docList.length})',
                     description:
                         'A report showing all the doctors registered in the system.',
                     onTap: () {
@@ -43,7 +48,7 @@ class Body extends StatelessWidget {
                     },
                   ),
                   ReportCard(
-                    title: 'Finance & Profits',
+                    title: 'Finance & Profits (${report.report['countTotal']} * ${report.report['priceTotal']})',
                     description: 'A report showing all the doctors profits',
                     onTap: () {
                       NavigationService2.instance
@@ -68,7 +73,7 @@ class Body extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      ):SizedBox(),
     );
   }
 }

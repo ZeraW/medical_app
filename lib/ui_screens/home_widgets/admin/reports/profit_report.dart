@@ -29,7 +29,8 @@ class ProfitReport extends StatelessWidget {
                   Navigator.of(context).pop();
                   context.read<AdminManage>().changeAppBarTitle(title: 'Reports');
 
-                },splashColor: Colors.transparent,hoverColor: Colors.transparent,child: Text('Reports',style: TextStyle(color: xColors.mainColor),)),Text('  /  ',),Text('All Patients Report'),
+                },splashColor: Colors.transparent,hoverColor: Colors.transparent,child: Text('Reports',style: TextStyle(color: xColors.mainColor),)),
+                Text('  /  ',),Text('All Patients Report'),
               ],
             ),
           ),

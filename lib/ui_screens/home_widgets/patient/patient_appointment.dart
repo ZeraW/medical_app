@@ -146,7 +146,8 @@ class AppointmentCard extends StatelessWidget {
                 ),
                 status >0 ? RowCardBuilder(
                   title: "Status",
-                  value: "${status ==1 ? 'Finished' : 'Canceled'}",
+                  value: "${status ==1 ? 'Finished' : status ==2 ?'Canceled by\nDoctor' : 'Canceled by\nUser'}",
+                  color: status ==1 ? Colors.green : status ==2 ?Colors.redAccent  : Colors.orange ,
                 ):SizedBox()
               ],
             ),
@@ -169,8 +170,8 @@ class AppointmentCard extends StatelessWidget {
                           'Are your sure that you want to cancel this Appointment?',
                           yes: () async {
                             AppointmentModel newAppointmentModel =  appointmentModel;
-                            newAppointmentModel.status =2;
-                            newAppointmentModel.keyWords['status'] = 2;
+                            newAppointmentModel.status =3;
+                            newAppointmentModel.keyWords['status'] = 3;
                             await DatabaseService()
                                 .updateAppointment(update: newAppointmentModel);
 
@@ -209,8 +210,8 @@ class AppointmentCard extends StatelessWidget {
 class RowCardBuilder extends StatelessWidget {
   final String title;
   final String value;
-
-  RowCardBuilder({this.title, this.value});
+  final Color color;
+  RowCardBuilder({this.title, this.value,this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -229,6 +230,7 @@ class RowCardBuilder extends StatelessWidget {
           Text(
             "$value",
             style: TextStyle(
+                color: color,
                 fontWeight: FontWeight.w600,
                 fontSize: Responsive.width(3.5, context)),
           )

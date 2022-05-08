@@ -156,9 +156,8 @@ class _AppointmentTabsState extends State<AppointmentTabs> {
 class RowCardBuilder extends StatelessWidget {
   final String title;
   final String value;
-
-  RowCardBuilder({this.title, this.value});
-
+  final Color color;
+  RowCardBuilder({this.title, this.value,this.color});
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -176,6 +175,7 @@ class RowCardBuilder extends StatelessWidget {
           Text(
             "$value",
             style: TextStyle(
+                color: color,
                 fontWeight: FontWeight.w600,
                 fontSize: 16),
           )
@@ -231,8 +231,9 @@ class AppointmentCard extends StatelessWidget {
                   appointmentModel.status > 0
                       ? RowCardBuilder(
                     title: "Status",
-                    value:
-                    "${appointmentModel.status == 1 ? 'Finished' : 'Canceled'}",
+
+                    value: "${appointmentModel.status ==1 ? 'Finished' : appointmentModel.status ==2 ?'Canceled by Doctor' : 'Canceled by User'}",
+                    color: appointmentModel.status ==1 ? Colors.green : appointmentModel.status ==2 ?Colors.redAccent  : Colors.orange ,
                   )
                       : SizedBox(),
                 ],

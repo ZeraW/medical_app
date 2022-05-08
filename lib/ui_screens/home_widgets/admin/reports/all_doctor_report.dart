@@ -139,7 +139,7 @@ class _SortablePageState extends State<SortablePage> {
           minHeight: 5.0,
           minWidth: 5.0,
           maxHeight: 100.0,
-          maxWidth: 130.0,
+          maxWidth: 160.0,
         ),
         child: Text('$data',maxLines: 2,overflow: TextOverflow.ellipsis,));
   }
