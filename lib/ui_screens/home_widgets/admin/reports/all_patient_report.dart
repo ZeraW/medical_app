@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medical_app/models/db_model.dart';
+import 'package:medical_app/provider/admin_manage.dart';
+import 'package:medical_app/utils/colors.dart';
 import 'package:provider/provider.dart';
 
 class AllPatientsReport extends StatelessWidget {
@@ -9,9 +11,28 @@ class AllPatientsReport extends StatelessWidget {
     List<CityModel> mCity = Provider.of<List<CityModel>>(context);
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       body: mList != null && mCity != null
-          ? SortablePage(mList, mCity)
+          ? Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Row(
+                  children: [
+                    InkWell(onTap: (){
+                      Navigator.of(context).pop();
+                      context.read<AdminManage>().changeAppBarTitle(title: 'Reports');
+
+                    },splashColor: Colors.transparent,hoverColor: Colors.transparent,child: Text('Reports',style: TextStyle(color: xColors.mainColor),)),Text('  /  ',),Text('All Patients Report'),
+                  ],
+                ),
+              ),
+
+              TotalCard(title: 'Patients', description: '${mList.length}'),
+              Expanded(child: SortablePage(mList, mCity)),
+            ],
+          )
           : SizedBox(),
     );
   }
@@ -99,8 +120,13 @@ class _SortablePageState extends State<SortablePage> {
       ascending ? value1.compareTo(value2) : value2.compareTo(value1);
 
   Widget rowText(data) {
-    return SizedBox(
-        width: 100,
+    return ConstrainedBox(
+        constraints: new BoxConstraints(
+          minHeight: 5.0,
+          minWidth: 5.0,
+          maxHeight: 100.0,
+          maxWidth: 130.0,
+        ),
         child: Text(
           '$data',
           maxLines: 2,
@@ -134,4 +160,44 @@ class ScrollableWidget extends StatelessWidget {
           child: child,
         ),
       );
+}
+
+
+class TotalCard extends StatelessWidget {
+  String title, description;
+
+  TotalCard({
+    this.title,
+    this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Container(
+        height: 70,
+        width: 200,
+        decoration: BoxDecoration(
+            color: xColors.offWhite,
+            border: Border.all(color: xColors.mainColor),
+            borderRadius: BorderRadius.all(Radius.circular(15))),
+        padding: EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SelectableText(
+              '$title',
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+            ),
+            Spacer(),
+            SelectableText(
+              '$description',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

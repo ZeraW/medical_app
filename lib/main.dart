@@ -33,6 +33,8 @@ class MyApp extends StatelessWidget {
         StreamProvider<User>.value(value: AuthService().user),
         StreamProvider<List<SpecialityModel>>.value(
             value: DatabaseService().getLiveSpeciality),
+        StreamProvider<List<CityModel>>.value(
+            value: DatabaseService().getLiveCities),
       ],
       child: MaterialApp(
         title: 'OPTS',

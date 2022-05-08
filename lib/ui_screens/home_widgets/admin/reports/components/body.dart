@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:medical_app/models/db_model.dart';
 import 'package:medical_app/navigation_service.dart';
+import 'package:medical_app/provider/admin_manage.dart';
 import 'package:medical_app/utils/colors.dart';
 import 'package:medical_app/utils/dimensions.dart';
+import 'package:provider/provider.dart';
 
 class Body extends StatelessWidget {
   @override
@@ -19,18 +21,48 @@ class Body extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Wrap(
                 children: [
-                  ReportCard(title: 'All Patients',description: 'A report showing all the patients registered in the system.',onTap: (){
-                    NavigationService2.instance.navigateTo('All_Patients_Report');
-                  },),
-                  ReportCard(title: 'All Doctors',description: 'A report showing all the doctors registered in the system.',onTap: (){
-                    NavigationService2.instance.navigateTo('All_Doctors_Report');
-                  },),
-                  ReportCard(title: 'Finance & Profits',description: 'A report showing all the doctors profits',onTap: (){
-                    NavigationService2.instance.navigateTo('finance_profit_Report');
-                  },),
-                  ReportCard(title: 'Appointments',description: 'A report showing all the doctors Appointments',onTap: (){
-                    NavigationService2.instance.navigateTo('Appointments_Report');
-                  },),
+                  ReportCard(
+                    title: 'All Patients',
+                    description:
+                        'A report showing all the patients registered in the system.',
+                    onTap: () {
+
+                      NavigationService2.instance
+                          .navigateTo('All_Patients_Report');
+                      context.read<AdminManage>().changeAppBarTitle(title: 'All Patients Report');
+                    },
+                  ),
+                  ReportCard(
+                    title: 'All Doctors',
+                    description:
+                        'A report showing all the doctors registered in the system.',
+                    onTap: () {
+                      NavigationService2.instance
+                          .navigateTo('All_Doctors_Report');
+                      context.read<AdminManage>().changeAppBarTitle(title: 'All Doctors Report');
+                    },
+                  ),
+                  ReportCard(
+                    title: 'Finance & Profits',
+                    description: 'A report showing all the doctors profits',
+                    onTap: () {
+                      NavigationService2.instance
+                          .navigateTo('finance_profit_Report');
+                      context.read<AdminManage>().changeAppBarTitle(title: 'Finance & Profit Report');
+
+                    },
+                  ),
+                  ReportCard(
+                    title: 'Appointments',
+                    description:
+                        'A report showing all the doctors Appointments',
+                    onTap: () {
+                      NavigationService2.instance
+                          .navigateTo('Appointments_Report');
+                      context.read<AdminManage>().changeAppBarTitle(title: 'Appointments Report');
+
+                    },
+                  ),
                 ],
               ),
             ),
@@ -42,13 +74,15 @@ class Body extends StatelessWidget {
 }
 
 class ReportCard extends StatelessWidget {
-  String title,description;
+  String title, description;
   Function onTap;
+
   ReportCard({
     this.title,
     this.description,
     this.onTap,
   });
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -64,19 +98,35 @@ class ReportCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SelectableText('$title',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
-            SizedBox(height: 4,),
-            SelectableText('$description',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 13),),
+            SelectableText(
+              '$title',
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            SelectableText(
+              '$description',
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
+            ),
             Spacer(),
-            SizedBox(height: 40,child: ElevatedButton(onPressed:onTap, child: Text('Show Report',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 17),),style: ButtonStyle(backgroundColor: xColors.materialColor(xColors.mainColor)),))
-
+            SizedBox(
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: onTap,
+                  child: Text(
+                    'Show Report',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
+                  ),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          xColors.materialColor(xColors.mainColor)),
+                ))
           ],
         ),
       ),
     );
   }
-
-
 }
 
 class SortablePage extends StatefulWidget {

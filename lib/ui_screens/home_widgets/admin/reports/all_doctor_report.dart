@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:medical_app/models/db_model.dart';
 import 'package:medical_app/provider/admin_manage.dart';
+import 'package:medical_app/utils/colors.dart';
 import 'package:provider/provider.dart';
+
+import 'all_patient_report.dart';
 
 class AllDoctorsReport extends StatelessWidget {
 
@@ -12,9 +15,29 @@ class AllDoctorsReport extends StatelessWidget {
     ReportModel report = context.watch<ReportModel>();
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       body: mList != null && mSp != null && report!=null
-          ? SortablePage(mList, mSp,report)
+          ? Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Row(
+                  children: [
+                    InkWell(onTap: (){
+                      Navigator.of(context).pop();
+                      context.read<AdminManage>().changeAppBarTitle(title: 'Reports');
+
+                    },splashColor: Colors.transparent,hoverColor: Colors.transparent,child: Text('Reports',style: TextStyle(color: xColors.mainColor),)),Text('  /  ',),Text('All Doctors Report'),
+                  ],
+                ),
+              ),
+              TotalCard(title: 'Doctors', description: '${mList.length}'),
+
+              Expanded(child: SortablePage(mList, mSp,report)),
+            ],
+          )
           : SizedBox(),
     );
   }
@@ -111,7 +134,14 @@ class _SortablePageState extends State<SortablePage> {
 
 
   Widget rowText(data){
-    return SizedBox(width: 100,child: Text('$data',maxLines: 2,overflow: TextOverflow.ellipsis,));
+    return ConstrainedBox(
+        constraints: new BoxConstraints(
+          minHeight: 5.0,
+          minWidth: 5.0,
+          maxHeight: 100.0,
+          maxWidth: 130.0,
+        ),
+        child: Text('$data',maxLines: 2,overflow: TextOverflow.ellipsis,));
   }
 
 

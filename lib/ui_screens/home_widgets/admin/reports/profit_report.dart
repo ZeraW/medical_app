@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:medical_app/models/db_model.dart';
+import 'package:medical_app/provider/admin_manage.dart';
+import 'package:medical_app/utils/colors.dart';
 import 'package:provider/provider.dart';
+
+import 'all_patient_report.dart';
 
 class ProfitReport extends StatelessWidget {
 
@@ -15,17 +19,28 @@ class ProfitReport extends StatelessWidget {
       backgroundColor: Colors.white,
       body: mList != null && mSp != null && report!=null
           ? Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 15,),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              children: [
+                InkWell(onTap: (){
+                  Navigator.of(context).pop();
+                  context.read<AdminManage>().changeAppBarTitle(title: 'Reports');
+
+                },splashColor: Colors.transparent,hoverColor: Colors.transparent,child: Text('Reports',style: TextStyle(color: xColors.mainColor),)),Text('  /  ',),Text('All Patients Report'),
+              ],
+            ),
+          ),
 
           Row(children: [
-            SizedBox(width: 15,),
-
-            Text('Total Profit : ${report.report['priceTotal']}   ,   '),
-            Text('Total Visitation Count : ${report.report['countTotal']}'),
+            TotalCard(title: 'Total Profit', description: '${report.report['priceTotal']}'),
+            TotalCard(title: 'Total Visitation', description: '${report.report['countTotal']}'),
 
           ],),
-          SizedBox(height: 15,),
+
+
           Expanded(child: SortablePage(mList, mSp,report)),
         ],
       )
@@ -123,7 +138,14 @@ class _SortablePageState extends State<SortablePage> {
 
 
   Widget rowText(data){
-    return SizedBox(width: 100,child: Text('$data',maxLines: 2,overflow: TextOverflow.ellipsis,));
+    return ConstrainedBox(
+        constraints: new BoxConstraints(
+          minHeight: 5.0,
+          minWidth: 5.0,
+          maxHeight: 100.0,
+          maxWidth: 130.0,
+        ),
+        child: Text('$data',maxLines: 2,overflow: TextOverflow.ellipsis,));
   }
 
 

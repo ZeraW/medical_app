@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:medical_app/models/db_model.dart';
+import 'package:medical_app/provider/admin_manage.dart';
 import 'package:medical_app/services/database_api.dart';
 import 'package:medical_app/ui_components/dialogs.dart';
+import 'package:medical_app/ui_screens/home_widgets/admin/reports/all_patient_report.dart';
 import 'package:medical_app/utils/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +24,19 @@ class _AppointmentsReportState extends State<AppointmentsReport> {
     return Scaffold(
       backgroundColor: Colors.white,
       body:Column(children: [
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Row(
+            children: [
+              InkWell(onTap: (){
+                Navigator.of(context).pop();
+                context.read<AdminManage>().changeAppBarTitle(title: 'Reports');
+
+              },splashColor: Colors.transparent,hoverColor: Colors.transparent,child: Text('Reports',style: TextStyle(color: xColors.mainColor),)),Text('  /  ',),Text('Appointments Report'),
+            ],
+          ),
+        ),
+
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -67,9 +82,6 @@ class _AppointmentsReportState extends State<AppointmentsReport> {
                 )),
           ],
         ),
-        SizedBox(
-          height: 15,
-        ),
         isNew ? Expanded(
           child: AppointmentTabs(
               type: AppointmentType.UPCOMING),
@@ -108,26 +120,34 @@ class _AppointmentTabsState extends State<AppointmentTabs> {
           List<AppointmentModel> mList = snapshot.data;
 
           return mList != null && patientList != null
-              ? ListView.builder(
-              itemBuilder: (context, index) {
-                AppointmentModel item = mList[index];
-                PatientModel patient = patientList.firstWhere(
-                        (element) => element.id == item.patientId,
-                    orElse: () =>
-                        PatientModel(id: "null", name: "Removed"));
-                return AppointmentCard(
-                  appointmentModel: item,
-                  onTap: () {
+              ? Column(
+                children: [
+                  TotalCard(title: 'Appointments', description: '${mList.length}'),
 
-                  },
-                  type: widget.type,
-                  docName: mDoctorList.firstWhere((element) => element.id==item.doctorId,orElse: ()=>DoctorModel(name: 'removed',id: 'null')).name,
-                  date:
-                  '${item.time.day}-${item.time.month}-${item.time.year}',
-                  patientName: patient.name,
-                );
-              },
-              itemCount: mList.length)
+                  Expanded(
+                    child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      AppointmentModel item = mList[index];
+                      PatientModel patient = patientList.firstWhere(
+                              (element) => element.id == item.patientId,
+                          orElse: () =>
+                              PatientModel(id: "null", name: "Removed"));
+                      return AppointmentCard(
+                        appointmentModel: item,
+                        onTap: () {
+
+                        },
+                        type: widget.type,
+                        docName: mDoctorList.firstWhere((element) => element.id==item.doctorId,orElse: ()=>DoctorModel(name: 'removed',id: 'null')).name,
+                        date:
+                        '${item.time.day}-${item.time.month}-${item.time.year}',
+                        patientName: patient.name,
+                      );
+                    },
+                    itemCount: mList.length),
+                  ),
+                ],
+              )
               : SizedBox();
         });
   }

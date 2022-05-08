@@ -80,18 +80,21 @@ class _MobileState extends State<Mobile> {
   TextEditingController _emailController = new TextEditingController();
 
   String gender;
+  CityModel selectedCity;
 
   String _nameError = "";
   String _phoneError = "";
   String _passError = "";
   String _rePassError = "";
   String _emailError = "";
-
+  String _cityError = "";
   String _ageError = "";
 
   String _genderError = "";
   @override
   Widget build(BuildContext context) {
+    List<CityModel> mCityList = Provider.of<List<CityModel>>(context);
+
     return Container(
       height: Responsive.height(100,context),
       padding: EdgeInsets.symmetric(
@@ -145,6 +148,22 @@ class _MobileState extends State<Mobile> {
             SizedBox(
               height: Responsive.height(3.0,context),
             ),
+            mCityList != null
+                ? DropDownDynamicList(
+                mList: mCityList,
+                errorText: _cityError,
+                selectedItem: selectedCity,
+                hint: "City",
+                onChange: (dynamic value) {
+                  setState(() {
+                    selectedCity = value;
+                  });
+                })
+                : SizedBox(),
+            SizedBox(
+              height: Responsive.height(3, context),
+            ),
+
             DropDownStringList(
               hint: 'Gender',
               mList: ['Male', 'Female'],
@@ -205,6 +224,7 @@ class _MobileState extends State<Mobile> {
     String passwordConfirm = _repasswordController.text;
     String age = _ageController.text;
     String email = _emailController.text;
+    String city = selectedCity.id;
 
 
     if (firstName == null || firstName.isEmpty) {
@@ -218,6 +238,11 @@ class _MobileState extends State<Mobile> {
     }else if (email == null || email.isEmpty || !isEmail(email)) {
       clear();
       _emailError = "Enter a valid Email";
+    }else if (city == null || city.isEmpty) {
+      clear();
+      setState(() {
+        _cityError = "Please Select City";
+      });
     } else if (password == null || password.isEmpty) {
       clear();
       _passError = "Enter the password";
@@ -235,6 +260,7 @@ class _MobileState extends State<Mobile> {
           password: password,
           phone: phone,email: email,
           age: age,
+          city: city,
           gender: gender,
           );
       await AuthService().registerPWithEmailAndPassword(
@@ -255,7 +281,7 @@ class _MobileState extends State<Mobile> {
       _phoneError = "";
       _passError = "";
       _emailError = "";
-
+      _cityError= "";
       _rePassError = "";
       _ageError = "";
       _genderError = "";
