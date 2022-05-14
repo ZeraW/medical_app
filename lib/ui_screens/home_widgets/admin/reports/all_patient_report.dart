@@ -58,7 +58,7 @@ class _SortablePageState extends State<SortablePage> {
       );
 
   Widget buildDataTable() {
-    final columns = ['Name', 'Email', 'Phone', 'City', 'Gender'];
+    final columns = ['Name', 'Email', 'Phone', 'City', 'Gender', 'Finished\nAppointment'];
 
     return DataTable(
       sortAscending: isAscending,
@@ -90,7 +90,7 @@ class _SortablePageState extends State<SortablePage> {
           user.email,
           user.phone,
           city(user.city),
-          user.gender];
+          user.gender,user.count??0,];
 
         return DataRow(cells: getCells(cells));
       }).toList();
@@ -108,6 +108,9 @@ class _SortablePageState extends State<SortablePage> {
     } else if (columnIndex == 2) {
       widget.users.sort((user1, user2) =>
           compareString(ascending, '${user1.city}', '${user2.city}'));
+    }else if (columnIndex == 5) {
+      widget.users.sort((user1, user2) =>
+          compareString(ascending, '${user1.count}', '${user2.count}'));
     }
 
     setState(() {

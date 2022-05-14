@@ -48,13 +48,14 @@ class UserModel {
 
 class PatientModel {
   String id, password, name, phone, email,city, gender, image, age;
+  int count;
 
   PatientModel(
       {this.id,
       this.password,
       this.name,
       this.email,
-      this.phone,
+      this.phone,this.count,
       this.gender,
       this.age,this.city,
       this.image});
@@ -64,6 +65,7 @@ class PatientModel {
         password = doc.get('password'),
         name = doc.get('name'),
         city = doc.get('city'),
+        count = doc.get('count'),
 
       email = doc.get('email'),
         gender = doc.get('gender'),
@@ -76,6 +78,7 @@ class PatientModel {
         password = json['password'],
         name = json['name'],
         city = json['city'],
+        count = json['count'],
 
       email = json['email'],
         gender = json['gender'],
@@ -90,6 +93,7 @@ class PatientModel {
           password: doc.get('password'),
           name: doc.get('name'),
           city: doc.get('city'),
+          count: doc.get('count'),
 
           email: doc.get('email'),
           gender: doc.get('gender'),
@@ -105,6 +109,7 @@ class PatientModel {
       'password': password,
       'name': name,
       'city': city,
+      'count': count,
 
       'gender': gender,
       'email': email,
@@ -211,11 +216,11 @@ class DoctorModel {
       password,
       specialty,
       fees,
-      rate,
       phone,
       address;
   Map<String, String> keyWords;
   Map<String, String> patients;
+  Map<String, int> rate;
 
   Map<String, DateTime> appointments;
 
@@ -250,7 +255,9 @@ class DoctorModel {
           fees: doc.get('fees'),
           password: doc.get('password'),
           specialty: doc.get('specialty'),
-          rate: doc.get('rate'),
+          rate: doc.get('rate') != null
+              ? Map<String, int>.from(doc.get('rate'))
+              : {},
           keyWords: doc.get('keyWords') != null
               ? Map<String, String>.from(doc.get('keyWords'))
               : {},
@@ -291,7 +298,17 @@ class DoctorModel {
       'subCity': this.subCity,
     };
   }
+  int getRateCount(){
+    return this.rate.length;
+  }
 
+  double getRate(){
+    int rate = 0;
+    for(var v in this.rate.values) {
+      rate = rate + v;
+    }
+    return this.rate.length >0 ?rate/this.rate.length:0;
+  }
   factory DoctorModel.fromJson(Map<String, dynamic> map) {
     return DoctorModel(
       id: map['id'] as String,
@@ -316,7 +333,9 @@ class DoctorModel {
             })
           : {},
       specialty: map['specialty'] as String,
-      rate: map['rate'] as String,
+      rate: map['rate'] != null
+          ? Map<String, int>.from(map['rate'])
+          : {},
       phone: map['phone'] as String,
       address: map['address'] as String,
       subCity: map['subCity'] as String,
@@ -481,17 +500,19 @@ class DiagnosisModel {
 }
 
 class HistoryFilesModel {
-  String id, title, details, fileUrl;
+  String id,type, title, details, fileUrl;
   DateTime date;
 
   HistoryFilesModel(
-      {this.date, this.id, this.fileUrl, this.title, this.details});
+      {this.date, this.id,this.type, this.fileUrl, this.title, this.details});
 
   List<HistoryFilesModel> fromQuery(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return HistoryFilesModel(
         id: doc.get('id'),
         title: doc.get('title'),
+        type: doc.get('type'),
+
         fileUrl: doc.get('fileUrl'),
         details: doc.get('details'),
         date: doc.get('date').toDate(),
@@ -503,6 +524,8 @@ class HistoryFilesModel {
     return {
       'id': this.id,
       'title': this.title,
+      'type': this.type,
+
       'details': this.details,
       'fileUrl': this.fileUrl,
       'date': this.date,

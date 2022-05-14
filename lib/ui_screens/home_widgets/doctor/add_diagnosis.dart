@@ -154,7 +154,7 @@ class _AddDiagnosisScreenState extends State<AddDiagnosisScreen> {
     if (_complain == null || _complain.isEmpty) {
       clear();
       setState(() {
-        _complain = "Please enter Patient Symptoms";
+        _complainError = "Please enter Patient Symptoms";
       });
     } else if (_diagnosis == null || _diagnosis.isEmpty) {
       clear();
@@ -189,6 +189,7 @@ class _AddDiagnosisScreenState extends State<AddDiagnosisScreen> {
       await DatabaseService().updateAppointment(update: newAppointmentModel);
       await DatabaseService().addPatient2DoctorList(docId: newAppointmentModel.doctorId,newPatient: widget.patientModel);
       await DatabaseService().updateReport(docId: doctorModel.id,price: int.parse(doctorModel.fees));
+      await DatabaseService().updatePatientCount(id: widget.patientModel.id);
 
 
 

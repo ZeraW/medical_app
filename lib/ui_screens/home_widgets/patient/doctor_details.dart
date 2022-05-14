@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medical_app/models/db_model.dart';
+import 'package:medical_app/ui_components/ratting.dart';
 import 'package:medical_app/ui_screens/home_widgets/patient/payment.dart';
 import 'package:medical_app/utils/colors.dart';
 import 'package:medical_app/utils/dimensions.dart';
@@ -123,6 +124,20 @@ class _DoctorScreenState extends State<DoctorScreen> {
                         SizedBox(
                           width: Responsive.width(2.0, context),
                         ),
+                        Expanded(
+                          flex: 1,
+                          child: FlatButtonBuilder(
+                            onTap: () {
+                              DoRate().rate(context, widget.doctor);
+                            },
+                            color: Colors.deepOrange,
+                            icon: Icons.star,
+                            labelText: "Rate",
+                          ),
+                        ),
+                        SizedBox(
+                          width: Responsive.width(2.0, context),
+                        ),
                       ],
                     ),
                     SizedBox(
@@ -172,9 +187,10 @@ class _DoctorScreenState extends State<DoctorScreen> {
                     ),
                     SmoothStarRating(
                         allowHalfRating: false,
-                        rating: 0,
+                        rating: widget.doctor.getRate(),
                         onRated: (v) {},
                         starCount: 5,
+                        isReadOnly: true,
                         borderColor: Colors.grey,
                         size: Responsive.width(4.5, context),
                         color: Colors.yellow[700],

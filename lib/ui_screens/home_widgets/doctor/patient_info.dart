@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medical_app/navigation_service.dart';
 import 'package:medical_app/services/database_api.dart';
+import 'package:medical_app/ui_components/drop_down.dart';
 import 'package:medical_app/utils/colors.dart';
 import 'package:medical_app/utils/dimensions.dart';
 
@@ -22,6 +23,9 @@ class PatientInfo extends StatefulWidget {
 
 class _PatientInfoState extends State<PatientInfo> {
   bool isDiagnosis = true;
+  String type = '';
+  String _typeError = '';
+
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +123,7 @@ class _PatientInfoState extends State<PatientInfo> {
                       setState(() {});
                     },
                     child: Text(
-                      'Files',
+                      'Files & Tests',
                       style: TextStyle(
                           color: !isDiagnosis ? xColors.mainColor : null,
                           fontSize: !isDiagnosis ? 18 : 17),
@@ -128,6 +132,20 @@ class _PatientInfoState extends State<PatientInfo> {
             ),
             SizedBox(
               height: 10,
+            ),
+            !isDiagnosis? DropDownStringList(
+              hint: 'Type',
+              mList: ['X Rays', 'Blood Pressure','Blood Sugar','Others'],
+              selectedItem: type,
+              errorText: _typeError,
+              onChange: (value) {
+                setState(() {
+                  type = value;
+                });
+              },
+            ):SizedBox(),
+            SizedBox(
+              height: !isDiagnosis? 5:0,
             ),
             isDiagnosis
                 ? StreamBuilder<List<DiagnosisModel>>(
@@ -153,9 +171,15 @@ class _PatientInfoState extends State<PatientInfo> {
                     })
                 : StreamBuilder<List<HistoryFilesModel>>(
                     stream: DatabaseService()
-                        .getLiveHistoryFiles(widget.patientModel.id),
+                        .getLiveHistoryFilesByType(widget.patientModel.id,type),
                     builder: (context, snapshot) {
                       List<HistoryFilesModel> mList = snapshot.data;
+
+                      if(mList != null){
+                        mList.sort((a,b) {
+                          return   b.date.compareTo(a.date);
+                        });
+                      }
 
                       return Expanded(
                           child: Container(
@@ -167,25 +191,28 @@ class _PatientInfoState extends State<PatientInfo> {
                                 itemCount: mList.length,
                                 itemBuilder: (context, index) {
                                   HistoryFilesModel item = mList[index];
-                                  return ListTile(
-                                    onTap: () {
-                                      NavigationService.docInstance
-                                          .navigateToWidget(ViewFile(item));
-                                    },
-                                    leading: Icon(
-                                      Icons.file_open,
-                                    ),
-                                    title: Text(
-                                      '${item.title}',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    subtitle: Text(
-                                        '${item.date.day}-${item.date.month}-${item.date.year}',
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 4),
+                                    child: ListTile(
+                                      onTap: () {
+                                        NavigationService.docInstance
+                                            .navigateToWidget(ViewFile(item));
+                                      },
+                                      leading: Icon(
+                                        Icons.folder_open,
+                                      ),
+                                      title: Text(
+                                        '${item.title}',
                                         style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600)),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      subtitle: Text(
+                                          'Type: ${item.type}\n${item.date.day}-${item.date.month}-${item.date.year}',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
                                   );
                                 },
                               )

@@ -134,17 +134,44 @@ class DatabaseService {
     return patientCollection
         .doc(id)
         .collection('Files')
-        .orderBy('date', descending: true)
         .snapshots()
         .map(HistoryFilesModel().fromQuery);
   }
+
+  Stream<List<HistoryFilesModel>> getLiveHistoryFilesByType(String id,String type) {
+    if(type.isEmpty){
+      return patientCollection
+          .doc(id)
+          .collection('Files')
+          .snapshots()
+          .map(HistoryFilesModel().fromQuery);
+    }else{
+      return patientCollection
+          .doc(id)
+          .collection('Files').where('type',isEqualTo: type)
+          .snapshots()
+          .map(HistoryFilesModel().fromQuery);
+    }
+
+  }
+
+
+
+  Future<void> updatePatientCount({String id}) async {
+    return await patientCollection.doc(id).update(
+        {'count': FieldValue.increment(1)});
+  }
+
+
+
 
   Future addFile(
       {HistoryFilesModel add, @required File file, String id}) async {
     var ref = patientCollection.doc(id).collection('Files').doc();
     add.id = ref.id;
-    add.fileUrl = await (DatabaseService()
-        .uploadFileToStorage(id: 'user/$id/${ref.id}', file: file));
+    if(file!=null){
+      add.fileUrl = await (DatabaseService().uploadFileToStorage(id: 'user/$id/${ref.id}', file: file));
+    }
     return await ref.set(add.toMap());
   }
 
@@ -388,6 +415,12 @@ class DatabaseService {
           .doc(updatedDoctor.id.toString())
           .update(updatedDoctor.toJson());
     }
+  }
+
+  Future rateDoctor({String docId,int ratting}) async {
+    return await doctorsCollection.doc(docId).update({
+      'rate.${FirebaseAuth.instance.currentUser.uid}': ratting
+    });
   }
 
   //delete existing Doctor

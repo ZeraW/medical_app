@@ -119,6 +119,11 @@ class _AppointmentTabsState extends State<AppointmentTabs> {
         builder: (context, snapshot) {
           List<AppointmentModel> mList = snapshot.data;
 
+          if(mList != null){
+            mList.sort((a,b) {
+              return widget.type == AppointmentType.UPCOMING ? a.time.compareTo(b.time) : b.time.compareTo(a.time);
+            });
+          }
           return mList != null && patientList != null
               ? Column(
                 children: [

@@ -130,7 +130,7 @@ class DoctorCard extends StatelessWidget {
                       ),
                       SmoothStarRating(
                           allowHalfRating: false,
-                          rating: double.parse("4.5"),
+                          rating: doctorObject.getRate(),
                           /*  onRatingChanged: (v) {
                                                               },*/
                           starCount: 5,

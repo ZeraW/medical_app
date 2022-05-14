@@ -173,9 +173,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   NavigationService.patientInstance.goBack();
                   NavigationService.patientInstance.goBack();
                   NavigationService.patientInstance.goBack();
+                  NavigationService.patientInstance.goBack();
 
                   NavigationService.patientInstance
-                      .navigateToReplacement('PatientAppointmentScreen');
+                      .navigateTo('PatientAppointmentScreen');
                   const snackBar = SnackBar(
                     content: Text('Booked successfully'),
                   );

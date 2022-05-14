@@ -95,15 +95,18 @@ class _AppointmentTabsState extends State<AppointmentTabs> {
         builder: (context, snapshot) {
           List<AppointmentModel> mList = snapshot.data;
 
+          if(mList != null){
+            mList.sort((a,b) {
+              return widget.type == AppointmentType.UPCOMING ? a.time.compareTo(b.time) : b.time.compareTo(a.time);
+            });
+          }
+
           return mList != null && patientList != null
               ? ListView.builder(
                   itemBuilder: (context, index) {
                     AppointmentModel item = mList[index];
-                    PatientModel patient = patientList.firstWhere(
-                        (element) => element.id == item.patientId,
-                        orElse: () =>
-                            PatientModel(id: "null", name: "Removed"));
-                    return AppointmentCard(
+                    PatientModel patient = patientList.firstWhere((element) => element.id == item.patientId, orElse: () => PatientModel(id: "null", name: "Removed"));
+                    return DateTime.now().day ==item.time.day && DateTime.now().month ==item.time.month && DateTime.now().year ==item.time.year ? AppointmentCard(
                       appointmentModel: item,
                       onTap: () {
                         NavigationService.docInstance
@@ -113,7 +116,7 @@ class _AppointmentTabsState extends State<AppointmentTabs> {
                       date:
                           '${item.time.day}-${item.time.month}-${item.time.year}',
                       patientName: patient.name,
-                    );
+                    ):SizedBox();
                   },
                   itemCount: mList.length)
               : SizedBox();
@@ -124,8 +127,9 @@ class _AppointmentTabsState extends State<AppointmentTabs> {
 class RowCardBuilder extends StatelessWidget {
   final String title;
   final String value;
+  final Color color;
 
-  RowCardBuilder({this.title, this.value});
+  RowCardBuilder({this.title, this.value,this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -144,6 +148,8 @@ class RowCardBuilder extends StatelessWidget {
           Text(
             "$value",
             style: TextStyle(
+                color: color,
+
                 fontWeight: FontWeight.w600,
                 fontSize: Responsive.width(3.5, context)),
           )
@@ -192,8 +198,8 @@ class AppointmentCard extends StatelessWidget {
                   appointmentModel.status > 0
                       ? RowCardBuilder(
                           title: "Status",
-                          value:
-                              "${appointmentModel.status == 1 ? 'Finished' : 'Canceled'}",
+                    value: "${appointmentModel.status ==1 ? 'Finished' : appointmentModel.status ==2 ?'Canceled by\nDoctor' : 'Canceled by\nUser'}",
+                    color: appointmentModel.status ==1 ? Colors.green : appointmentModel.status ==2 ?Colors.redAccent  : Colors.orange ,
                         )
                       : SizedBox(),
                 ],

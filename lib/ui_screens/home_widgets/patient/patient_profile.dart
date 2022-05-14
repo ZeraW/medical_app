@@ -62,6 +62,7 @@ class _BodyState extends State<Body> {
   String gender;
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _emailController = new TextEditingController();
+  CityModel selectedCity;
 
   TextEditingController _passwordController = new TextEditingController();
   TextEditingController _phoneController = new TextEditingController();
@@ -70,6 +71,7 @@ class _BodyState extends State<Body> {
 
   String _nameError = "";
   String _ageError = "";
+  String _cityError = "";
 
   String _phoneError = "";
   String _passError = "";
@@ -83,7 +85,9 @@ class _BodyState extends State<Body> {
 
     _passwordController.text = widget.user.password;
     _ageController.text = widget.user.age;
-
+    selectedCity = widget.cityModel.firstWhere(
+            (element) => element.id == widget.user.city,
+        orElse: () => CityModel(id: 'null', name: 'Removed'));
     _phoneController.text = widget.user.phone;
     imageUrl = widget.user.image;
     gender = widget.user.gender.toString();
@@ -253,6 +257,20 @@ class _BodyState extends State<Body> {
                     SizedBox(
                       height: Responsive.height(3, context),
                     ),
+                    DropDownDynamicList(
+                        mList: widget.cityModel,
+                        errorText: _cityError,
+                        selectedItem: selectedCity,
+                        enabled: isEnabled,
+                        hint: "City",
+                        onChange: (dynamic value) {
+                          setState(() {
+                            selectedCity = value;
+                          });
+                        }),
+                    SizedBox(
+                      height: Responsive.height(3, context),
+                    ),
                     TextFormBuilder(
                       hint: "age",
                       keyType: TextInputType.number,
@@ -314,6 +332,7 @@ class _BodyState extends State<Body> {
     String phone = _phoneController.text;
     String password = _passwordController.text;
     String age = _ageController.text;
+    String city = selectedCity.id;
 
 
     if (name == null || name.isEmpty) {
@@ -330,6 +349,11 @@ class _BodyState extends State<Body> {
       clear();
       setState(() {
         _phoneError = "Please enter age";
+      });
+    }else if (city == null || city.isEmpty) {
+      clear();
+      setState(() {
+        _cityError = "Please Select City";
       });
     } else if (password == null || password.isEmpty || password.length < 5) {
       clear();
@@ -349,6 +373,9 @@ class _BodyState extends State<Body> {
           name: name,
           image: pickedImage == null ? widget.user.image : null,
           phone: phone,
+          city: selectedCity.id,
+          count: widget.user.count,
+          email: widget.user.email,
           age: age,
           gender: gender,
           password: password,);
