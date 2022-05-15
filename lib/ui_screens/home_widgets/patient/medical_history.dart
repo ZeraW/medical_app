@@ -316,7 +316,7 @@ class _AddFileState extends State<AddFile> {
                     color: xColors.mainColor,
                     child: Center(
                       child: Text(
-                        "add File",
+                        "Upload File",
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
@@ -352,6 +352,11 @@ class _AddFileState extends State<AddFile> {
       clear();
       setState(() {
         _detailsError = 'add Details';
+      });
+    }else if (file == null && (_type=='X Rays' || _type=='Others')) {
+      clear();
+      setState(() {
+        _fileError = "Please Upload File";
       });
     }  else {
       clear();

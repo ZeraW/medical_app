@@ -129,7 +129,7 @@ class _AddDiagnosisScreenState extends State<AddDiagnosisScreen> {
                     color: xColors.mainColor,
                     padding: EdgeInsets.all(15),
                     child: Text(
-                      'Add File',
+                      'Add File & Test',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 15,
