@@ -135,9 +135,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       if (formKey.currentState.validate()) {
                         await DatabaseService()
                             .addAppointment(add: widget.model);
+                        NavigationService.patientInstance.goBack();
+                        NavigationService.patientInstance.goBack();
+                        NavigationService.patientInstance.goBack();
+                        NavigationService.patientInstance.goBack();
 
                         NavigationService.patientInstance
-                            .pushReplacement('PatientAppointmentScreen');
+                            .navigateTo('PatientAppointmentScreen');
+                        const snackBar = SnackBar(
+                          content: Text('Booked successfully'),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                     },
                   ),
