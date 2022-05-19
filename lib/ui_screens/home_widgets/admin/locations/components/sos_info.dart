@@ -59,7 +59,7 @@ class _SosInfoState extends State<SosInfo> {
                             style: TextStyle(fontSize: 27),
                           ),
                           SelectableText(
-                            'Aage: ${provider.model.user.age}',
+                            'Age: ${provider.model.user.age}',
                             style: TextStyle(fontSize: 17),
                           ),
                         ],

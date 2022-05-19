@@ -32,11 +32,22 @@ class SearchResult extends StatelessWidget {
         }, icon: Icon(Icons.search))
       ]),
       body: doctorList !=null && mSpecList!=null ?
-      doctorList.isNotEmpty? ListView.builder(
-        itemBuilder: (context, index) {
-          return DoctorCard(doctorList[index], mSpecList,date);
-        },
-        itemCount: doctorList.length,
+      doctorList.isNotEmpty? Column(
+        children: [
+
+          Align(alignment: AlignmentDirectional.centerEnd,child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Text('( ${doctorList.length} ) Doctors found'),
+          )),
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                return DoctorCard(doctorList[index], mSpecList,date);
+              },
+              itemCount: doctorList.length,
+            ),
+          ),
+        ],
       ):Center(child: Text('No doctor found'),)
           :Center(child: CircularProgressIndicator(color: xColors.mainColor)),
     );

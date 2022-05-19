@@ -148,31 +148,20 @@ class _QueryDoctorState extends State<QueryDoctor> {
   }
 
   void checkValidation() {
-    String spec = selectedSpeciality.id;
-    String city = selectedCity.id;
-    String subCity = selectedSubCity.id;
 
 
-    if (spec == null || spec.isEmpty) {
+
+
+    if (selectedSpeciality == null ) {
       clear();
       setState(() {
         _specialtyError = "Please Select Specialty";
       });
     }
-    else if (city == null || city.isEmpty) {
-      clear();
-      setState(() {
-        _cityError = "Please Select City";
-      });
-    }
-    else if (subCity == null || subCity.isEmpty) {
-      clear();
-      setState(() {
-        _subCityError = "Please Select Area";
-      });
-    }
     else {
+
       clear();
+      String spec = selectedSpeciality.id;
       //do request
       //query
       final String day = DateFormat('EEEE').format(pickedDate);
@@ -180,17 +169,29 @@ class _QueryDoctorState extends State<QueryDoctor> {
       print(day);
       Query query =  FirebaseFirestore.instance
           .collection('Doctors')
-          .where('keyWords.spec', isEqualTo: '$spec')
-          .where('keyWords.city', isEqualTo: '$city')
-          .where('keyWords.$day', isEqualTo: 'true')
-          .where('keyWords.subCity', isEqualTo: '$subCity');
+          .where('keyWords.spec', isEqualTo: '$spec').where('keyWords.$day', isEqualTo: 'true');
       Query query2;
+      if (selectedCity != null && selectedSubCity==null){
+        String city = selectedCity.id;
+        query2 = query
+            .where('keyWords.city', isEqualTo: '$city');
+      }else if(selectedCity != null && selectedSubCity!=null){
+        String city = selectedCity.id;
+        String subCity = selectedSubCity.id;
+
+        query2 = query
+            .where('keyWords.city', isEqualTo: '$city').where('keyWords.subCity', isEqualTo: '$subCity');
+      }else{
+        query2 = query;
+      }
+
+      Query query3;
       if (gender != null && gender.isNotEmpty && gender!='both'){
         //add gender to query
-        query2 = query.where('keyWords.gender', isEqualTo: '$gender');
+        query3 = query2.where('keyWords.gender', isEqualTo: '$gender');
       }else {
         //query without gender
-        query2 = query;
+        query3 = query2;
       }
 
         NavigationService.patientInstance.navigateToWidget(MultiProvider(providers: [
