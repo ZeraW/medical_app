@@ -24,38 +24,15 @@ class Body extends StatelessWidget {
                 child: Card(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Wrap(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        patList != null
-                            ? ReportCard(
-                                title: 'All Patients (${patList.length})',
-                                description:
-                                    'A report showing all the patients registered in the system.',
-                                onTap: () {
-                                  NavigationService2.instance
-                                      .navigateTo('All_Patients_Report');
-                                  context.read<AdminManage>().changeAppBarTitle(
-                                      title: 'All Patients Report');
-                                },
-                              )
-                            : SizedBox(),
-                        ReportCard(
-                          title: 'All Doctors (${docList.length})',
-                          description:
-                              'A report showing all the doctors registered in the system.',
-                          onTap: () {
-                            NavigationService2.instance
-                                .navigateTo('All_Doctors_Report');
-                            context
-                                .read<AdminManage>()
-                                .changeAppBarTitle(title: 'All Doctors Report');
-                          },
-                        ),
+                        Text('Finance Report',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
                         ReportCard(
                           title:
-                              'Finance & Profits (${report.report['countTotal']} * ${report.report['priceTotal']})',
+                          'Finance & Profits (${report.report['countTotal']} * ${report.report['priceTotal']})',
                           description:
-                              'A report showing all the doctors profits',
+                          'A report showing all the doctors profits',
                           onTap: () {
                             NavigationService2.instance
                                 .navigateTo('finance_profit_Report');
@@ -63,16 +40,49 @@ class Body extends StatelessWidget {
                                 title: 'Finance & Profit Report');
                           },
                         ),
-                        ReportCard(
-                          title: 'Appointments',
-                          description:
-                              'A report showing all the doctors Appointments',
-                          onTap: () {
-                            NavigationService2.instance
-                                .navigateTo('Appointments_Report');
-                            context.read<AdminManage>().changeAppBarTitle(
-                                title: 'Appointments Report');
-                          },
+                        SizedBox(height: 10,),
+
+                        Text('Management Report',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                        Row(
+                          children: [
+                            patList != null
+                                ? ReportCard(
+                                    title: 'All Patients (${patList.length})',
+                                    description:
+                                        'A report showing all the patients registered in the system.',
+                                    onTap: () {
+                                      NavigationService2.instance
+                                          .navigateTo('All_Patients_Report');
+                                      context.read<AdminManage>().changeAppBarTitle(
+                                          title: 'All Patients Report');
+                                    },
+                                  )
+                                : SizedBox(),
+                            ReportCard(
+                              title: 'All Doctors (${docList.length})',
+                              description:
+                                  'A report showing all the doctors registered in the system.',
+                              onTap: () {
+                                NavigationService2.instance
+                                    .navigateTo('All_Doctors_Report');
+                                context
+                                    .read<AdminManage>()
+                                    .changeAppBarTitle(title: 'All Doctors Report');
+                              },
+                            ),
+
+                            ReportCard(
+                              title: 'Appointments',
+                              description:
+                                  'A report showing all the doctors Appointments',
+                              onTap: () {
+                                NavigationService2.instance
+                                    .navigateTo('Appointments_Report');
+                                context.read<AdminManage>().changeAppBarTitle(
+                                    title: 'Appointments Report');
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),

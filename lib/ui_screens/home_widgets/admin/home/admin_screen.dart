@@ -12,6 +12,11 @@ import 'package:medical_app/utils/themes.dart';
 import 'package:provider/provider.dart';
 
 class AdminScreen extends StatefulWidget {
+
+  UserModel user;
+
+  AdminScreen(this.user);
+
   @override
   _AdminScreenState createState() => _AdminScreenState();
 }
@@ -22,7 +27,7 @@ class _AdminScreenState extends State<AdminScreen> {
     return Scaffold(
       // key: context.read<MenuController>().scaffoldKey,
       backgroundColor: Colors.black12,
-      drawer: SideMenu(),
+      drawer: SideMenu(widget.user),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -30,7 +35,7 @@ class _AdminScreenState extends State<AdminScreen> {
           Expanded(
             // default flex = 1
             // and it takes 1/6 part of the screen
-            child: SideMenu(),
+            child: SideMenu(widget.user),
           ),
 
           Expanded(
@@ -63,7 +68,7 @@ class _AdminScreenState extends State<AdminScreen> {
                       title: 'admin',
                       debugShowCheckedModeBanner: false,
                       navigatorKey: NavigationService2.instance.key,
-                      initialRoute: 'ManageReportScreen',
+                      initialRoute: widget.user.type == 'admin' ?'ManageCitiesScreen' :'ManageReportScreen',
                       theme: appTheme(),
                       routes: routes,
                     ),
