@@ -3,9 +3,10 @@ import 'package:medical_app/models/db_model.dart';
 import 'package:medical_app/provider/admin_manage.dart';
 import 'package:medical_app/services/database_api.dart';
 import 'package:medical_app/ui_components/dialogs.dart';
-import 'package:medical_app/ui_screens/home_widgets/admin/reports/all_patient_report.dart';
 import 'package:medical_app/utils/colors.dart';
 import 'package:provider/provider.dart';
+
+import 'all_patient_report.dart';
 
 class AppointmentsReport extends StatefulWidget {
 

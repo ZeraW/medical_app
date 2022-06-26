@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medical_app/ui_screens/home_widgets/admin/reports/components/body.dart';
+import 'package:medical_app/ui_screens/home_widgets/manager/reports/components/body.dart';
 
 class ManageReportScreen extends StatelessWidget {
   @override

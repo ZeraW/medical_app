@@ -36,9 +36,9 @@ class ProfitReport extends StatelessWidget {
           ),
 
           Row(children: [
-            TotalCard(title: 'Total Profit', description: '${report.report['priceTotal']}'),
+            TotalCard(title: 'Total Profit', description: '${report.report['priceTotal']} L.E'),
             TotalCard(title: 'Total Visitation', description: '${report.report['countTotal']}'),
-
+            TotalCard(title: 'App Profit 10%', description: '${report.report['priceTotal']*0.1} L.E'),
           ],),
 
 
@@ -75,7 +75,7 @@ class _SortablePageState extends State<SortablePage> {
     print( widget.report.doctorVisitation);
 
 
-    final columns = ['Name','Specialty','Visitation\nCount','Total\nProfit (L.E)'];
+    final columns = ['Name','Specialty','Visitation\nCount','Total\nProfit (L.E)',"App profit 10% (L.E)"];
 
     return DataTable(
       sortAscending: isAscending,
@@ -95,7 +95,7 @@ class _SortablePageState extends State<SortablePage> {
       .toList();
 
   List<DataRow> getRows(List<DoctorModel> users) => users.map((DoctorModel user) {
-    final cells = [user.name, sp(user.specialty),bookingCount(user.id),profit(user.id)];
+    final cells = [user.name, sp(user.specialty),bookingCount(user.id),profit(user.id),appProfit(user.id)];
 
     return DataRow(cells: getCells(cells));
   }).toList();
@@ -110,6 +110,12 @@ class _SortablePageState extends State<SortablePage> {
 
   int profit(String id){
     return widget.report.doctorProfit!=null && widget.report.doctorProfit.containsKey(id)? widget.report.doctorProfit[id]:0;
+  }
+
+  double appProfit(String id){
+    int doctorProfit = widget.report.doctorProfit!=null && widget.report.doctorProfit.containsKey(id)? widget.report.doctorProfit[id]:0;
+    //int appProfit = widget.report.report['priceTotal'];
+    return doctorProfit*0.1;
   }
 
   void onSort(int columnIndex, bool ascending) {

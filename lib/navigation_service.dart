@@ -7,7 +7,6 @@ class NavigationService {
   static NavigationService docInstance = NavigationService();
   static NavigationService patientInstance = NavigationService();
 
-
   NavigationService() {
     key = GlobalKey<NavigatorState>();
   }
@@ -27,8 +26,10 @@ class NavigationService {
   Future<dynamic> navigateToWidget(Widget _rn) {
     return key.currentState.push(MaterialPageRoute(builder: (_) => _rn));
   }
+
   Future<dynamic> navigateToWidgetReplacement(Widget _rn) {
-    return key.currentState.pushReplacement(MaterialPageRoute(builder: (_) => _rn));
+    return key.currentState
+        .pushReplacement(MaterialPageRoute(builder: (_) => _rn));
   }
 
   goBack() {
@@ -45,7 +46,8 @@ class NavigationService {
       return true;
     });
     if (!isNewRouteSameAsCurrent) {
-      key.currentState.pushNamedAndRemoveUntil(newRouteName, (Route<dynamic> route) => false);
+      key.currentState.pushNamedAndRemoveUntil(
+          newRouteName, (Route<dynamic> route) => false);
     }
   }
 }
@@ -86,6 +88,22 @@ class NavigationService2 {
     });
     if (!isNewRouteSameAsCurrent) {
       key.currentState.pushReplacementNamed(newRouteName);
+    }
+  }
+}
+
+class MyCustomRoute<T> extends MaterialPageRoute<T> {
+  MyCustomRoute({WidgetBuilder builder, RouteSettings settings})
+      : super(builder: builder, settings: settings);
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    if (settings.name == '/') {
+      return child;
+      // Fades between routes. (If you don't want any animation,
+      // just return child.)
+      return new FadeTransition(opacity: animation, child: child);
     }
   }
 }

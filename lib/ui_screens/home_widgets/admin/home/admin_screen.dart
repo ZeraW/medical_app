@@ -65,12 +65,15 @@ class _AdminScreenState extends State<AdminScreen> {
                   ),
                   Expanded(
                     child: MaterialApp(
-                      title: 'admin',
+                      title: widget.user.type == 'admin' ?'admin':'Manager',
                       debugShowCheckedModeBanner: false,
                       navigatorKey: NavigationService2.instance.key,
                       initialRoute: widget.user.type == 'admin' ?'ManageCitiesScreen' :'ManageReportScreen',
                       theme: appTheme(),
-                      routes: routes,
+                      onGenerateRoute: RouteGenerator.getRoute,
+
+
+                     // routes: routes,
                     ),
                   ),
                 ],

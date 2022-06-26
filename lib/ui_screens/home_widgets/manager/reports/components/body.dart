@@ -34,8 +34,7 @@ class Body extends StatelessWidget {
                           description:
                           'A report showing all the doctors profits',
                           onTap: () {
-                            NavigationService2.instance
-                                .navigateTo('finance_profit_Report');
+                            NavigationService2.instance.navigateTo('finance_profit_Report');
                             context.read<AdminManage>().changeAppBarTitle(
                                 title: 'Finance & Profit Report');
                           },
@@ -51,8 +50,7 @@ class Body extends StatelessWidget {
                                     description:
                                         'A report showing all the patients registered in the system.',
                                     onTap: () {
-                                      NavigationService2.instance
-                                          .navigateTo('All_Patients_Report');
+                                      NavigationService2.instance.navigateTo('All_Patients_Report');
                                       context.read<AdminManage>().changeAppBarTitle(
                                           title: 'All Patients Report');
                                     },
@@ -63,8 +61,7 @@ class Body extends StatelessWidget {
                               description:
                                   'A report showing all the doctors registered in the system.',
                               onTap: () {
-                                NavigationService2.instance
-                                    .navigateTo('All_Doctors_Report');
+                                NavigationService2.instance.navigateTo('All_Doctors_Report');
                                 context
                                     .read<AdminManage>()
                                     .changeAppBarTitle(title: 'All Doctors Report');
@@ -76,8 +73,7 @@ class Body extends StatelessWidget {
                               description:
                                   'A report showing all the doctors Appointments',
                               onTap: () {
-                                NavigationService2.instance
-                                    .navigateTo('Appointments_Report');
+                                NavigationService2.instance.navigateTo('Appointments_Report');
                                 context.read<AdminManage>().changeAppBarTitle(
                                     title: 'Appointments Report');
                               },
