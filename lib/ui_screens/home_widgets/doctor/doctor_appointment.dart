@@ -184,6 +184,30 @@ class AppointmentCard extends StatelessWidget {
       Key key})
       : super(key: key);
 
+
+  String canceledByText(int x){
+    switch (x) {
+      case 1:return "Finished";
+      case 2:return "Canceled by Doctor";
+      case 3:return "Canceled by User";
+      case 4:return "Canceled by Manager";
+
+      default:
+        return 'unDefinedRoute()';
+    }
+  }
+  Color canceledByColor(int x){
+    switch (x) {
+      case 1:return  Colors.green;
+      case 2:return Colors.redAccent;
+      case 3:return Colors.orange ;
+      case 4:return Colors.purpleAccent ;
+
+      default:
+        return Colors.black54;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -207,13 +231,9 @@ class AppointmentCard extends StatelessWidget {
                   appointmentModel.status > 0
                       ? RowCardBuilder(
                           title: "Status",
-                          value:
-                              "${appointmentModel.status == 1 ? 'Finished' : appointmentModel.status == 2 ? 'Canceled by\nDoctor' : 'Canceled by\nUser'}",
-                          color: appointmentModel.status == 1
-                              ? Colors.green
-                              : appointmentModel.status == 2
-                                  ? Colors.redAccent
-                                  : Colors.orange,
+
+                    value: canceledByText(appointmentModel.status),
+                    color: canceledByColor(appointmentModel.status),
                         )
                       : SizedBox(),
                 ],
