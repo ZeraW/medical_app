@@ -106,7 +106,7 @@ class _MobileState extends State<Mobile> {
           SizedBox(
             height: Responsive.height(3.0, context),
           ),
-          widget.type != 'Patient'
+          widget.type != 'patient'
               ? SizedBox()
               : GestureDetector(
                   onTap: () {
